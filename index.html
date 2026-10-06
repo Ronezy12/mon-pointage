@@ -103,22 +103,33 @@ function ouvrirModalPause(){const field=document.getElementById("departureObserv
 async function terminer(pauseMinutes){const observation=document.getElementById("departureObservation").value.trim();fermerModal("pauseModal");setLoading(true);try{const heure=heureActuelle();const r=await appelerAPI("terminerJour",{heure,pauseMinutes,observation});appliquerEtat(r.data);toast("✓ Départ enregistré à "+heure);await synchroniserTout()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
 function ouvrirAbsence(){document.getElementById("absenceMotif").value="";document.getElementById("absenceModal").classList.add("show")}async function confirmerAbsence(){const motif=document.getElementById("absenceMotif").value.trim()||"Non précisé";fermerModal("absenceModal");setLoading(true);try{const r=await appelerAPI("signalerAbsence",{motif});appliquerEtat(r.data);toast("✓ Absence enregistrée");await chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
 function ouvrirVue(id,btn){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="hoursView")chargerRecapEtHistorique();window.scrollTo({top:0,behavior:"smooth"})}function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}function afficherTitreMois(){document.getElementById("monthTitle").innerHTML=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"Europe/Paris"})+"<small>Récapitulatif</small>"}function afficherRecap(r){document.getElementById("monthHours").textContent=r.heuresTravaillees||r.heures||"—";document.getElementById("monthDays").textContent=r.joursTravailles??"—";document.getElementById("monthAbsences").textContent=r.absences??"—";afficherTitreMois()}function afficherHistorique(rows){const el=document.getElementById("history");if(!rows?.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}el.innerHTML=rows.map(x=>{const d=x.date?new Date(x.date):null;const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):x.libelle||"—";return '<div class="history-row"><div class="hdate">'+label+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+' → '+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+(x.observation?' · 📝 '+esc(x.observation):"")+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+'</div></div>'}).join("")}function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}function horloge(){const n=new Date();document.getElementById("clock").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("heroTime").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});if(document.getElementById("heroDate").textContent==="Chargement…")document.getElementById("heroDate").textContent=n.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function heureActuelle(){const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")}function formaterDate(v){if(!v)return"Date indisponible";if(typeof v==="string"){let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});m=v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}const d=new Date(v);return isNaN(d)?"Date indisponible":d.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function ouvrirModal(id){document.getElementById(id).classList.add("show")}function fermerModal(id){document.getElementById(id).classList.remove("show")}document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}))function setLoading(v){document.getElementById("loading").classList.toggle("show",v)}function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2800)}function afficherErreur(e){console.error(e);toast(e?.message||"Une erreur est survenue.")}function erreurConnexion(msg){const e=document.getElementById("loginError");e.textContent=msg;e.classList.remove("hidden")}function deconnexion(){if(synchronisationTimer)clearInterval(synchronisationTimer);idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();document.getElementById("app").style.display="none";document.getElementById("loginScreen").style.display="grid"}afficherTitreMois();
-</script>
-</body>
-</html
 function lancerConnexionGoogle(){
   const status=document.getElementById("googleStatus");
   if(status)status.textContent="Ouverture de Google…";
   if(window.google?.accounts?.id){
     try{
       google.accounts.id.prompt((notification)=>{
-        if(notification?.isNotDisplayed?.() && status)status.textContent="Le compte Google n’est pas disponible dans cette fenêtre. Utilisez le bouton Google ci-dessus ou autorisez les fenêtres Google."; 
-        if(notification?.isSkippedMoment?.() && status)status.textContent="Connexion Google ignorée.";
+        if(notification?.isNotDisplayed?.() && status){
+          status.textContent="Le compte Google n’est pas disponible dans cette fenêtre. Utilisez le bouton Google ci-dessus ou autorisez les fenêtres Google.";
+        }
+        if(notification?.isSkippedMoment?.() && status){
+          status.textContent="Connexion Google ignorée.";
+        }
       });
       return;
-    }catch(e){console.error(e)}
+    }catch(e){
+      console.error(e);
+    }
   }
   initialiserGoogle();
-  setTimeout(()=>{if(window.google?.accounts?.id)lancerConnexionGoogle();else if(status)status.textContent="Google est bloqué ou ne se charge pas. Vérifiez votre bloqueur de contenu puis rechargez.";},700);
+  setTimeout(()=>{
+    if(window.google?.accounts?.id){
+      lancerConnexionGoogle();
+    }else if(status){
+      status.textContent="Google est bloqué ou ne se charge pas. Vérifiez votre bloqueur de contenu puis rechargez.";
+    }
+  },700);
 }
->
+</script>
+</body>
+</html
