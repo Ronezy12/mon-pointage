@@ -166,14 +166,34 @@ function demarrerSynchronisationTempsReel(){
 }
 async function chargerEtat(){try{const r=await appelerAPI("getEtatDuJour");appliquerEtat(r.data)}catch(e){afficherErreur(e)}}
 async function chargerRecapEtHistorique(){
+ const annee=moisCourant.getFullYear(), mois=moisCourant.getMonth()+1;
  try{
-  const r=await appelerAPI("obtenirTableauDeBord",{annee:moisCourant.getFullYear(),mois:moisCourant.getMonth()+1});
-  const d=r.data||{};afficherRecap(d.recap||{});afficherHistorique(d.historique||[]);
+  const r=await appelerAPI("obtenirTableauDeBord",{annee,mois});
+  const d=r.data||{};
+  const recap=d.recap||{};
+  let historique=Array.isArray(d.historique)?d.historique:[];
+  if(!historique.length){
+   try{
+    const h=await appelerAPI("obtenirHistoriqueMois",{annee,mois});
+    historique=h.data?.historique||h.data?.rows||h.data||[];
+   }catch(_){}
+  }
+  afficherRecap(recap);
+  afficherHistorique(historique);
  }catch(e){
-  // Compatible avec un backend plus ancien : le pointage reste fonctionnel.
-  afficherHistorique([]);
-  console.warn("Historique non disponible:",e);
- }
+  try{
+   const [r,h]=await Promise.all([
+    appelerAPI("obtenirRecapMois",{annee,mois}),
+    appelerAPI("obtenirHistoriqueMois",{annee,mois})
+   ]);
+   afficherRecap(r.data||{});
+   const rows=h.data?.historique||h.data?.rows||h.data||[];
+   afficherHistorique(Array.isArray(rows)?rows:[]);
+  }catch(e2){
+   afficherHistorique([]);
+   console.warn("Historique non disponible:",e2);
+  }
+ } 
 }
 function appliquerEtat(e){
  if(!e)return;
