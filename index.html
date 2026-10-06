@@ -11,7 +11,7 @@
 
   <meta
     name="theme-color"
-    content="#0b0d12"
+    content="#f7f8fa"
   >
 
   <title>Mon Pointage</title>
@@ -26,24 +26,19 @@
   <style>
 
     :root {
-      --bg: #f4f5f7;
-      --card: rgba(255,255,255,.88);
-      --text: #111318;
-      --muted: #747985;
-      --border: rgba(20,25,35,.08);
-
-      --green: #1f9d61;
-      --green-dark: #167a4a;
-
-      --red: #d83c4b;
-      --red-dark: #b72d3b;
-
-      --yellow: #e4a900;
-
-      --shadow:
-        0 18px 50px rgba(0,0,0,.08);
-
-      --radius: 26px;
+      --bg: #f6f7f9;
+      --card: rgba(255,255,255,.94);
+      --text: #12141a;
+      --muted: #7b808b;
+      --border: rgba(18,20,26,.07);
+      --green: #16a064;
+      --green-dark: #087847;
+      --red: #dc4351;
+      --red-dark: #b82d3b;
+      --yellow: #b98200;
+      --shadow: 0 14px 42px rgba(20,24,34,.07);
+      --shadow-soft: 0 7px 24px rgba(20,24,34,.055);
+      --radius: 28px;
     }
 
     * {
@@ -59,26 +54,13 @@
     body {
       margin: 0;
       min-height: 100vh;
-
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        Inter,
-        Arial,
-        sans-serif;
-
+      font-family: -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;
       color: var(--text);
       background:
-        radial-gradient(
-          circle at top left,
-          rgba(255,255,255,.9),
-          transparent 38%
-        ),
-        var(--bg);
-
+        radial-gradient(circle at 50% -10%, rgba(255,255,255,.95), transparent 38%),
+        linear-gradient(180deg,#f8f9fb 0%,#f2f3f6 100%);
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     button,
@@ -94,14 +76,11 @@
     .app {
       width: 100%;
       min-height: 100vh;
-      padding:
-        max(18px, env(safe-area-inset-top))
-        18px
-        max(28px, env(safe-area-inset-bottom));
+      padding: max(16px,env(safe-area-inset-top)) 16px max(34px,env(safe-area-inset-bottom));
     }
 
     .shell {
-      width: min(760px, 100%);
+      width: min(680px,100%);
       margin: 0 auto;
     }
 
@@ -737,6 +716,214 @@
     }
 
     /* ======================================================
+       PREMIUM POLISH
+    ====================================================== */
+
+    .date-topline {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .live-dot {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      color:rgba(255,255,255,.68);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.8px;
+    }
+
+    .live-dot::before {
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:#53d391;
+      box-shadow:0 0 0 4px rgba(83,211,145,.12);
+    }
+
+    .date-card {
+      position:relative;
+      overflow:hidden;
+      padding:26px;
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 90% 0%,rgba(255,255,255,.11),transparent 32%),
+        linear-gradient(145deg,#101218 0%,#20232c 100%);
+      box-shadow:0 26px 65px rgba(12,14,20,.18);
+    }
+
+    .date-card::after {
+      content:"";
+      position:absolute;
+      width:170px;
+      height:170px;
+      right:-95px;
+      bottom:-105px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .date {
+      max-width:92%;
+      line-height:1.12;
+    }
+
+    .clock {
+      font-variant-numeric:tabular-nums;
+      font-feature-settings:"tnum";
+    }
+
+    .status-card {
+      padding:16px 18px;
+      border-radius:20px;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .actions {
+      gap:11px;
+    }
+
+    .action {
+      position:relative;
+      overflow:hidden;
+      min-height:132px;
+      padding:18px;
+      border-radius:24px;
+      box-shadow:0 15px 32px rgba(18,20,26,.10);
+    }
+
+    .action::after {
+      content:"";
+      position:absolute;
+      width:100px;
+      height:100px;
+      right:-48px;
+      top:-52px;
+      border-radius:50%;
+      background:rgba(255,255,255,.09);
+    }
+
+    .action-icon {
+      width:36px;
+      height:36px;
+      display:grid;
+      place-items:center;
+      margin-bottom:18px;
+      border-radius:12px;
+      background:rgba(255,255,255,.14);
+      font-size:15px;
+    }
+
+    .action-title,.action-subtitle {
+      position:relative;
+      z-index:1;
+    }
+
+    .info-grid {
+      gap:10px;
+    }
+
+    .info {
+      position:relative;
+      min-height:116px;
+      padding:16px;
+      border-radius:22px;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .info-icon {
+      position:absolute;
+      top:14px;
+      right:14px;
+      width:27px;
+      height:27px;
+      display:grid;
+      place-items:center;
+      border-radius:9px;
+      background:#f1f2f5;
+      color:#858a94;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .info.featured .info-icon {
+      background:#e8f7ef;
+      color:#16804f;
+    }
+
+    .info-value {
+      margin-top:9px;
+      font-size:21px;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .absence-button {
+      margin-top:13px;
+      background:rgba(255,255,255,.62);
+      box-shadow:var(--shadow-soft);
+      transition:.15s ease;
+    }
+
+    .absence-button:active {
+      transform:scale(.985);
+      background:#fff;
+    }
+
+    .login-card {
+      position:relative;
+      overflow:hidden;
+      padding:38px 25px 28px;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:0 28px 90px rgba(20,24,34,.12);
+    }
+
+    .login-card::before {
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      top:-150px;
+      right:-90px;
+      border-radius:50%;
+      background:#f1f3f6;
+    }
+
+    .login-card > * {
+      position:relative;
+      z-index:1;
+    }
+
+    .logo {
+      width:74px;
+      height:74px;
+      border-radius:23px;
+      background:linear-gradient(145deg,#101218,#292d37);
+    }
+
+    .google-button {
+      width:100%;
+    }
+
+    @media (max-width: 430px) {
+      .app { padding-left:12px; padding-right:12px; }
+      header { padding-left:4px; padding-right:4px; }
+      .brand-icon { width:42px; height:42px; border-radius:14px; }
+      .brand-title { font-size:17px; }
+      .date-card { padding:23px; border-radius:27px; }
+      .clock { font-size:40px; }
+      .action { min-height:124px; padding:16px; }
+      .info { min-height:108px; }
+      .info-value { font-size:19px; }
+    }
+
+    /* ======================================================
        DESKTOP
     ====================================================== */
 
@@ -806,44 +993,17 @@
     <div class="shell">
 
       <header>
-
         <div class="brand">
-
-          <div class="brand-icon">
-            MP
-          </div>
-
+          <div class="brand-icon">MP</div>
           <div>
-
-            <div class="brand-title">
-              Mon Pointage
-            </div>
-
-            <div class="brand-subtitle">
-              Votre journée de travail
-            </div>
-
+            <div class="brand-title">Mon Pointage</div>
+            <div id="welcome" class="brand-subtitle">Votre journée de travail</div>
           </div>
-
         </div>
-
-
         <div class="profile">
-
-          <img
-            id="profilePicture"
-            alt="Profil"
-            style="display:none"
-          >
-
-          <button
-            class="logout"
-            onclick="deconnexion()">
-            Déconnexion
-          </button>
-
+          <img id="profilePicture" alt="Profil" style="display:none">
+          <button class="logout" onclick="deconnexion()" aria-label="Déconnexion">Quitter</button>
         </div>
-
       </header>
 
 
@@ -851,9 +1011,7 @@
 
       <section class="date-card">
 
-        <div class="date-label">
-          Aujourd'hui
-        </div>
+        <div class="date-topline"><div class="date-label">AUJOURD'HUI</div><div class="live-dot">EN DIRECT</div></div>
 
         <div
           id="date"
@@ -1261,7 +1419,9 @@
       }
 
       afficherApplication();
-
+      const prenom = (utilisateur.nom || "").trim().split(" ")[0];
+      document.getElementById("welcome").textContent =
+        prenom ? "Bonjour " + prenom : "Votre journée de travail";
       chargerEtat();
     }
 
