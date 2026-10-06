@@ -880,14 +880,52 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
           "finishButton"
         );
 
+      /*
+       * Le backend historique peut ne pas encore renvoyer
+       * peutCommencer / peutTerminer. Dans ce cas on déduit
+       * l'état directement à partir des heures de la journée.
+       */
+      const statutBloquant = [
+        "Fête",
+        "Chabbat",
+        "Absent"
+      ].includes(etat.statut);
+
+      const peutCommencer =
+        typeof etat.peutCommencer === "boolean"
+          ? etat.peutCommencer
+          : (
+              !statutBloquant &&
+              !etat.debut
+            );
+
+      const peutTerminer =
+        typeof etat.peutTerminer === "boolean"
+          ? etat.peutTerminer
+          : (
+              !statutBloquant &&
+              Boolean(etat.debut) &&
+              !etat.fin
+            );
+
       start.classList.toggle(
         "disabled",
-        !etat.peutCommencer
+        !peutCommencer
       );
 
       finish.classList.toggle(
         "disabled",
-        !etat.peutTerminer
+        !peutTerminer
+      );
+
+      start.setAttribute(
+        "aria-disabled",
+        String(!peutCommencer)
+      );
+
+      finish.setAttribute(
+        "aria-disabled",
+        String(!peutTerminer)
       );
 
 
