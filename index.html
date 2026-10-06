@@ -397,6 +397,47 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
     let callbackCounter = 0;
 
 
+    async function restaurerSession() {
+
+      const token = sessionStorage.getItem("monPointageGoogleToken");
+
+      if (!token) return;
+
+      const payload = decoderJwt(token);
+
+      if (!payload || !payload.email) {
+        sessionStorage.removeItem("monPointageGoogleToken");
+        return;
+      }
+
+      if (
+        payload.email.toLowerCase() !==
+        "aharonelbaz6@gmail.com"
+      ) {
+        sessionStorage.removeItem("monPointageGoogleToken");
+        return;
+      }
+
+      // On restaure immédiatement l'interface.
+      idToken = token;
+
+      utilisateur = {
+        email: payload.email || "",
+        nom: payload.name || "",
+        picture: payload.picture || ""
+      };
+
+      afficherApplication();
+
+      const prenom = (utilisateur.nom || "").trim().split(" ")[0];
+      document.getElementById("welcome").textContent =
+        prenom ? "Bonjour " + prenom : "Votre journée de travail";
+
+      // Puis on synchronise avec Sheets en arrière-plan.
+      chargerEtat();
+    }
+
+
     /* ======================================================
        INITIALISATION GOOGLE
     ====================================================== */
@@ -411,6 +452,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
         mettreAJourHorloge,
         1000
       );
+
+      restaurerSession();
     };
 
 
