@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#070809">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Mon Pointage</title>
-<script src="https://accounts.google.com/gsi/client" async defer onload="window.__googleGsiLoaded=true; if(window.initialiserGoogle) window.initialiserGoogle()"></script>
 <style>
 :root{--bg:#070809;--bg2:#0b0d10;--surface:rgba(18,21,25,.78);--surface2:#111419;--surface3:#171a20;--ink:#f5f7fa;--muted:#858b96;--muted2:#5d636d;--line:rgba(255,255,255,.075);--green:#45e6a0;--green2:#20bd7d;--red:#ff5968;--gold:#e6c879;--blue:#7f8cff;--shadow:0 30px 90px rgba(0,0,0,.32);--radius:28px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 12% 0%,rgba(69,230,160,.08),transparent 30%),radial-gradient(circle at 92% 18%,rgba(127,140,255,.07),transparent 28%),var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(rgba(255,255,255,.16) .5px,transparent .5px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
@@ -30,7 +29,7 @@
 </style>
 </head>
 <body>
-<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton"><button type="button" class="google-fallback" onclick="lancerConnexionGoogle()">Continuer avec Google</button><div id="googleStatus" class="google-status">Connexion sécurisée</div></div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
+<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton"><div id="g_id_onload" data-client_id="390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com" data-callback="connexionGoogle" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard" data-theme="filled_black" data-size="large" data-text="signin_with" data-shape="pill" data-logo_alignment="left" data-width="320"></div><div id="googleStatus" class="google-status">Connexion sécurisée avec Google</div></div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
 <main id="app"><div class="shell"><header class="topbar"><div class="brand"><div class="brandmark">MP</div><div><div class="brandname">Mon Pointage</div><div id="welcome" class="brandsub">Votre espace personnel</div></div></div><div class="account"><img id="avatar" alt=""><button class="ghost" onclick="deconnexion()">Déconnexion</button></div></header>
 <section id="homeView" class="view active"><div class="hero"><div class="hero-content"><div class="eyebrow">AUJOURD'HUI · <span id="heroTime">--:--:--</span></div><div id="heroDate" class="hero-date">Chargement…</div><div id="clock" class="hero-clock">--:--:--</div><div class="hero-bottom"><div id="status" class="pill gray"><i></i>Chargement</div><span id="heroHint" class="eyebrow">Synchronisation</span></div></div></div>
 <div class="section-head"><h2>Votre journée</h2><span id="daySummary">En attente</span></div><div class="metrics"><div class="metric accent"><div class="metric-label">Arrivée</div><div id="arrival" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Départ</div><div id="departure" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Pause</div><div id="break" class="metric-value">—</div></div><div class="metric accent"><div class="metric-label">Travaillé</div><div id="worked" class="metric-value">—</div></div></div>
@@ -53,75 +52,14 @@ window.addEventListener("load",()=>{
 let googleInitialise=false;
 let googleTimer=null;
 function initialiserGoogle(){
-  const target=document.getElementById("googleButton");
-  if(!target || googleInitialise)return;
-  if(!window.google?.accounts?.id){
-    const status=document.getElementById("googleStatus");
-    if(status)status.textContent="Chargement de Google…";
-    clearTimeout(googleTimer);
-    googleTimer=setTimeout(initialiserGoogle,500);
-    return;
-  }
-  try{
-    google.accounts.id.initialize({
-      client_id:GOOGLE_CLIENT_ID,
-      callback:connexionGoogle,
-      auto_select:false,
-      cancel_on_tap_outside:true
-    });
-    googleInitialise=true;
-    target.innerHTML="";
-    google.accounts.id.renderButton(target,{
-      type:"standard",
-      theme:"filled_black",
-      size:"large",
-      text:"signin_with",
-      shape:"pill",
-      logo_alignment:"left",
-      width:320,
-      locale:"fr"
-    });
-    console.log("Google Identity Services prêt");
-  }catch(e){
-    console.error("Google Identity Services:",e);
-    googleInitialise=false;
-    const status=document.getElementById("googleStatus");
-    if(status)status.textContent="Erreur Google : "+(e.message||"chargement impossible");
-    clearTimeout(googleTimer);
-    googleTimer=setTimeout(initialiserGoogle,2000);
-  }
-}
-
-function lancerConnexionGoogle(){
-  const target=document.getElementById("googleButton");
   const status=document.getElementById("googleStatus");
-
   if(window.google?.accounts?.id){
-    if(!googleInitialise){
-      initialiserGoogle();
-      setTimeout(()=>{
-        if(googleInitialise && target){
-          const btn=target.querySelector('iframe');
-          if(btn) btn.focus();
-        }
-      },300);
-    }
-    if(status)status.textContent="Utilisez le bouton Google officiel qui vient d’apparaître.";
+    if(status)status.textContent="Connexion sécurisée avec Google";
     return;
   }
-
-  if(status)status.textContent="Chargement sécurisé de Google…";
-  initialiserGoogle();
-
-  clearTimeout(window.__googleClickTimer);
-  window.__googleClickTimer=setTimeout(()=>{
-    if(window.google?.accounts?.id){
-      initialiserGoogle();
-      if(status)status.textContent="Google est prêt. Cliquez sur le bouton.";
-    }else if(status){
-      status.textContent="Google ne se charge pas dans ce navigateur. Désactivez temporairement le blocage des cookies/traceurs pour ce site.";
-    }
-  },1500);
+  if(status)status.textContent="Chargement de Google…";
+  clearTimeout(googleTimer);
+  googleTimer=setTimeout(initialiserGoogle,500);
 }
 
 function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
@@ -166,5 +104,6 @@ function lancerConnexionGoogle(){
   },700);
 }
 </script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="initialiserGoogle()"></script>
 </body>
-</html
+</html>
