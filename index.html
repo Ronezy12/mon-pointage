@@ -1,0 +1,3859 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#080b12"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="Mon Pointage"
+  >
+
+  <title>Mon Pointage</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: #080b12;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          rgba(37,99,235,.22),
+          transparent 38%
+        ),
+        #080b12;
+
+      color: #fff;
+
+      overflow-x: hidden;
+
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    button {
+      font: inherit;
+      border: 0;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* =====================================================
+       APP
+    ===================================================== */
+
+    .app {
+
+      width: 100%;
+      max-width: 560px;
+
+      margin: 0 auto;
+
+      padding:
+        max(16px, env(safe-area-inset-top))
+        16px
+        max(30px, env(safe-area-inset-bottom))
+        16px;
+    }
+
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar {
+
+      height: 56px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 10px;
+    }
+
+
+    .brand {
+
+      display: flex;
+      align-items: center;
+
+      gap: 11px;
+    }
+
+
+    .brand-logo {
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          145deg,
+          #2563eb,
+          #4f46e5
+        );
+
+      box-shadow:
+        0 8px 25px
+        rgba(37,99,235,.3);
+
+      font-size: 18px;
+    }
+
+
+    .brand-name {
+
+      font-size: 17px;
+      font-weight: 750;
+
+      letter-spacing: -.3px;
+    }
+
+
+    .brand-subtitle {
+
+      margin-top: 2px;
+
+      color: #7d8798;
+
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+
+    .refresh {
+
+      width: 40px;
+      height: 40px;
+
+      border-radius: 13px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #121722;
+
+      border: 1px solid #1d2533;
+
+      color: #aeb8c8;
+
+      font-size: 18px;
+
+      transition:
+        transform .25s ease;
+    }
+
+
+    .refresh:active {
+
+      transform:
+        rotate(180deg)
+        scale(.94);
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    .date-block {
+
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+
+    .date-week {
+
+      color: #718096;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      text-transform: uppercase;
+
+      letter-spacing: 1.2px;
+    }
+
+
+    .date-full {
+
+      margin-top: 3px;
+
+      color: #dce3ee;
+
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+
+    /* =====================================================
+       CLOCK CARD
+    ===================================================== */
+
+    .clock-card {
+
+      position: relative;
+
+      overflow: hidden;
+
+      border-radius: 28px;
+
+      padding:
+        28px
+        20px
+        22px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #121824,
+          #0e131d
+        );
+
+      border: 1px solid #1d2635;
+
+      box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.28);
+    }
+
+
+    .clock-card::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 190px;
+      height: 190px;
+
+      top: -110px;
+      right: -60px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(59,130,246,.20),
+          transparent 70%
+        );
+
+      pointer-events: none;
+    }
+
+
+    .status {
+
+      position: relative;
+
+      width: fit-content;
+
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+
+      gap: 7px;
+
+      padding:
+        7px 11px;
+
+      border-radius: 999px;
+
+      background: #151c28;
+
+      color: #8e9aad;
+
+      font-size: 11px;
+      font-weight: 750;
+
+      text-transform: uppercase;
+
+      letter-spacing: .5px;
+    }
+
+
+    .status-dot {
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #64748b;
+    }
+
+
+    .status.en-cours {
+
+      color: #86efac;
+
+      background:
+        rgba(34,197,94,.08);
+    }
+
+
+    .status.en-cours .status-dot {
+
+      background: #22c55e;
+
+      box-shadow:
+        0 0 10px
+        rgba(34,197,94,.7);
+
+      animation:
+        pulse 1.8s infinite;
+    }
+
+
+    .status.termine {
+
+      color: #93c5fd;
+
+      background:
+        rgba(59,130,246,.08);
+    }
+
+
+    .status.termine .status-dot {
+
+      background: #3b82f6;
+    }
+
+
+    .status.absent {
+
+      color: #fbbf24;
+
+      background:
+        rgba(245,158,11,.08);
+    }
+
+
+    .status.absent .status-dot {
+
+      background: #f59e0b;
+    }
+
+
+    .status.fete {
+
+      color: #f9a8d4;
+
+      background:
+        rgba(236,72,153,.08);
+    }
+
+
+    .status.fete .status-dot {
+
+      background: #ec4899;
+    }
+
+
+    .status.chabbat {
+
+      color: #c4b5fd;
+
+      background:
+        rgba(139,92,246,.08);
+    }
+
+
+    .status.chabbat .status-dot {
+
+      background: #8b5cf6;
+    }
+
+
+    /* =====================================================
+       CLOCK
+    ===================================================== */
+
+    .clock {
+
+      position: relative;
+
+      margin-top: 20px;
+
+      text-align: center;
+
+      font-size:
+        clamp(
+          60px,
+          18vw,
+          92px
+        );
+
+      line-height: .95;
+
+      font-weight: 800;
+
+      letter-spacing: -4px;
+
+      font-variant-numeric:
+        tabular-nums;
+
+      color: #f8fafc;
+    }
+
+
+    .clock-seconds {
+
+      color: #657184;
+
+      font-size: .36em;
+
+      letter-spacing: -1px;
+    }
+
+
+    .clock-label {
+
+      margin-top: 9px;
+
+      text-align: center;
+
+      color: #697587;
+
+      font-size: 11px;
+
+      font-weight: 600;
+    }
+
+
+    /* =====================================================
+       ACTION
+    ===================================================== */
+
+    .main-action {
+
+      width: 100%;
+
+      margin-top: 18px;
+
+      min-height: 68px;
+
+      border-radius: 19px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 10px;
+
+      color: #fff;
+
+      font-size: 16px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      background:
+        linear-gradient(
+          135deg,
+          #2563eb,
+          #4f46e5
+        );
+
+      box-shadow:
+        0 12px 30px
+        rgba(37,99,235,.25);
+
+      transition:
+        transform .15s ease,
+        opacity .2s ease;
+    }
+
+
+    .main-action:active {
+
+      transform:
+        scale(.975);
+    }
+
+
+    .main-action.finish {
+
+      background:
+        linear-gradient(
+          135deg,
+          #dc2626,
+          #ef4444
+        );
+
+      box-shadow:
+        0 12px 30px
+        rgba(239,68,68,.22);
+    }
+
+
+    .main-action:disabled {
+
+      opacity: .45;
+
+      pointer-events: none;
+    }
+
+
+    .action-icon {
+
+      width: 25px;
+      height: 25px;
+
+      border-radius: 8px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background:
+        rgba(255,255,255,.16);
+
+      font-size: 12px;
+    }
+
+
+    /* =====================================================
+       TODAY
+    ===================================================== */
+
+    .today-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
+
+      gap: 10px;
+
+      margin-top: 10px;
+    }
+
+
+    .today-card {
+
+      min-height: 88px;
+
+      padding: 16px;
+
+      border-radius: 18px;
+
+      background: #111722;
+
+      border: 1px solid #1c2533;
+    }
+
+
+    .today-label {
+
+      color: #697587;
+
+      font-size: 10px;
+
+      font-weight: 700;
+
+      text-transform: uppercase;
+
+      letter-spacing: .7px;
+    }
+
+
+    .today-value {
+
+      margin-top: 8px;
+
+      color: #eef2f7;
+
+      font-size: 20px;
+
+      font-weight: 800;
+
+      font-variant-numeric:
+        tabular-nums;
+    }
+
+
+    /* =====================================================
+       PROGRESS
+    ===================================================== */
+
+    .progress-card {
+
+      margin-top: 10px;
+
+      padding: 18px;
+
+      border-radius: 20px;
+
+      background: #111722;
+
+      border: 1px solid #1c2533;
+    }
+
+
+    .progress-top {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+    }
+
+
+    .progress-title {
+
+      color: #aab4c3;
+
+      font-size: 12px;
+
+      font-weight: 700;
+    }
+
+
+    .progress-percent {
+
+      color: #e5e7eb;
+
+      font-size: 13px;
+
+      font-weight: 800;
+    }
+
+
+    .progress-track {
+
+      height: 7px;
+
+      margin-top: 12px;
+
+      border-radius: 999px;
+
+      overflow: hidden;
+
+      background: #202938;
+    }
+
+
+    .progress-bar {
+
+      width: 0%;
+
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2563eb,
+          #6366f1
+        );
+
+      transition:
+        width .5s ease;
+    }
+
+
+    .progress-caption {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-top: 9px;
+
+      color: #596577;
+
+      font-size: 10px;
+
+      font-weight: 600;
+    }
+
+
+    /* =====================================================
+       SECTIONS
+    ===================================================== */
+
+    .section-header {
+
+      display: flex;
+
+      align-items: flex-end;
+
+      justify-content: space-between;
+
+      margin-top: 28px;
+
+      margin-bottom: 11px;
+    }
+
+
+    .section-title {
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+      letter-spacing: -.4px;
+    }
+
+
+    .section-subtitle {
+
+      color: #647084;
+
+      font-size: 10px;
+
+      font-weight: 650;
+    }
+
+
+    /* =====================================================
+       TIMELINE
+    ===================================================== */
+
+    .timeline-card {
+
+      padding: 17px;
+
+      border-radius: 20px;
+
+      background: #111722;
+
+      border: 1px solid #1c2533;
+    }
+
+
+    .timeline {
+
+      position: relative;
+    }
+
+
+    .timeline-row {
+
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+
+      min-height: 52px;
+    }
+
+
+    .timeline-line {
+
+      position: absolute;
+
+      left: 7px;
+
+      top: 25px;
+
+      bottom: -25px;
+
+      width: 1px;
+
+      background: #253041;
+    }
+
+
+    .timeline-row:last-child
+    .timeline-line {
+
+      display: none;
+    }
+
+
+    .timeline-dot {
+
+      position: relative;
+
+      z-index: 2;
+
+      width: 15px;
+      height: 15px;
+
+      flex: 0 0 15px;
+
+      border-radius: 50%;
+
+      background: #202b3a;
+
+      border:
+        3px solid #111722;
+
+      box-shadow:
+        0 0 0 1px #354154;
+    }
+
+
+    .timeline-row.active
+    .timeline-dot {
+
+      background: #3b82f6;
+
+      box-shadow:
+        0 0 0 1px #3b82f6,
+        0 0 12px
+        rgba(59,130,246,.5);
+    }
+
+
+    .timeline-content {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      width: 100%;
+
+      margin-left: 13px;
+    }
+
+
+    .timeline-label {
+
+      color: #8994a5;
+
+      font-size: 12px;
+
+      font-weight: 650;
+    }
+
+
+    .timeline-time {
+
+      color: #e5e7eb;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      font-variant-numeric:
+        tabular-nums;
+    }
+
+
+    /* =====================================================
+       MONTH
+    ===================================================== */
+
+    .month-card {
+
+      padding: 16px;
+
+      border-radius: 22px;
+
+      background: #111722;
+
+      border: 1px solid #1c2533;
+    }
+
+
+    .month-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
+
+      gap: 9px;
+    }
+
+
+    .month-stat {
+
+      min-height: 82px;
+
+      padding: 14px;
+
+      border-radius: 16px;
+
+      background: #0d121a;
+
+      border: 1px solid #19212d;
+    }
+
+
+    .month-number {
+
+      font-size: 21px;
+
+      font-weight: 800;
+
+      font-variant-numeric:
+        tabular-nums;
+    }
+
+
+    .month-label {
+
+      margin-top: 4px;
+
+      color: #687488;
+
+      font-size: 10px;
+
+      font-weight: 650;
+
+      text-transform: uppercase;
+
+      letter-spacing: .5px;
+    }
+
+
+    /* =====================================================
+       ABSENCE
+    ===================================================== */
+
+    .absence-button {
+
+      width: 100%;
+
+      margin-top: 12px;
+
+      min-height: 53px;
+
+      border-radius: 16px;
+
+      background: transparent;
+
+      border: 1px solid #263142;
+
+      color: #8793a5;
+
+      font-size: 13px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition:
+        background .2s ease,
+        color .2s ease;
+    }
+
+
+    .absence-button:active {
+
+      background: #141b26;
+
+      color: #cbd5e1;
+    }
+
+
+    /* =====================================================
+       MODALS
+    ===================================================== */
+
+    .modal {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 1000;
+
+      display: none;
+
+      align-items: flex-end;
+
+      background:
+        rgba(0,0,0,.62);
+
+      backdrop-filter:
+        blur(9px);
+
+      -webkit-backdrop-filter:
+        blur(9px);
+    }
+
+
+    .modal.show {
+
+      display: flex;
+    }
+
+
+    .modal-content {
+
+      width: 100%;
+
+      padding:
+        12px
+        18px
+        max(
+          26px,
+          env(
+            safe-area-inset-bottom
+          )
+        );
+
+      border-radius:
+        26px
+        26px
+        0
+        0;
+
+      background: #121824;
+
+      border-top:
+        1px solid #253041;
+
+      animation:
+        modalUp .25s ease;
+    }
+
+
+    .modal-handle {
+
+      width: 38px;
+      height: 4px;
+
+      margin:
+        2px auto 19px;
+
+      border-radius: 999px;
+
+      background: #374151;
+    }
+
+
+    .modal-title {
+
+      font-size: 21px;
+
+      font-weight: 800;
+    }
+
+
+    .modal-description {
+
+      margin-top: 5px;
+
+      color: #7c8798;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+
+    .choices {
+
+      display: grid;
+
+      gap: 9px;
+
+      margin-top: 18px;
+    }
+
+
+    .choice {
+
+      width: 100%;
+
+      min-height: 57px;
+
+      padding: 0 16px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      border-radius: 15px;
+
+      background: #0d131c;
+
+      border: 1px solid #202a38;
+
+      color: #cdd5e1;
+
+      font-size: 14px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+
+    .choice.selected {
+
+      background:
+        rgba(37,99,235,.12);
+
+      border-color: #3b82f6;
+
+      color: #93c5fd;
+    }
+
+
+    .choice-check {
+
+      opacity: 0;
+
+      width: 20px;
+      height: 20px;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 11px;
+    }
+
+
+    .choice.selected
+    .choice-check {
+
+      opacity: 1;
+    }
+
+
+    .modal-buttons {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 9px;
+
+      margin-top: 18px;
+    }
+
+
+    .modal-button {
+
+      min-height: 55px;
+
+      border-radius: 15px;
+
+      font-size: 14px;
+
+      font-weight: 800;
+    }
+
+
+    .cancel {
+
+      background: #1a222f;
+
+      color: #aeb8c8;
+    }
+
+
+    .confirm {
+
+      background: #2563eb;
+
+      color: white;
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 2000;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background: #080b12;
+
+      transition:
+        opacity .3s ease,
+        visibility .3s ease;
+    }
+
+
+    .loading.hidden {
+
+      opacity: 0;
+
+      visibility: hidden;
+
+      pointer-events: none;
+    }
+
+
+    .loader {
+
+      text-align: center;
+    }
+
+
+    .loader-icon {
+
+      width: 44px;
+      height: 44px;
+
+      margin: auto;
+
+      border-radius: 50%;
+
+      border:
+        3px solid #202938;
+
+      border-top-color:
+        #3b82f6;
+
+      animation:
+        spin .8s linear infinite;
+    }
+
+
+    .loader-text {
+
+      margin-top: 13px;
+
+      color: #687488;
+
+      font-size: 11px;
+
+      font-weight: 650;
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    .toast {
+
+      position: fixed;
+
+      z-index: 3000;
+
+      left: 16px;
+      right: 16px;
+
+      bottom:
+        max(
+          20px,
+          env(
+            safe-area-inset-bottom
+          )
+        );
+
+      padding:
+        14px 16px;
+
+      border-radius: 15px;
+
+      background: #17202d;
+
+      border: 1px solid #283446;
+
+      color: #e5e7eb;
+
+      text-align: center;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      transform:
+        translateY(150%);
+
+      transition:
+        transform .3s ease;
+    }
+
+
+    .toast.show {
+
+      transform:
+        translateY(0);
+    }
+
+
+    .toast.success {
+
+      border-color:
+        rgba(34,197,94,.35);
+
+      background: #102318;
+
+      color: #86efac;
+    }
+
+
+    .toast.error {
+
+      border-color:
+        rgba(239,68,68,.35);
+
+      background: #281315;
+
+      color: #fca5a5;
+    }
+
+
+    /* =====================================================
+       ANIMATIONS
+    ===================================================== */
+
+    @keyframes spin {
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .4;
+      }
+    }
+
+
+    @keyframes modalUp {
+
+      from {
+        transform:
+          translateY(100%);
+      }
+
+      to {
+        transform:
+          translateY(0);
+      }
+    }
+
+
+    /* =====================================================
+       DESKTOP
+    ===================================================== */
+
+    @media (min-width:700px) {
+
+      .app {
+
+        max-width:1050px;
+
+        padding:
+          35px
+          25px
+          50px;
+      }
+
+
+      .topbar {
+
+        margin-bottom:25px;
+      }
+
+
+      .desktop-layout {
+
+        display:grid;
+
+        grid-template-columns:
+          1.2fr .8fr;
+
+        gap:14px;
+      }
+
+
+      .clock-card {
+
+        grid-row:
+          span 2;
+      }
+
+
+      .today-grid {
+
+        grid-template-columns:
+          repeat(
+            2,
+            1fr
+          );
+      }
+
+
+      .month-grid {
+
+        grid-template-columns:
+          repeat(
+            4,
+            1fr
+          );
+      }
+
+
+      .absence-button {
+
+        max-width:320px;
+
+        margin-left:auto;
+        margin-right:auto;
+      }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    id="loading"
+    class="loading"
+  >
+
+    <div class="loader">
+
+      <div class="loader-icon"></div>
+
+      <div class="loader-text">
+        Chargement de Mon Pointage
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       APPLICATION
+  ====================================================== -->
+
+  <main class="app">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          ⏱
+        </div>
+
+        <div>
+
+          <div class="brand-name">
+            Mon Pointage
+          </div>
+
+          <div class="brand-subtitle">
+            Votre journée de travail
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="refreshButton"
+        class="refresh"
+        onclick="chargerEtat()"
+        aria-label="Actualiser"
+      >
+        ↻
+      </button>
+
+    </header>
+
+
+    <!-- DATE -->
+
+    <section class="date-block">
+
+      <div
+        id="dateWeek"
+        class="date-week"
+      >
+        —
+      </div>
+
+      <div
+        id="dateFull"
+        class="date-full"
+      >
+        —
+      </div>
+
+    </section>
+
+
+    <!-- HORLOGE -->
+
+    <section class="clock-card">
+
+
+      <div
+        id="status"
+        class="status"
+      >
+
+        <span class="status-dot"></span>
+
+        <span id="statusText">
+          NON POINTÉ
+        </span>
+
+      </div>
+
+
+      <div
+        id="clock"
+        class="clock"
+      >
+
+        00:00
+
+        <span class="clock-seconds">
+          :00
+        </span>
+
+      </div>
+
+
+      <div class="clock-label">
+        Heure actuelle
+      </div>
+
+
+      <button
+        id="mainAction"
+        class="main-action"
+        onclick="actionPrincipale()"
+      >
+
+        <span
+          id="actionIcon"
+          class="action-icon"
+        >
+          ▶
+        </span>
+
+        <span id="actionText">
+          Commencer ma journée
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <!-- TODAY -->
+
+    <section class="today-grid">
+
+
+      <div class="today-card">
+
+        <div class="today-label">
+          Arrivée
+        </div>
+
+        <div
+          id="arrival"
+          class="today-value"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="today-card">
+
+        <div class="today-label">
+          Départ
+        </div>
+
+        <div
+          id="departure"
+          class="today-value"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="today-card">
+
+        <div class="today-label">
+          Pause
+        </div>
+
+        <div
+          id="pause"
+          class="today-value"
+        >
+          0 min
+        </div>
+
+      </div>
+
+
+      <div class="today-card">
+
+        <div class="today-label">
+          Travaillé
+        </div>
+
+        <div
+          id="worked"
+          class="today-value"
+        >
+          —
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROGRESSION -->
+
+    <section class="progress-card">
+
+      <div class="progress-top">
+
+        <span class="progress-title">
+          Progression de la journée
+        </span>
+
+        <span
+          id="progressText"
+          class="progress-percent"
+        >
+          0 %
+        </span>
+
+      </div>
+
+
+      <div class="progress-track">
+
+        <div
+          id="progressBar"
+          class="progress-bar"
+        ></div>
+
+      </div>
+
+
+      <div class="progress-caption">
+
+        <span>
+          0h00
+        </span>
+
+        <span>
+          Objectif 8h00
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- TIMELINE -->
+
+    <div class="section-header">
+
+      <div class="section-title">
+        Aujourd'hui
+      </div>
+
+      <div class="section-subtitle">
+        Détails
+      </div>
+
+    </div>
+
+
+    <section class="timeline-card">
+
+      <div class="timeline">
+
+
+        <div
+          id="timelineArrival"
+          class="timeline-row"
+        >
+
+          <div class="timeline-line"></div>
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-label">
+              Arrivée
+            </span>
+
+            <span
+              id="timelineArrivalTime"
+              class="timeline-time"
+            >
+              —
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline-row">
+
+          <div class="timeline-line"></div>
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-label">
+              Pause
+            </span>
+
+            <span
+              id="timelinePauseTime"
+              class="timeline-time"
+            >
+              —
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="timelineDeparture"
+          class="timeline-row"
+        >
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-label">
+              Départ
+            </span>
+
+            <span
+              id="timelineDepartureTime"
+              class="timeline-time"
+            >
+              —
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MOIS -->
+
+    <div class="section-header">
+
+      <div class="section-title">
+        Ce mois-ci
+      </div>
+
+      <div
+        id="monthName"
+        class="section-subtitle"
+      >
+        —
+      </div>
+
+    </div>
+
+
+    <section class="month-card">
+
+      <div class="month-grid">
+
+
+        <div class="month-stat">
+
+          <div
+            id="recapHours"
+            class="month-number"
+          >
+            0h00
+          </div>
+
+          <div class="month-label">
+            Heures
+          </div>
+
+        </div>
+
+
+        <div class="month-stat">
+
+          <div
+            id="recapDays"
+            class="month-number"
+          >
+            0
+          </div>
+
+          <div class="month-label">
+            Jours travaillés
+          </div>
+
+        </div>
+
+
+        <div class="month-stat">
+
+          <div
+            id="recapAbsences"
+            class="month-number"
+          >
+            0
+          </div>
+
+          <div class="month-label">
+            Absences
+          </div>
+
+        </div>
+
+
+        <div class="month-stat">
+
+          <div
+            id="recapFetes"
+            class="month-number"
+          >
+            0
+          </div>
+
+          <div class="month-label">
+            Fêtes
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CHABBAT -->
+
+    <div
+      class="month-stat"
+      style="
+        margin-top:9px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+      "
+    >
+
+      <div>
+
+        <div
+          id="recapChabbat"
+          class="month-number"
+        >
+          0
+        </div>
+
+        <div class="month-label">
+          Chabbat
+        </div>
+
+      </div>
+
+
+      <div
+        style="
+          width:40px;
+          height:40px;
+          border-radius:13px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:#151322;
+          color:#a78bfa;
+        "
+      >
+        ✦
+      </div>
+
+    </div>
+
+
+    <!-- ABSENCE -->
+
+    <button
+      id="absenceButton"
+      class="absence-button"
+      onclick="ouvrirAbsence()"
+    >
+      Signaler une absence
+    </button>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       MODAL PAUSE
+  ====================================================== -->
+
+  <div
+    id="pauseModal"
+    class="modal"
+  >
+
+    <div class="modal-content">
+
+      <div class="modal-handle"></div>
+
+      <div class="modal-title">
+        Votre pause
+      </div>
+
+      <div class="modal-description">
+        Sélectionnez la durée de votre pause.
+      </div>
+
+
+      <div class="choices">
+
+
+        <button
+          class="choice"
+          onclick="selectionnerPause(0,this)"
+        >
+
+          <span>
+            Aucune pause
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+
+        <button
+          class="choice"
+          onclick="selectionnerPause(30,this)"
+        >
+
+          <span>
+            30 minutes
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+
+        <button
+          class="choice"
+          onclick="selectionnerPause(60,this)"
+        >
+
+          <span>
+            1 heure
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div class="modal-buttons">
+
+        <button
+          class="modal-button cancel"
+          onclick="fermerPause()"
+        >
+          Annuler
+        </button>
+
+        <button
+          class="modal-button confirm"
+          onclick="confirmerFin()"
+        >
+          Terminer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL ABSENCE
+  ====================================================== -->
+
+  <div
+    id="absenceModal"
+    class="modal"
+  >
+
+    <div class="modal-content">
+
+      <div class="modal-handle"></div>
+
+      <div class="modal-title">
+        Signaler une absence
+      </div>
+
+      <div class="modal-description">
+        Indiquez le motif de votre absence.
+      </div>
+
+
+      <div class="choices">
+
+
+        <button
+          class="choice"
+          onclick="selectionnerAbsence('Congé',this)"
+        >
+
+          <span>
+            Congé
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+
+        <button
+          class="choice"
+          onclick="selectionnerAbsence('Maladie',this)"
+        >
+
+          <span>
+            Maladie
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+
+        <button
+          class="choice"
+          onclick="selectionnerAbsence('Absence exceptionnelle',this)"
+        >
+
+          <span>
+            Absence exceptionnelle
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+
+        <button
+          class="choice"
+          onclick="selectionnerAbsence('Autre',this)"
+        >
+
+          <span>
+            Autre
+          </span>
+
+          <span class="choice-check">
+            ✓
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div class="modal-buttons">
+
+        <button
+          class="modal-button cancel"
+          onclick="fermerAbsence()"
+        >
+          Annuler
+        </button>
+
+        <button
+          class="modal-button confirm"
+          onclick="confirmerAbsence()"
+        >
+          Confirmer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script>
+
+    /* =====================================================
+       CONFIGURATION API
+    ===================================================== */
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbyGHfIcUVimauPjm9mrhUHoIDFl7iAjcQQHkQAZxLCSD1GvVDKDCGIKo1169CVVRKuiBw/exec";
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let etat = null;
+
+    let pauseSelectionnee = 0;
+
+    let absenceSelectionnee = null;
+
+    let horlogeInterval = null;
+
+    let toastTimeout = null;
+
+    let requeteEnCours = false;
+
+
+    /* =====================================================
+       INITIALISATION
+    ===================================================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        mettreDate();
+
+        chargerEtat();
+
+        demarrerHorloge();
+
+      }
+    );
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function mettreDate() {
+
+      const maintenant =
+        new Date();
+
+      const jour =
+        maintenant.toLocaleDateString(
+          "fr-FR",
+          {
+            weekday: "long"
+          }
+        );
+
+      const date =
+        maintenant.toLocaleDateString(
+          "fr-FR",
+          {
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+          }
+        );
+
+
+      document.getElementById(
+        "dateWeek"
+      ).textContent =
+        jour.toUpperCase();
+
+
+      document.getElementById(
+        "dateFull"
+      ).textContent =
+        date.charAt(0).toUpperCase() +
+        date.slice(1);
+    }
+
+
+    /* =====================================================
+       HORLOGE
+    ===================================================== */
+
+    function demarrerHorloge() {
+
+      mettreHorloge();
+
+      if (horlogeInterval) {
+
+        clearInterval(
+          horlogeInterval
+        );
+      }
+
+      horlogeInterval =
+        setInterval(
+          mettreHorloge,
+          1000
+        );
+    }
+
+
+    function mettreHorloge() {
+
+      const maintenant =
+        new Date();
+
+      const h =
+        String(
+          maintenant.getHours()
+        )
+        .padStart(2, "0");
+
+      const m =
+        String(
+          maintenant.getMinutes()
+        )
+        .padStart(2, "0");
+
+      const s =
+        String(
+          maintenant.getSeconds()
+        )
+        .padStart(2, "0");
+
+
+      document.getElementById(
+        "clock"
+      ).innerHTML =
+        h +
+        ":" +
+        m +
+        '<span class="clock-seconds">:' +
+        s +
+        "</span>";
+
+
+      if (
+        etat &&
+        etat.debut &&
+        !etat.fin
+      ) {
+
+        afficherTempsTravaille();
+
+        mettreProgression();
+      }
+    }
+
+
+    /* =====================================================
+       HEURE LOCALE
+    ===================================================== */
+
+    function heureLocale() {
+
+      const maintenant =
+        new Date();
+
+      return (
+        String(
+          maintenant.getHours()
+        )
+        .padStart(2, "0") +
+
+        ":" +
+
+        String(
+          maintenant.getMinutes()
+        )
+        .padStart(2, "0")
+      );
+    }
+
+
+    /* =====================================================
+       API JSONP
+    ===================================================== */
+
+    function appelerAPI(
+      action,
+      params = {}
+    ) {
+
+      return new Promise(
+        function(resolve, reject) {
+
+          const callbackName =
+            "monPointageCallback_" +
+            Date.now() +
+            "_" +
+            Math.floor(
+              Math.random() * 100000
+            );
+
+          const script =
+            document.createElement(
+              "script"
+            );
+
+          let termine = false;
+
+          const timeout =
+            setTimeout(
+              function() {
+
+                if (termine) return;
+
+                termine = true;
+
+                nettoyer();
+
+                reject(
+                  new Error(
+                    "Le serveur ne répond pas."
+                  )
+                );
+
+              },
+              15000
+            );
+
+
+          function nettoyer() {
+
+            clearTimeout(
+              timeout
+            );
+
+            script.remove();
+
+            try {
+
+              delete window[
+                callbackName
+              ];
+
+            } catch (e) {
+
+              window[
+                callbackName
+              ] = undefined;
+            }
+          }
+
+
+          window[
+            callbackName
+          ] =
+            function(reponse) {
+
+              if (termine) {
+                return;
+              }
+
+              termine = true;
+
+              nettoyer();
+
+              if (
+                !reponse ||
+                reponse.success !== true
+              ) {
+
+                reject(
+                  new Error(
+                    reponse &&
+                    reponse.error
+                      ? reponse.error
+                      : "Erreur API."
+                  )
+                );
+
+                return;
+              }
+
+              resolve(
+                reponse.data
+              );
+            };
+
+
+          const query =
+            new URLSearchParams();
+
+          query.set(
+            "action",
+            action
+          );
+
+          query.set(
+            "callback",
+            callbackName
+          );
+
+
+          Object.keys(params)
+            .forEach(
+              function(cle) {
+
+                const valeur =
+                  params[cle];
+
+                if (
+                  valeur !== undefined &&
+                  valeur !== null
+                ) {
+
+                  query.set(
+                    cle,
+                    String(valeur)
+                  );
+                }
+              }
+            );
+
+
+          script.src =
+            API_URL +
+            (
+              API_URL.indexOf("?") >= 0
+                ? "&"
+                : "?"
+            ) +
+            query.toString();
+
+
+          script.async = true;
+
+
+          script.onerror =
+            function() {
+
+              if (termine) {
+                return;
+              }
+
+              termine = true;
+
+              nettoyer();
+
+              reject(
+                new Error(
+                  "Impossible de contacter Mon Pointage."
+                )
+              );
+            };
+
+
+          document
+            .head
+            .appendChild(
+              script
+            );
+        }
+      );
+    }
+
+
+    /* =====================================================
+       CHARGER ÉTAT
+    ===================================================== */
+
+    async function chargerEtat() {
+
+      if (requeteEnCours) {
+        return;
+      }
+
+      const refresh =
+        document.getElementById(
+          "refreshButton"
+        );
+
+      refresh.style.transform =
+        "rotate(180deg)";
+
+
+      try {
+
+        requeteEnCours = true;
+
+        const data =
+          await appelerAPI(
+            "getEtatDuJour"
+          );
+
+        etat = data;
+
+        afficherEtat();
+
+        cacherLoading();
+
+      }
+
+      catch (error) {
+
+        cacherLoading();
+
+        afficherErreur(
+          error
+        );
+
+      }
+
+      finally {
+
+        requeteEnCours = false;
+
+        setTimeout(
+          function() {
+
+            refresh.style.transform =
+              "rotate(0deg)";
+
+          },
+          250
+        );
+      }
+    }
+
+
+    /* =====================================================
+       AFFICHAGE GLOBAL
+    ===================================================== */
+
+    function afficherEtat() {
+
+      if (!etat) {
+        return;
+      }
+
+
+      document.getElementById(
+        "arrival"
+      ).textContent =
+        etat.debut || "—";
+
+
+      document.getElementById(
+        "departure"
+      ).textContent =
+        etat.fin || "—";
+
+
+      document.getElementById(
+        "pause"
+      ).textContent =
+        formaterPause(
+          etat.pause
+        );
+
+
+      afficherTempsTravaille();
+
+      afficherStatut();
+
+      afficherTimeline();
+
+      afficherRecap();
+
+      mettreProgression();
+
+      mettreAction();
+    }
+
+
+    /* =====================================================
+       STATUT
+    ===================================================== */
+
+    function afficherStatut() {
+
+      const status =
+        document.getElementById(
+          "status"
+        );
+
+      const text =
+        document.getElementById(
+          "statusText"
+        );
+
+
+      const type =
+        String(
+          etat.type || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+      status.className =
+        "status";
+
+
+      if (
+        type === "ABSENT"
+      ) {
+
+        status.classList.add(
+          "absent"
+        );
+
+        text.textContent =
+          "ABSENT";
+
+        return;
+      }
+
+
+      if (
+        type === "FETE"
+      ) {
+
+        status.classList.add(
+          "fete"
+        );
+
+        text.textContent =
+          "FÊTE";
+
+        return;
+      }
+
+
+      if (
+        type === "CHABBAT"
+      ) {
+
+        status.classList.add(
+          "chabbat"
+        );
+
+        text.textContent =
+          "CHABBAT";
+
+        return;
+      }
+
+
+      if (
+        etat.debut &&
+        !etat.fin
+      ) {
+
+        status.classList.add(
+          "en-cours"
+        );
+
+        text.textContent =
+          "JOURNÉE EN COURS";
+
+        return;
+      }
+
+
+      if (
+        etat.debut &&
+        etat.fin
+      ) {
+
+        status.classList.add(
+          "termine"
+        );
+
+        text.textContent =
+          "JOURNÉE TERMINÉE";
+
+        return;
+      }
+
+
+      text.textContent =
+        "NON POINTÉ";
+    }
+
+
+    /* =====================================================
+       ACTION PRINCIPALE
+    ===================================================== */
+
+    function mettreAction() {
+
+      const button =
+        document.getElementById(
+          "mainAction"
+        );
+
+      const icon =
+        document.getElementById(
+          "actionIcon"
+        );
+
+      const text =
+        document.getElementById(
+          "actionText"
+        );
+
+      const absenceButton =
+        document.getElementById(
+          "absenceButton"
+        );
+
+
+      const type =
+        String(
+          etat.type || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+      if (
+        type === "ABSENT" ||
+        type === "FETE" ||
+        type === "CHABBAT"
+      ) {
+
+        button.style.display =
+          "none";
+
+        absenceButton.style.display =
+          type === "ABSENT"
+            ? "none"
+            : "block";
+
+        return;
+      }
+
+
+      absenceButton.style.display =
+        etat.debut
+          ? "none"
+          : "block";
+
+
+      button.style.display =
+        "flex";
+
+
+      if (
+        etat.debut &&
+        !etat.fin
+      ) {
+
+        button.classList.add(
+          "finish"
+        );
+
+        icon.textContent =
+          "■";
+
+        text.textContent =
+          "Terminer ma journée";
+
+      }
+
+      else if (
+        etat.debut &&
+        etat.fin
+      ) {
+
+        button.style.display =
+          "none";
+
+      }
+
+      else {
+
+        button.classList.remove(
+          "finish"
+        );
+
+        icon.textContent =
+          "▶";
+
+        text.textContent =
+          "Commencer ma journée";
+      }
+    }
+
+
+    function actionPrincipale() {
+
+      if (
+        !etat
+      ) {
+        return;
+      }
+
+
+      if (
+        etat.debut &&
+        !etat.fin
+      ) {
+
+        ouvrirPause();
+
+      }
+
+      else {
+
+        commencer();
+      }
+    }
+
+
+    /* =====================================================
+       TEMPS TRAVAILLÉ
+    ===================================================== */
+
+    function afficherTempsTravaille() {
+
+      const valeur =
+        calculerTempsTravaille();
+
+
+      document.getElementById(
+        "worked"
+      ).textContent =
+        valeur || "—";
+    }
+
+
+    function calculerTempsTravaille() {
+
+      if (
+        !etat ||
+        !etat.debut
+      ) {
+
+        return "";
+      }
+
+
+      const debut =
+        convertirHeureEnMinutes(
+          etat.debut
+        );
+
+
+      if (
+        debut === null
+      ) {
+
+        return "";
+      }
+
+
+      const fin =
+        convertirHeureEnMinutes(
+          etat.fin ||
+          heureLocale()
+        );
+
+
+      if (
+        fin === null
+      ) {
+
+        return "";
+      }
+
+
+      let duree =
+        fin - debut;
+
+
+      if (
+        duree < 0
+      ) {
+
+        duree += 1440;
+      }
+
+
+      duree -=
+        convertirPauseEnMinutes(
+          etat.pause
+        );
+
+
+      if (
+        duree < 0
+      ) {
+
+        duree = 0;
+      }
+
+
+      return formaterDuree(
+        duree
+      );
+    }
+
+
+    function formaterDuree(
+      minutes
+    ) {
+
+      minutes =
+        Math.max(
+          0,
+          Math.round(
+            Number(minutes) || 0
+          )
+        );
+
+
+      const heures =
+        Math.floor(
+          minutes / 60
+        );
+
+      const reste =
+        minutes % 60;
+
+
+      return (
+        String(heures)
+          .padStart(2,"0") +
+
+        ":" +
+
+        String(reste)
+          .padStart(2,"0")
+      );
+    }
+
+
+    /* =====================================================
+       CONVERSIONS
+    ===================================================== */
+
+    function convertirHeureEnMinutes(
+      valeur
+    ) {
+
+      if (!valeur) {
+        return null;
+      }
+
+
+      const match =
+        String(valeur)
+          .trim()
+          .match(
+            /^(\d{1,2}):(\d{2})/
+          );
+
+
+      if (!match) {
+        return null;
+      }
+
+
+      return (
+        Number(match[1]) * 60 +
+        Number(match[2])
+      );
+    }
+
+
+    function convertirPauseEnMinutes(
+      valeur
+    ) {
+
+      if (
+        valeur === null ||
+        valeur === undefined ||
+        valeur === ""
+      ) {
+
+        return 0;
+      }
+
+
+      if (
+        typeof valeur === "number"
+      ) {
+
+        if (
+          valeur > 0 &&
+          valeur < 1
+        ) {
+
+          return Math.round(
+            valeur * 1440
+          );
+        }
+
+        return Math.round(
+          valeur
+        );
+      }
+
+
+      const texte =
+        String(
+          valeur
+        ).trim();
+
+
+      const match =
+        texte.match(
+          /^(\d+):(\d{2})/
+        );
+
+
+      if (match) {
+
+        return (
+          Number(match[1]) * 60 +
+          Number(match[2])
+        );
+      }
+
+
+      return 0;
+    }
+
+
+    function formaterPause(
+      valeur
+    ) {
+
+      const minutes =
+        convertirPauseEnMinutes(
+          valeur
+        );
+
+
+      if (!minutes) {
+
+        return "0 min";
+      }
+
+
+      if (
+        minutes < 60
+      ) {
+
+        return (
+          minutes +
+          " min"
+        );
+      }
+
+
+      const heures =
+        Math.floor(
+          minutes / 60
+        );
+
+
+      const reste =
+        minutes % 60;
+
+
+      if (!reste) {
+
+        return (
+          heures +
+          (
+            heures > 1
+              ? " heures"
+              : " heure"
+          )
+        );
+      }
+
+
+      return (
+        heures +
+        "h" +
+        String(
+          reste
+        ).padStart(
+          2,
+          "0"
+        )
+      );
+    }
+
+
+    /* =====================================================
+       PROGRESSION
+    ===================================================== */
+
+    function mettreProgression() {
+
+      const temps =
+        calculerTempsTravaille();
+
+
+      const minutes =
+        convertirDureeEnMinutes(
+          temps
+        );
+
+
+      let pourcentage = 0;
+
+
+      if (
+        minutes !== null
+      ) {
+
+        pourcentage =
+          Math.min(
+            100,
+            minutes / 480 * 100
+          );
+      }
+
+
+      document.getElementById(
+        "progressBar"
+      ).style.width =
+        pourcentage +
+        "%";
+
+
+      document.getElementById(
+        "progressText"
+      ).textContent =
+        Math.round(
+          pourcentage
+        ) +
+        " %";
+    }
+
+
+    function convertirDureeEnMinutes(
+      valeur
+    ) {
+
+      if (!valeur) {
+        return null;
+      }
+
+
+      const match =
+        String(
+          valeur
+        )
+        .match(
+          /^(\d+):(\d{2})$/
+        );
+
+
+      if (!match) {
+        return null;
+      }
+
+
+      return (
+        Number(match[1]) * 60 +
+        Number(match[2])
+      );
+    }
+
+
+    /* =====================================================
+       TIMELINE
+    ===================================================== */
+
+    function afficherTimeline() {
+
+      document.getElementById(
+        "timelineArrivalTime"
+      ).textContent =
+        etat.debut || "—";
+
+
+      document.getElementById(
+        "timelineDepartureTime"
+      ).textContent =
+        etat.fin || "—";
+
+
+      document.getElementById(
+        "timelinePauseTime"
+      ).textContent =
+        etat.pause
+          ? formaterPause(
+              etat.pause
+            )
+          : "—";
+
+
+      const arrival =
+        document.getElementById(
+          "timelineArrival"
+        );
+
+
+      const departure =
+        document.getElementById(
+          "timelineDeparture"
+        );
+
+
+      arrival.classList.toggle(
+        "active",
+        !!etat.debut
+      );
+
+
+      departure.classList.toggle(
+        "active",
+        !!etat.fin
+      );
+    }
+
+
+    /* =====================================================
+       RÉCAP
+    ===================================================== */
+
+    function afficherRecap() {
+
+      document.getElementById(
+        "recapHours"
+      ).textContent =
+        etat.totalMois ||
+        "0h00";
+
+
+      document.getElementById(
+        "recapDays"
+      ).textContent =
+        etat.joursMois ||
+        "0";
+
+
+      document.getElementById(
+        "recapAbsences"
+      ).textContent =
+        etat.absencesMois ||
+        "0";
+
+
+      document.getElementById(
+        "recapFetes"
+      ).textContent =
+        etat.fetesMois ||
+        "0";
+
+
+      document.getElementById(
+        "recapChabbat"
+      ).textContent =
+        etat.chabbatMois ||
+        "0";
+
+
+      if (
+        etat.moisActuel
+      ) {
+
+        document.getElementById(
+          "monthName"
+        ).textContent =
+          etat.moisActuel;
+      }
+    }
+
+
+    /* =====================================================
+       COMMENCER
+    ===================================================== */
+
+    async function commencer() {
+
+      const button =
+        document.getElementById(
+          "mainAction"
+        );
+
+
+      button.disabled = true;
+
+
+      try {
+
+        await appelerAPI(
+          "commencerJour",
+          {
+            heure:
+              heureLocale()
+          }
+        );
+
+
+        afficherToast(
+          "Arrivée enregistrée",
+          "success"
+        );
+
+
+        await chargerEtat();
+
+      }
+
+      catch (error) {
+
+        button.disabled =
+          false;
+
+        afficherErreur(
+          error
+        );
+      }
+    }
+
+
+    /* =====================================================
+       PAUSE
+    ===================================================== */
+
+    function ouvrirPause() {
+
+      pauseSelectionnee = 0;
+
+
+      document
+        .querySelectorAll(
+          "#pauseModal .choice"
+        )
+        .forEach(
+          function(element) {
+
+            element.classList.remove(
+              "selected"
+            );
+          }
+        );
+
+
+      document.getElementById(
+        "pauseModal"
+      ).classList.add(
+        "show"
+      );
+    }
+
+
+    function fermerPause() {
+
+      document.getElementById(
+        "pauseModal"
+      ).classList.remove(
+        "show"
+      );
+    }
+
+
+    function selectionnerPause(
+      minutes,
+      bouton
+    ) {
+
+      pauseSelectionnee =
+        minutes;
+
+
+      document
+        .querySelectorAll(
+          "#pauseModal .choice"
+        )
+        .forEach(
+          function(element) {
+
+            element.classList.remove(
+              "selected"
+            );
+          }
+        );
+
+
+      bouton.classList.add(
+        "selected"
+      );
+    }
+
+
+    async function confirmerFin() {
+
+      fermerPause();
+
+
+      const button =
+        document.getElementById(
+          "mainAction"
+        );
+
+
+      button.disabled = true;
+
+
+      try {
+
+        await appelerAPI(
+          "terminerJour",
+          {
+            heure:
+              heureLocale(),
+
+            pauseMinutes:
+              pauseSelectionnee
+          }
+        );
+
+
+        afficherToast(
+          "Départ enregistré",
+          "success"
+        );
+
+
+        await chargerEtat();
+
+      }
+
+      catch (error) {
+
+        button.disabled =
+          false;
+
+        afficherErreur(
+          error
+        );
+      }
+    }
+
+
+    /* =====================================================
+       ABSENCE
+    ===================================================== */
+
+    function ouvrirAbsence() {
+
+      absenceSelectionnee =
+        null;
+
+
+      document
+        .querySelectorAll(
+          "#absenceModal .choice"
+        )
+        .forEach(
+          function(element) {
+
+            element.classList.remove(
+              "selected"
+            );
+          }
+        );
+
+
+      document.getElementById(
+        "absenceModal"
+      ).classList.add(
+        "show"
+      );
+    }
+
+
+    function fermerAbsence() {
+
+      document.getElementById(
+        "absenceModal"
+      ).classList.remove(
+        "show"
+      );
+    }
+
+
+    function selectionnerAbsence(
+      motif,
+      bouton
+    ) {
+
+      absenceSelectionnee =
+        motif;
+
+
+      document
+        .querySelectorAll(
+          "#absenceModal .choice"
+        )
+        .forEach(
+          function(element) {
+
+            element.classList.remove(
+              "selected"
+            );
+          }
+        );
+
+
+      bouton.classList.add(
+        "selected"
+      );
+    }
+
+
+    async function confirmerAbsence() {
+
+      if (
+        !absenceSelectionnee
+      ) {
+
+        afficherToast(
+          "Sélectionnez un motif",
+          "error"
+        );
+
+        return;
+      }
+
+
+      fermerAbsence();
+
+
+      try {
+
+        await appelerAPI(
+          "signalerAbsence",
+          {
+            motif:
+              absenceSelectionnee
+          }
+        );
+
+
+        afficherToast(
+          "Absence enregistrée",
+          "success"
+        );
+
+
+        await chargerEtat();
+
+      }
+
+      catch (error) {
+
+        afficherErreur(
+          error
+        );
+      }
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    function cacherLoading() {
+
+      document.getElementById(
+        "loading"
+      ).classList.add(
+        "hidden"
+      );
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function afficherToast(
+      message,
+      type = ""
+    ) {
+
+      const toast =
+        document.getElementById(
+          "toast"
+        );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.className =
+        "toast";
+
+
+      if (type) {
+
+        toast.classList.add(
+          type
+        );
+      }
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      if (toastTimeout) {
+
+        clearTimeout(
+          toastTimeout
+        );
+      }
+
+
+      toastTimeout =
+        setTimeout(
+          function() {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          3000
+        );
+    }
+
+
+    /* =====================================================
+       ERREUR
+    ===================================================== */
+
+    function afficherErreur(
+      error
+    ) {
+
+      console.error(
+        error
+      );
+
+
+      const message =
+        error &&
+        error.message
+          ? error.message
+          : "Une erreur est survenue.";
+
+
+      afficherToast(
+        message,
+        "error"
+      );
+    }
+
+
+    /* =====================================================
+       FERMETURE MODALES
+    ===================================================== */
+
+    document
+      .getElementById(
+        "pauseModal"
+      )
+      .addEventListener(
+        "click",
+        function(event) {
+
+          if (
+            event.target === this
+          ) {
+
+            fermerPause();
+          }
+        }
+      );
+
+
+    document
+      .getElementById(
+        "absenceModal"
+      )
+      .addEventListener(
+        "click",
+        function(event) {
+
+          if (
+            event.target === this
+          ) {
+
+            fermerAbsence();
+          }
+        }
+      );
+
+
+    /* =====================================================
+       ESC
+    ===================================================== */
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key !== "Escape"
+        ) {
+          return;
+        }
+
+        fermerPause();
+        fermerAbsence();
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>
