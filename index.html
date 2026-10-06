@@ -1108,7 +1108,7 @@
      * Client ID Google.
      */
     const GOOGLE_CLIENT_ID =
-      "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com.apps.googleusercontent.com";
+      "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com";
 
 
     let idToken = null;
@@ -1145,19 +1145,6 @@
 
         afficherErreurConnexion(
           "Le service Google n'a pas pu être chargé. Vérifiez votre connexion Internet puis rechargez la page."
-        );
-
-        return;
-      }
-
-      if (
-        GOOGLE_CLIENT_ID.indexOf(
-          "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com"
-        ) === 0
-      ) {
-
-        afficherErreurConnexion(
-          "Le Client ID Google n'est pas encore configuré dans index.html."
         );
 
         return;
