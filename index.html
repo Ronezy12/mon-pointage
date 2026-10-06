@@ -47,6 +47,9 @@ radial-gradient(circle at 15% 10%,rgba(24,185,119,.18),transparent 28%),radial-g
 @media(min-width:760px){.shell{width:min(1100px,calc(100% - 48px))}.topbar{height:88px}.hero{padding:36px;min-height:310px}.day-grid{grid-template-columns:1.5fr .5fr}.modal{align-items:center}.bottom-nav{bottom:20px}.month-toolbar{margin-top:8px}}
 @media(max-width:700px){.metrics{grid-template-columns:repeat(2,1fr)}.day-grid{grid-template-columns:1fr}.hero-bottom{align-items:flex-start;flex-direction:column}.account .ghost{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style><style>
+.observation-inline{margin-top:10px;padding:12px 14px;border-radius:15px;background:#f1f8f5;color:#39705b;font-size:11px;line-height:1.45;border:1px solid rgba(24,185,119,.12)}
+@media(min-width:760px){.observation-inline{max-width:600px}}
 </style>
 </head>
 <body>
@@ -83,7 +86,7 @@ radial-gradient(circle at 15% 10%,rgba(24,185,119,.18),transparent 28%),radial-g
 <div class="timeline">
 <div class="section-head" style="margin-top:0"><h2>Chronologie</h2><span>Temps réel</span></div>
 <div class="event done"><div id="arrivalDot" class="event-dot"></div><div><div class="event-title">Arrivée</div><div id="timelineArrival" class="event-time">—</div><div class="event-note">Début de votre journée</div></div></div>
-<div class="event stop"><div id="departureDot" class="event-dot"></div><div><div class="event-title">Départ</div><div id="timelineDeparture" class="event-time">—</div><div class="event-note">Fin de votre journée</div></div></div>
+<div class="event stop"><div id="departureDot" class="event-dot"></div><div><div class="event-title">Départ</div><div id="timelineDeparture" class="event-time">—</div><div id="timelineObservation" class="event-note">Fin de votre journée</div></div></div>
 </div>
 <div class="action-card">
 <button id="startButton" class="action-main" onclick="commencer()"><div class="action-icon">↗</div><div class="action-title">Pointer mon arrivée</div><div class="action-sub">Enregistrer l'heure maintenant</div></button>
@@ -189,6 +192,8 @@ function appliquerEtat(e){
  const hint=e.statut==="En cours"?"Journée en cours":e.statut==="Terminé"?"Journée terminée":e.statut==="Absent"?"Absence enregistrée":e.statut||"Prêt à pointer";
  document.getElementById("heroHint").textContent=hint;
  const note=document.getElementById("homeNote");if(e.statut==="Fête"||e.statut==="Chabbat"){note.textContent="Cette journée n'est pas une journée de travail : le pointage est désactivé.";note.classList.remove("hidden")}else{note.classList.add("hidden")}
+ const obs=document.getElementById("timelineObservation");
+ if(obs) obs.innerHTML=e.observation ? "📝 "+esc(e.observation) : "Fin de votre journée";
 }
 function classeStatut(s){return s==="En cours"?"green":s==="Absent"?"red":s==="Fête"?"yellow":"gray"}
 async function commencer(){
@@ -223,7 +228,7 @@ function ouvrirVue(id,btn){document.querySelectorAll(".view").forEach(v=>v.class
 function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}
 function afficherTitreMois(){document.getElementById("monthTitle").innerHTML=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"Europe/Paris"})+"<small>Récapitulatif</small>"}
 function afficherRecap(r){document.getElementById("monthHours").textContent=r.heuresTravaillees||r.heures||"—";document.getElementById("monthDays").textContent=r.joursTravailles??"—";document.getElementById("monthAbsences").textContent=r.absences??"—";afficherTitreMois()}
-function afficherHistorique(rows){const el=document.getElementById("history");if(!rows?.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}el.innerHTML=rows.map(x=>{const d=x.date?new Date(x.date):null;const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):x.libelle||"—";return '<div class="history-row"><div class="hdate">'+label+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+' → '+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+'</div></div>'}).join("")}
+function afficherHistorique(rows){const el=document.getElementById("history");if(!rows?.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}el.innerHTML=rows.map(x=>{const d=x.date?new Date(x.date):null;const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):x.libelle||"—";return '<div class="history-row"><div class="hdate">'+label+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+' → '+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+(x.observation?' · 📝 '+esc(x.observation):'')+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+'</div></div>'}).join("")}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function horloge(){const n=new Date();document.getElementById("clock").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("heroTime").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});if(document.getElementById("heroDate").textContent==="Chargement…")document.getElementById("heroDate").textContent=n.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}
 function heureActuelle(){const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")}
