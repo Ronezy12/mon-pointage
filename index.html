@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#070809">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Mon Pointage</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="window.__googleGsiLoaded=true; if(window.initialiserGoogle) window.initialiserGoogle()"></script>
 <style>
 :root{--bg:#070809;--bg2:#0b0d10;--surface:rgba(18,21,25,.78);--surface2:#111419;--surface3:#171a20;--ink:#f5f7fa;--muted:#858b96;--muted2:#5d636d;--line:rgba(255,255,255,.075);--green:#45e6a0;--green2:#20bd7d;--red:#ff5968;--gold:#e6c879;--blue:#7f8cff;--shadow:0 30px 90px rgba(0,0,0,.32);--radius:28px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 12% 0%,rgba(69,230,160,.08),transparent 30%),radial-gradient(circle at 92% 18%,rgba(127,140,255,.07),transparent 28%),var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(rgba(255,255,255,.16) .5px,transparent .5px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
@@ -54,39 +54,40 @@ let googleInitialise=false;
 let googleTimer=null;
 function initialiserGoogle(){
   const target=document.getElementById("googleButton");
-  if(!target)return;
-  if(googleInitialise)return;
-  if(window.google?.accounts?.id){
-    try{
-      google.accounts.id.initialize({
-        client_id:GOOGLE_CLIENT_ID,
-        callback:connexionGoogle,
-        auto_select:false,
-        cancel_on_tap_outside:true,
-        use_fedcm_for_prompt:true
-      });
-      googleInitialise=true;
-      target.innerHTML="";
-      google.accounts.id.renderButton(target,{
-        type:"standard",
-        theme:"filled_black",
-        size:"large",
-        text:"signin_with",
-        shape:"pill",
-        logo_alignment:"left",
-        width:320,
-        locale:"fr"
-      });
-      setTimeout(()=>{try{google.accounts.id.prompt()}catch(e){}},250);
-      return;
-    }catch(e){
-      console.error("Google Identity Services:",e);
-      googleInitialise=false;
-    }
+  if(!target || googleInitialise)return;
+  if(!window.google?.accounts?.id){
+    target.innerHTML='<div style="color:#858b96;font-size:12px;padding:14px">Chargement de la connexion Google…</div>';
+    clearTimeout(googleTimer);
+    googleTimer=setTimeout(initialiserGoogle,300);
+    return;
   }
-  target.innerHTML='<div style="color:#858b96;font-size:12px;padding:14px">Connexion Google en cours…</div>';
-  clearTimeout(googleTimer);
-  googleTimer=setTimeout(initialiserGoogle,400);
+  try{
+    google.accounts.id.initialize({
+      client_id:GOOGLE_CLIENT_ID,
+      callback:connexionGoogle,
+      auto_select:false,
+      cancel_on_tap_outside:true
+    });
+    target.innerHTML="";
+    google.accounts.id.renderButton(target,{
+      type:"standard",
+      theme:"filled_black",
+      size:"large",
+      text:"signin_with",
+      shape:"pill",
+      logo_alignment:"left",
+      width:320,
+      locale:"fr"
+    });
+    googleInitialise=true;
+    console.log("Google Identity Services prêt");
+  }catch(e){
+    console.error("Google Identity Services:",e);
+    googleInitialise=false;
+    target.innerHTML='<div style="color:#ff8994;font-size:12px;padding:14px">Impossible de charger Google. Rechargez la page.</div>';
+    clearTimeout(googleTimer);
+    googleTimer=setTimeout(initialiserGoogle,1500);
+  }
 }
 function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
 async function restaurerSession(){const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;const p=decoderJwt(t);if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
