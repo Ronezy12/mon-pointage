@@ -44,8 +44,22 @@
 <div id="loading" class="loading"><div class="loader"><div class="clock-face"><div class="hand"></div><div class="hand m"></div><div class="pin"></div></div><div class="load-title">Synchronisation</div><div class="load-sub">Mon Pointage</div></div></div><div id="toast" class="toast"></div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbyGHfIcUVimauPjm9mrhUHoIDFl7iAjcQQHkQAZxLCSD1GvVDKDCGIKo1169CVVRKuiBw/exec";const GOOGLE_CLIENT_ID="390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com";const EMAIL_AUTORISE="aharonelbaz6@gmail.com";let idToken=null,utilisateur=null,callbackCounter=0;let moisCourant=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-window.addEventListener("load",()=>{initialiserGoogle();horloge();setInterval(horloge,1000);restaurerSession()});
-function initialiserGoogle(){if(!window.google?.accounts?.id){setTimeout(initialiserGoogle,350);return}google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:connexionGoogle,auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(document.getElementById("googleButton"),{type:"standard",theme:"outline",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:300,locale:"fr"})}
+window.addEventListener("load",()=>{horloge();setInterval(horloge,1000);initialiserGoogle();restaurerSession()});
+let googleInitialise=false;
+function initialiserGoogle(){
+  const target=document.getElementById("googleButton");
+  if(!target)return;
+  if(googleInitialise)return;
+  if(window.google?.accounts?.id){
+    googleInitialise=true;
+    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:connexionGoogle,auto_select:false,cancel_on_tap_outside:true});
+    target.innerHTML="";
+    google.accounts.id.renderButton(target,{type:"standard",theme:"outline",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:300,locale:"fr"});
+    return;
+  }
+  target.innerHTML='<div style="color:#858b96;font-size:12px;padding:12px">Chargement de Google…</div>';
+  setTimeout(initialiserGoogle,500);
+}
 function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
 async function restaurerSession(){const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;const p=decoderJwt(t);if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
 async function connexionGoogle(r){if(!r?.credential)return erreurConnexion("Connexion Google impossible.");const p=decoderJwt(r.credential);if(!p?.email)return erreurConnexion("Jeton Google invalide.");if(p.email.toLowerCase()!==EMAIL_AUTORISE)return erreurConnexion("Ce compte Google n'est pas autorisé.");idToken=r.credential;sessionStorage.setItem("monPointageGoogleToken",idToken);utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
