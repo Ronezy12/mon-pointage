@@ -56,9 +56,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
 .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.info{position:relative;min-height:112px;padding:16px;border:1px solid var(--line);border-radius:23px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:0 15px 45px rgba(0,0,0,.18);animation:card .65s .25s both}.info-icon{position:absolute;right:13px;top:13px;width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.06);color:#a4abb8;font-size:11px}.info.featured .info-icon{color:#62efb2;background:rgba(57,230,158,.08)}.info-label{color:#7f8796;font-size:11px}.info-value{margin-top:9px;font-size:21px;font-weight:850;font-variant-numeric:tabular-nums}
 .absence-button{width:100%;margin-top:11px;padding:15px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:#a1a8b4;font-size:12px;font-weight:750;transition:.18s}.absence-button:active{transform:scale(.985)}
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;padding:16px;background:rgba(0,0,0,.6);backdrop-filter:blur(16px)}.modal.show{display:flex}.modal-card{width:min(500px,100%);padding:24px;border:1px solid var(--line);border-radius:30px;background:#11151d;box-shadow:0 -15px 70px rgba(0,0,0,.4);animation:sheet .28s cubic-bezier(.2,.8,.2,1)}@keyframes sheet{from{transform:translateY(25px);opacity:0}to{transform:none;opacity:1}}.modal-card h2{margin:0;font-size:22px}.modal-card p{margin:7px 0 18px;color:var(--muted);font-size:13px}.pause-options{display:grid;gap:9px}.pause-option{padding:16px;border-radius:17px;background:#191e28;color:#f5f6f8;border:1px solid var(--line);text-align:left;font-weight:750}.cancel{width:100%;margin-top:9px;padding:14px;border-radius:16px;background:transparent;color:#858c99;font-weight:700}
-.loading{position:fixed;inset:0;z-index:200;display:none;place-items:center;background:rgba(5,7,10,.48);backdrop-filter:blur(12px)}.loading.show{display:grid}.spinner{width:34px;height:34px;border:2px solid rgba(255,255,255,.14);border-top-color:var(--green);border-radius:50%;animation:spin .55s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.loading{position:fixed;inset:0;z-index:200;display:none;place-items:center;background:rgba(5,7,10,.52);backdrop-filter:blur(18px)}.loading.show{display:grid}.loading-card{width:170px;padding:22px 18px 18px;border:1px solid rgba(255,255,255,.1);border-radius:28px;background:linear-gradient(145deg,rgba(25,30,40,.94),rgba(9,11,16,.92));box-shadow:0 30px 90px rgba(0,0,0,.5);text-align:center;animation:loaderIn .24s cubic-bezier(.2,.8,.2,1)}.loading-clock{width:70px;height:70px;margin:0 auto 13px;border-radius:50%;position:relative;border:2px solid rgba(57,230,158,.45);background:radial-gradient(circle at 50% 45%,rgba(57,230,158,.12),transparent 58%),#0d1118;box-shadow:0 0 0 7px rgba(57,230,158,.045),0 0 35px rgba(57,230,158,.14);animation:clockFloat 2s ease-in-out infinite}.loading-clock:before{content:"";position:absolute;inset:7px;border:1px dashed rgba(255,255,255,.12);border-radius:50%}.clock-hand{position:absolute;left:50%;bottom:50%;width:2px;height:21px;border-radius:4px;background:#f7f8fb;transform-origin:50% 100%;transform:translateX(-50%) rotate(25deg);animation:handHour 3.6s linear infinite}.clock-hand.minute{height:28px;background:var(--green);transform:translateX(-50%) rotate(145deg);animation:handMinute 1.8s linear infinite}.clock-center{position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;background:var(--green);transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(57,230,158,.7)}.loading-label{font-size:11px;font-weight:850;letter-spacing:1.4px;text-transform:uppercase;color:#dce2eb}.loading-sub{margin-top:5px;font-size:10px;color:#707989}@keyframes loaderIn{from{opacity:0;transform:scale(.92) translateY(6px)}to{opacity:1;transform:none}}@keyframes clockFloat{50%{transform:translateY(-3px)}}@keyframes handMinute{to{transform:translateX(-50%) rotate(505deg)}}@keyframes handHour{to{transform:translateX(-50%) rotate(385deg)}}
 .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));z-index:300;transform:translate(-50%,20px);opacity:0;pointer-events:none;width:min(calc(100% - 30px),420px);padding:13px 15px;border:1px solid var(--line);border-radius:16px;background:rgba(20,23,31,.94);backdrop-filter:blur(20px);color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.35);font-size:13px;font-weight:650;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(min-width:700px){.app{padding-top:32px}.modal{align-items:center}}@media(max-width:430px){.app{padding-left:12px;padding-right:12px}.date-card{padding:23px}.clock{font-size:41px}.action{min-height:124px;padding:16px}.info{min-height:106px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(min-width:700px){.app{padding-top:32px}.modal{align-items:center}}@media(max-width:430px){.app{padding-left:12px;padding-right:12px}.date-card{padding:23px}.clock{font-size:41px}.action{min-height:124px;padding:16px}.info{min-height:106px}}[data-status="En cours"]{box-shadow:0 28px 75px rgba(0,0,0,.34),0 0 0 1px rgba(57,230,158,.04)}[data-status="Terminé"]{box-shadow:0 28px 75px rgba(0,0,0,.34),0 0 0 1px rgba(109,124,255,.035)}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 
@@ -349,12 +349,16 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
        LOADING
   ====================================================== -->
 
-  <div
-    id="loading"
-    class="loading">
-
-    <div class="spinner"></div>
-
+  <div id="loading" class="loading" aria-live="polite">
+    <div class="loading-card">
+      <div class="loading-clock" aria-hidden="true">
+        <div class="clock-hand"></div>
+        <div class="clock-hand minute"></div>
+        <div class="clock-center"></div>
+      </div>
+      <div class="loading-label">Un instant</div>
+      <div class="loading-sub">Synchronisation en cours</div>
+    </div>
   </div>
 
 
@@ -817,6 +821,11 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
           etat.statut
         );
 
+      const dateCard = document.querySelector(".date-card");
+      if (dateCard) {
+        dateCard.dataset.status = etat.statut || "";
+      }
+
 
       const start =
         document.getElementById(
@@ -1103,28 +1112,58 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
        DATE
     ====================================================== */
 
-    function formaterDateFr(
-      valeur
-    ) {
+    function formaterDateFr(valeur) {
 
       if (!valeur) {
-        return "";
+        return "Date indisponible";
       }
 
-      const date =
-        new Date(
-          valeur + "T12:00:00"
-        );
+      let date = null;
 
-      return date.toLocaleDateString(
-        "fr-FR",
-        {
-          weekday: "long",
-          day: "2-digit",
-          month: "long",
-          year: "numeric"
+      // ISO / Google timestamp: 2026-10-07T00:00:00.000Z
+      if (typeof valeur === "string" && /^\\d{4}-\\d{2}-\\d{2}/.test(valeur)) {
+        const match = valeur.match(/^(\\d{4})-(\\d{2})-(\\d{2})/);
+        if (match) {
+          date = new Date(
+            Number(match[1]),
+            Number(match[2]) - 1,
+            Number(match[3]),
+            12, 0, 0
+          );
         }
-      );
+      }
+
+      // French date: 07/10/2026
+      if (!date && typeof valeur === "string") {
+        const fr = valeur.match(/^(\\d{1,2})[\\/-](\\d{1,2})[\\/-](\\d{4})$/);
+        if (fr) {
+          date = new Date(
+            Number(fr[3]),
+            Number(fr[2]) - 1,
+            Number(fr[1]),
+            12, 0, 0
+          );
+        }
+      }
+
+      // Numeric timestamp / Date-compatible value as final fallback.
+      if (!date) {
+        const tentative = new Date(valeur);
+        if (!Number.isNaN(tentative.getTime())) {
+          date = tentative;
+        }
+      }
+
+      if (!date || Number.isNaN(date.getTime())) {
+        return "Date indisponible";
+      }
+
+      return date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
     }
 
 
