@@ -116,7 +116,8 @@ radial-gradient(circle at 15% 10%,rgba(24,185,119,.18),transparent 28%),radial-g
 </nav>
 </main>
 
-<div id="pauseModal" class="modal"><div class="sheet"><h2>Terminer la journée</h2><p>Indique la durée de votre pause. L'heure de départ sera enregistrée à l'instant de validation.</p><div class="choices">
+<div id="pauseModal" class="modal"><div class="sheet"><h2>Terminer la journée</h2><p>Indique la durée de votre pause. L'heure de départ sera enregistrée à l'instant de validation.</p><textarea id="departureObservation" class="field" placeholder="Observation de la journée (facultatif)…"></textarea>
+<div class="choices" style="margin-top:10px">
 <button class="choice" onclick="terminer(0)"><strong>0 minute</strong><small>Aucune pause à déduire</small></button>
 <button class="choice" onclick="terminer(30)"><strong>30 minutes</strong><small>Pause standard</small></button>
 <button class="choice" onclick="terminer(60)"><strong>1 heure</strong><small>Une heure de pause</small></button>
@@ -142,13 +143,24 @@ function initialiserGoogle(){
  google.accounts.id.renderButton(document.getElementById("googleButton"),{type:"standard",theme:"outline",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:300,locale:"fr"});
 }
 function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
-async function restaurerSession(){const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;const p=decoderJwt(t);if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();chargerTout()}
-function connexionGoogle(r){if(!r?.credential)return erreurConnexion("Connexion Google impossible.");const p=decoderJwt(r.credential);if(!p?.email)return erreurConnexion("Jeton Google invalide.");if(p.email.toLowerCase()!==EMAIL_AUTORISE)return erreurConnexion("Ce compte Google n'est pas autorisé.");idToken=r.credential;sessionStorage.setItem("monPointageGoogleToken",idToken);utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();chargerTout()}
+async function restaurerSession(){const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;const p=decoderJwt(t);if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
+async function connexionGoogle(r){if(!r?.credential)return erreurConnexion("Connexion Google impossible.");const p=decoderJwt(r.credential);if(!p?.email)return erreurConnexion("Jeton Google invalide.");if(p.email.toLowerCase()!==EMAIL_AUTORISE)return erreurConnexion("Ce compte Google n'est pas autorisé.");idToken=r.credential;sessionStorage.setItem("monPointageGoogleToken",idToken);utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
 function afficherApp(){document.getElementById("loginScreen").style.display="none";document.getElementById("app").style.display="block";const prenom=(utilisateur.nom||"").trim().split(" ")[0];document.getElementById("welcome").textContent=prenom?"Bonjour "+prenom:"Votre espace personnel";document.getElementById("avatar").src=utilisateur.picture||"";document.getElementById("profileBig").src=utilisateur.picture||"";document.getElementById("profileName").textContent=utilisateur.nom||"Utilisateur";document.getElementById("profileEmail").textContent=utilisateur.email}
 function appelerAPI(action,params={}){
  return new Promise((resolve,reject)=>{if(!idToken)return reject(new Error("Connexion Google requise."));const cb="mp_"+Date.now()+"_"+(++callbackCounter),s=document.createElement("script"),q=new URLSearchParams({action,id_token:idToken,callback:cb});Object.entries(params).forEach(([k,v])=>q.set(k,v));let done=false;const finish=(fn,val)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(val)};const timer=setTimeout(()=>finish(reject,new Error("Le serveur Mon Pointage ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur inconnue."));s.onerror=()=>finish(reject,new Error("Impossible de contacter Mon Pointage."));s.src=API_URL+"?"+q;s.async=true;document.head.appendChild(s)})
 }
-async function chargerTout(){await chargerEtat();chargerRecapEtHistorique()}
+async function chargerTout(){await synchroniserTout()}
+async function synchroniserTout(){
+ await Promise.all([chargerEtat(),chargerRecapEtHistorique()]);
+}
+let synchronisationTimer=null;
+function demarrerSynchronisationTempsReel(){
+ if(synchronisationTimer)clearInterval(synchronisationTimer);
+ synchronisationTimer=setInterval(async()=>{
+  if(!idToken)return;
+  try{await synchroniserTout()}catch(e){console.warn("Synchronisation:",e)}
+ },5000);
+}
 async function chargerEtat(){try{const r=await appelerAPI("getEtatDuJour");appliquerEtat(r.data)}catch(e){afficherErreur(e)}}
 async function chargerRecapEtHistorique(){
  try{
@@ -166,19 +178,46 @@ function appliquerEtat(e){
  document.getElementById("arrival").textContent=e.debut||"—";document.getElementById("departure").textContent=e.fin||"—";document.getElementById("break").textContent=e.pause||"—";document.getElementById("worked").textContent=e.travaille||"—";
  document.getElementById("timelineArrival").textContent=e.debut||"—";document.getElementById("timelineDeparture").textContent=e.fin||"—";
  const status=document.getElementById("status");status.className="pill "+classeStatut(e.statut);status.innerHTML="<i></i>"+(e.statut||"—");
- const blocked=["Fête","Chabbat","Absent"].includes(e.statut);
- const start=typeof e.peutCommencer==="boolean"?e.peutCommencer:(!blocked&&!e.debut);
- const finish=typeof e.peutTerminer==="boolean"?e.peutTerminer:(!blocked&&!!e.debut&&!e.fin);
- document.getElementById("startButton").classList.toggle("disabled",!start);document.getElementById("finishButton").classList.toggle("disabled",!finish);
+ const blockedStart=["Fête","Chabbat","Absent"].includes(e.statut);
+ const start=typeof e.peutCommencer==="boolean"?e.peutCommencer:(!blockedStart&&!e.debut);
+ // Le départ reste volontairement disponible dès que la journée n'est pas déjà terminée.
+ // Le serveur acceptera le départ même si aucune arrivée n'a été enregistrée.
+ const finish=typeof e.fin==="string"&&e.fin ? false : true;
+ document.getElementById("startButton").classList.toggle("disabled",!start);
+ document.getElementById("finishButton").classList.toggle("disabled",!finish);
  document.getElementById("daySummary").textContent=e.statut||"—";
  const hint=e.statut==="En cours"?"Journée en cours":e.statut==="Terminé"?"Journée terminée":e.statut==="Absent"?"Absence enregistrée":e.statut||"Prêt à pointer";
  document.getElementById("heroHint").textContent=hint;
  const note=document.getElementById("homeNote");if(e.statut==="Fête"||e.statut==="Chabbat"){note.textContent="Cette journée n'est pas une journée de travail : le pointage est désactivé.";note.classList.remove("hidden")}else{note.classList.add("hidden")}
 }
 function classeStatut(s){return s==="En cours"?"green":s==="Absent"?"red":s==="Fête"?"yellow":"gray"}
-async function commencer(){if(document.getElementById("startButton").classList.contains("disabled"))return;setLoading(true);try{const heure=heureActuelle();const r=await appelerAPI("commencerJour",{heure});appliquerEtat(r.data);toast("✓ Arrivée enregistrée à "+heure);chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
-async function terminer(pauseMinutes){fermerModal("pauseModal");setLoading(true);try{const heure=heureActuelle();const r=await appelerAPI("terminerJour",{heure,pauseMinutes});appliquerEtat(r.data);toast("✓ Départ enregistré à "+heure);chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
+async function commencer(){
+ if(document.getElementById("startButton").classList.contains("disabled"))return;
+ setLoading(true);
+ try{
+  const heure=heureActuelle();
+  const r=await appelerAPI("commencerJour",{heure});
+  appliquerEtat(r.data);
+  toast("✓ Arrivée enregistrée à "+heure);
+  await synchroniserTout();
+ }catch(e){afficherErreur(e)}
+ finally{setLoading(false)}
+}
+async function terminer(pauseMinutes){
+ const observation=document.getElementById("departureObservation").value.trim();
+ fermerModal("pauseModal");
+ setLoading(true);
+ try{
+  const heure=heureActuelle();
+  const r=await appelerAPI("terminerJour",{heure,pauseMinutes,observation});
+  appliquerEtat(r.data);
+  toast("✓ Départ enregistré à "+heure);
+  await synchroniserTout();
+ }catch(e){afficherErreur(e)}
+ finally{setLoading(false)}
+}
 function ouvrirAbsence(){document.getElementById("absenceMotif").value="";document.getElementById("absenceModal").classList.add("show")}
+document.getElementById("pauseModal").addEventListener("click",e=>{if(e.target===document.getElementById("pauseModal"))fermerModal("pauseModal")});
 async function confirmerAbsence(){const motif=document.getElementById("absenceMotif").value.trim()||"Non précisé";fermerModal("absenceModal");setLoading(true);try{const r=await appelerAPI("signalerAbsence",{motif});appliquerEtat(r.data);toast("✓ Absence enregistrée");chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
 function ouvrirVue(id,btn){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="hoursView")chargerRecapEtHistorique();window.scrollTo({top:0,behavior:"smooth"})}
 function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}
@@ -195,7 +234,7 @@ function setLoading(v){document.getElementById("loading").classList.toggle("show
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2800)}
 function afficherErreur(e){console.error(e);toast(e?.message||"Une erreur est survenue.")}
 function erreurConnexion(msg){const e=document.getElementById("loginError");e.textContent=msg;e.classList.remove("hidden")}
-function deconnexion(){idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();document.getElementById("app").style.display="none";document.getElementById("loginScreen").style.display="grid"}
+function deconnexion(){if(synchronisationTimer)clearInterval(synchronisationTimer);idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();document.getElementById("app").style.display="none";document.getElementById("loginScreen").style.display="grid"}
 afficherTitreMois();
 </script>
 </body>
