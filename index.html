@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 
   <meta charset="UTF-8">
@@ -10,3098 +9,1312 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta name="theme-color" content="#080a0f">
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-
   <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent"
-  >
-
-  <meta
-    name="apple-mobile-web-app-title"
-    content="Mon Pointage"
+    name="theme-color"
+    content="#0b0d12"
   >
 
   <title>Mon Pointage</title>
 
+  <!-- Google Identity Services -->
+  <script
+    src="https://accounts.google.com/gsi/client"
+    async
+    defer>
+  </script>
 
   <style>
 
-    /* =========================================================
-       RESET
-    ========================================================= */
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     :root {
-      --bg: #07090e;
-      --surface: rgba(17, 21, 30, .78);
-      --surface-solid: #11151e;
-      --surface-2: #151a24;
-      --border: rgba(255,255,255,.075);
+      --bg: #f4f5f7;
+      --card: rgba(255,255,255,.88);
+      --text: #111318;
+      --muted: #747985;
+      --border: rgba(20,25,35,.08);
 
-      --text: #f7f8fb;
-      --muted: #7d8798;
-      --muted-2: #596375;
+      --green: #1f9d61;
+      --green-dark: #167a4a;
 
-      --blue: #3b82f6;
-      --blue-2: #6366f1;
+      --red: #d83c4b;
+      --red-dark: #b72d3b;
 
-      --green: #22c55e;
-      --red: #ef4444;
-      --orange: #f59e0b;
-      --purple: #8b5cf6;
-      --pink: #ec4899;
-
-      --radius-lg: 28px;
-      --radius-md: 20px;
-      --radius-sm: 15px;
+      --yellow: #e4a900;
 
       --shadow:
-        0 24px 70px rgba(0,0,0,.34);
+        0 18px 50px rgba(0,0,0,.08);
 
-      --ease:
-        cubic-bezier(.22,1,.36,1);
+      --radius: 26px;
     }
 
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     html {
       min-height: 100%;
       background: var(--bg);
     }
 
-
     body {
+      margin: 0;
       min-height: 100vh;
-      min-height: 100dvh;
-
-      overflow-x: hidden;
 
       font-family:
         -apple-system,
         BlinkMacSystemFont,
         "SF Pro Display",
         "SF Pro Text",
-        "Segoe UI",
-        Roboto,
-        Helvetica,
+        Inter,
         Arial,
         sans-serif;
 
       color: var(--text);
-
       background:
         radial-gradient(
-          circle at 50% -15%,
-          rgba(59,130,246,.20),
-          transparent 34%
-        ),
-        radial-gradient(
-          circle at 110% 35%,
-          rgba(99,102,241,.08),
-          transparent 32%
-        ),
-        radial-gradient(
-          circle at -10% 80%,
-          rgba(59,130,246,.06),
-          transparent 30%
+          circle at top left,
+          rgba(255,255,255,.9),
+          transparent 38%
         ),
         var(--bg);
 
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-
-      -webkit-tap-highlight-color: transparent;
     }
 
-
-    body::before {
-      content: "";
-
-      position: fixed;
-
-      inset: -20%;
-
-      z-index: -1;
-
-      pointer-events: none;
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(59,130,246,.08),
-          transparent 25%
-        );
-
-      animation:
-        ambientMove 12s ease-in-out infinite alternate;
+    button,
+    input {
+      font: inherit;
     }
-
 
     button {
       border: 0;
-      outline: none;
-      font: inherit;
-      color: inherit;
-      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
     }
-
-
-    button:focus-visible {
-      outline:
-        2px solid rgba(96,165,250,.8);
-
-      outline-offset: 3px;
-    }
-
-
-    /* =========================================================
-       APP
-    ========================================================= */
 
     .app {
-
-      position: relative;
-
       width: 100%;
-      max-width: 620px;
-
-      margin: 0 auto;
-
+      min-height: 100vh;
       padding:
         max(18px, env(safe-area-inset-top))
-        16px
-        max(34px, env(safe-area-inset-bottom))
-        16px;
-
-      opacity: 0;
-
-      transform: translateY(18px);
-
-      animation:
-        appReveal .8s var(--ease) .25s forwards;
-    }
-
-
-    /* =========================================================
-       TOPBAR
-    ========================================================= */
-
-    .topbar {
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      min-height: 52px;
-
-      margin-bottom: 22px;
-    }
-
-
-    .brand {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 11px;
-    }
-
-
-    .brand-logo {
-
-      position: relative;
-
-      width: 42px;
-      height: 42px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 14px;
-
-      background:
-        linear-gradient(
-          145deg,
-          #2563eb,
-          #4f46e5
-        );
-
-      box-shadow:
-        0 10px 30px rgba(37,99,235,.25);
-
-      font-size: 19px;
-
-      overflow: hidden;
-    }
-
-
-    .brand-logo::after {
-
-      content: "";
-
-      position: absolute;
-
-      width: 100%;
-      height: 100%;
-
-      top: 0;
-      left: -100%;
-
-      background:
-        linear-gradient(
-          110deg,
-          transparent,
-          rgba(255,255,255,.3),
-          transparent
-        );
-
-      animation:
-        logoShine 3.5s ease-in-out 1.2s infinite;
-    }
-
-
-    .brand-name {
-
-      font-size: 17px;
-
-      font-weight: 800;
-
-      letter-spacing: -.35px;
-    }
-
-
-    .brand-subtitle {
-
-      margin-top: 3px;
-
-      color: var(--muted);
-
-      font-size: 10px;
-
-      font-weight: 600;
-    }
-
-
-    .refresh {
-
-      position: relative;
-
-      width: 42px;
-      height: 42px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 14px;
-
-      background:
-        rgba(255,255,255,.045);
-
-      border:
-        1px solid var(--border);
-
-      color: #aeb8c8;
-
-      cursor: pointer;
-
-      transition:
-        transform .35s var(--ease),
-        background .2s ease,
-        border-color .2s ease;
-    }
-
-
-    .refresh:hover {
-
-      background:
-        rgba(255,255,255,.08);
-
-      border-color:
-        rgba(255,255,255,.13);
-    }
-
-
-    .refresh:active {
-
-      transform:
-        scale(.9)
-        rotate(160deg);
-    }
-
-
-    .refresh svg {
-
-      width: 18px;
-      height: 18px;
-    }
-
-
-    /* =========================================================
-       DATE
-    ========================================================= */
-
-    .date-block {
-
-      margin-bottom: 14px;
-
-      animation:
-        fadeUp .7s var(--ease) .45s both;
-    }
-
-
-    .date-week {
-
-      color: #687386;
-
-      font-size: 10px;
-
-      font-weight: 800;
-
-      letter-spacing: 1.5px;
-
-      text-transform: uppercase;
-    }
-
-
-    .date-full {
-
-      margin-top: 5px;
-
-      color: #dce2ec;
-
-      font-size: 15px;
-
-      font-weight: 650;
-
-      letter-spacing: -.2px;
-    }
-
-
-    /* =========================================================
-       MAIN CLOCK
-    ========================================================= */
-
-    .clock-card {
-
-      position: relative;
-
-      isolation: isolate;
-
-      overflow: hidden;
-
-      padding:
-        27px
         18px
-        18px;
-
-      border-radius:
-        var(--radius-lg);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(20,25,36,.94),
-          rgba(12,16,24,.96)
-        );
-
-      border:
-        1px solid rgba(255,255,255,.08);
-
-      box-shadow:
-        var(--shadow);
-
-      animation:
-        cardReveal .8s var(--ease) .55s both;
+        max(28px, env(safe-area-inset-bottom));
     }
 
-
-    .clock-card::before {
-
-      content: "";
-
-      position: absolute;
-
-      width: 300px;
-      height: 300px;
-
-      top: -190px;
-      right: -120px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(59,130,246,.20),
-          transparent 67%
-        );
-
-      z-index: -1;
-
-      animation:
-        glowFloat 7s ease-in-out infinite alternate;
-    }
-
-
-    .clock-card::after {
-
-      content: "";
-
-      position: absolute;
-
-      inset: 0;
-
-      border-radius: inherit;
-
-      pointer-events: none;
-
-      background:
-        linear-gradient(
-          120deg,
-          rgba(255,255,255,.035),
-          transparent 30%,
-          transparent 70%,
-          rgba(255,255,255,.018)
-        );
-    }
-
-
-    /* =========================================================
-       STATUS
-    ========================================================= */
-
-    .status {
-
-      position: relative;
-
-      width: fit-content;
-
+    .shell {
+      width: min(760px, 100%);
       margin: 0 auto;
+    }
+
+    /* ======================================================
+       LOGIN
+    ====================================================== */
+
+    #loginScreen {
+      min-height: 100vh;
 
       display: flex;
-
       align-items: center;
-
-      gap: 7px;
+      justify-content: center;
 
       padding:
-        7px 11px;
+        30px
+        18px
+        max(30px, env(safe-area-inset-bottom));
+    }
 
-      border-radius: 999px;
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+
+      padding: 34px 26px 28px;
+
+      border-radius: 32px;
 
       background:
-        rgba(255,255,255,.045);
+        rgba(255,255,255,.92);
 
       border:
-        1px solid rgba(255,255,255,.055);
-
-      color: #8791a2;
-
-      font-size: 10px;
-
-      font-weight: 800;
-
-      letter-spacing: .6px;
-
-      text-transform: uppercase;
-
-      transition:
-        background .35s ease,
-        color .35s ease,
-        border-color .35s ease;
-    }
-
-
-    .status-dot {
-
-      width: 7px;
-      height: 7px;
-
-      flex: 0 0 7px;
-
-      border-radius: 50%;
-
-      background: #64748b;
-
-      transition:
-        background .3s ease,
-        box-shadow .3s ease;
-    }
-
-
-    .status.en-cours {
-
-      color: #86efac;
-
-      background:
-        rgba(34,197,94,.07);
-
-      border-color:
-        rgba(34,197,94,.15);
-    }
-
-
-    .status.en-cours .status-dot {
-
-      background: var(--green);
+        1px solid rgba(255,255,255,.8);
 
       box-shadow:
-        0 0 0 4px rgba(34,197,94,.08),
-        0 0 14px rgba(34,197,94,.7);
-
-      animation:
-        statusPulse 1.8s infinite;
-    }
-
-
-    .status.termine {
-
-      color: #93c5fd;
-
-      background:
-        rgba(59,130,246,.07);
-
-      border-color:
-        rgba(59,130,246,.14);
-    }
-
-
-    .status.termine .status-dot {
-
-      background: var(--blue);
-
-      box-shadow:
-        0 0 0 4px rgba(59,130,246,.07);
-    }
-
-
-    .status.absent {
-
-      color: #fbbf24;
-
-      background:
-        rgba(245,158,11,.07);
-
-      border-color:
-        rgba(245,158,11,.14);
-    }
-
-
-    .status.absent .status-dot {
-      background: var(--orange);
-    }
-
-
-    .status.fete {
-
-      color: #f9a8d4;
-
-      background:
-        rgba(236,72,153,.07);
-
-      border-color:
-        rgba(236,72,153,.14);
-    }
-
-
-    .status.fete .status-dot {
-      background: var(--pink);
-    }
-
-
-    .status.chabbat {
-
-      color: #c4b5fd;
-
-      background:
-        rgba(139,92,246,.07);
-
-      border-color:
-        rgba(139,92,246,.14);
-    }
-
-
-    .status.chabbat .status-dot {
-      background: var(--purple);
-    }
-
-
-    /* =========================================================
-       CLOCK
-    ========================================================= */
-
-    .clock {
-
-      margin-top: 22px;
+        0 30px 80px rgba(0,0,0,.12);
 
       text-align: center;
-
-      color: #f8fafc;
-
-      font-size:
-        clamp(
-          64px,
-          19vw,
-          98px
-        );
-
-      line-height: .9;
-
-      font-weight: 850;
-
-      letter-spacing:
-        -5px;
-
-      font-variant-numeric:
-        tabular-nums;
-
-      text-shadow:
-        0 0 35px rgba(255,255,255,.04);
-
-      animation:
-        clockAppear .9s var(--ease) .7s both;
     }
 
-
-    .clock-seconds {
-
-      color: #596477;
-
-      font-size: .34em;
-
-      letter-spacing: -1px;
-
-      vertical-align: 8%;
-    }
-
-
-    .clock-label {
-
-      margin-top: 12px;
-
-      text-align: center;
-
-      color: #626e80;
-
-      font-size: 10px;
-
-      font-weight: 650;
-
-      letter-spacing: .2px;
-    }
-
-
-    /* =========================================================
-       MAIN BUTTON
-    ========================================================= */
-
-    .main-action {
-
-      position: relative;
-
-      width: 100%;
-
-      min-height: 64px;
-
-      margin-top: 20px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      gap: 10px;
-
-      overflow: hidden;
-
-      border-radius: 18px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #4f46e5
-        );
-
-      color: #fff;
-
-      font-size: 15px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 14px 32px rgba(37,99,235,.22);
-
-      transition:
-        transform .18s var(--ease),
-        box-shadow .25s ease,
-        filter .25s ease;
-    }
-
-
-    .main-action::before {
-
-      content: "";
-
-      position: absolute;
-
-      inset: 0;
-
-      background:
-        linear-gradient(
-          110deg,
-          transparent 15%,
-          rgba(255,255,255,.16) 45%,
-          transparent 70%
-        );
-
-      transform:
-        translateX(-120%);
-
-      animation:
-        buttonShine 4s ease-in-out 1.8s infinite;
-    }
-
-
-    .main-action:hover {
-
-      filter: brightness(1.06);
-
-      box-shadow:
-        0 17px 38px rgba(37,99,235,.28);
-    }
-
-
-    .main-action:active {
-
-      transform:
-        scale(.975);
-    }
-
-
-    .main-action.finish {
-
-      background:
-        linear-gradient(
-          135deg,
-          #dc2626,
-          #ef4444
-        );
-
-      box-shadow:
-        0 14px 32px rgba(239,68,68,.20);
-    }
-
-
-    .main-action.finish:hover {
-
-      box-shadow:
-        0 17px 38px rgba(239,68,68,.27);
-    }
-
-
-    .main-action:disabled {
-
-      opacity: .48;
-
-      cursor: default;
-
-      pointer-events: none;
-    }
-
-
-    .action-icon {
-
-      position: relative;
-
-      width: 27px;
-      height: 27px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 9px;
-
-      background:
-        rgba(255,255,255,.15);
-
-      font-size: 11px;
-
-      z-index: 1;
-    }
-
-
-    #actionText {
-      position: relative;
-      z-index: 1;
-    }
-
-
-    /* =========================================================
-       TODAY CARDS
-    ========================================================= */
-
-    .today-grid {
+    .logo {
+      width: 70px;
+      height: 70px;
+
+      margin: 0 auto 22px;
 
       display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0,1fr));
-
-      gap: 9px;
-
-      margin-top: 9px;
-    }
-
-
-    .today-card {
-
-      position: relative;
-
-      min-height: 94px;
-
-      padding: 16px;
-
-      overflow: hidden;
-
-      border-radius: 18px;
-
-      background:
-        rgba(17,22,31,.76);
-
-      border:
-        1px solid var(--border);
-
-      backdrop-filter:
-        blur(16px);
-
-      -webkit-backdrop-filter:
-        blur(16px);
-
-      transition:
-        transform .25s var(--ease),
-        border-color .25s ease,
-        background .25s ease;
-
-      animation:
-        cardReveal .7s var(--ease) both;
-    }
-
-
-    .today-card:nth-child(1) {
-      animation-delay: .75s;
-    }
-
-    .today-card:nth-child(2) {
-      animation-delay: .82s;
-    }
-
-    .today-card:nth-child(3) {
-      animation-delay: .89s;
-    }
-
-    .today-card:nth-child(4) {
-      animation-delay: .96s;
-    }
-
-
-    .today-card:hover {
-
-      transform:
-        translateY(-2px);
-
-      border-color:
-        rgba(255,255,255,.12);
-
-      background:
-        rgba(22,27,38,.86);
-    }
-
-
-    .today-label {
-
-      color: #687386;
-
-      font-size: 9px;
-
-      font-weight: 800;
-
-      text-transform: uppercase;
-
-      letter-spacing: .8px;
-    }
-
-
-    .today-value {
-
-      margin-top: 9px;
-
-      color: #edf1f7;
-
-      font-size: 21px;
-
-      font-weight: 800;
-
-      letter-spacing: -.5px;
-
-      font-variant-numeric:
-        tabular-nums;
-    }
-
-
-    /* =========================================================
-       SECTIONS
-    ========================================================= */
-
-    .section-header {
-
-      display: flex;
-
-      align-items: flex-end;
-
-      justify-content: space-between;
-
-      margin-top: 30px;
-
-      margin-bottom: 11px;
-
-      animation:
-        fadeUp .7s var(--ease) 1s both;
-    }
-
-
-    .section-title {
-
-      font-size: 18px;
-
-      font-weight: 800;
-
-      letter-spacing: -.5px;
-    }
-
-
-    .section-subtitle {
-
-      color: #5f6a7b;
-
-      font-size: 10px;
-
-      font-weight: 700;
-
-      text-transform: uppercase;
-
-      letter-spacing: .7px;
-    }
-
-
-    /* =========================================================
-       TIMELINE
-    ========================================================= */
-
-    .timeline-card {
-
-      padding: 18px;
-
-      border-radius: 21px;
-
-      background:
-        rgba(17,22,31,.74);
-
-      border:
-        1px solid var(--border);
-
-      backdrop-filter:
-        blur(16px);
-
-      -webkit-backdrop-filter:
-        blur(16px);
-
-      animation:
-        cardReveal .75s var(--ease) 1.05s both;
-    }
-
-
-    .timeline {
-
-      position: relative;
-    }
-
-
-    .timeline-row {
-
-      position: relative;
-
-      display: flex;
-
-      align-items: center;
-
-      min-height: 52px;
-    }
-
-
-    .timeline-line {
-
-      position: absolute;
-
-      left: 7px;
-
-      top: 25px;
-
-      bottom: -25px;
-
-      width: 1px;
-
-      background:
-        linear-gradient(
-          to bottom,
-          #273142,
-          rgba(39,49,66,.25)
-        );
-    }
-
-
-    .timeline-row:last-child .timeline-line {
-      display: none;
-    }
-
-
-    .timeline-dot {
-
-      position: relative;
-
-      z-index: 2;
-
-      width: 15px;
-      height: 15px;
-
-      flex: 0 0 15px;
-
-      border-radius: 50%;
-
-      background: #1e2735;
-
-      border:
-        3px solid #11161f;
-
-      box-shadow:
-        0 0 0 1px #334052;
-
-      transition:
-        background .3s ease,
-        box-shadow .3s ease,
-        transform .3s var(--ease);
-    }
-
-
-    .timeline-row.active .timeline-dot {
-
-      background: var(--blue);
-
-      box-shadow:
-        0 0 0 1px var(--blue),
-        0 0 14px rgba(59,130,246,.45);
-
-      transform:
-        scale(1.08);
-    }
-
-
-    .timeline-content {
-
-      width: 100%;
-
-      margin-left: 14px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-    }
-
-
-    .timeline-label {
-
-      color: #8994a5;
-
-      font-size: 12px;
-
-      font-weight: 650;
-    }
-
-
-    .timeline-time {
-
-      color: #e7ebf2;
-
-      font-size: 13px;
-
-      font-weight: 800;
-
-      font-variant-numeric:
-        tabular-nums;
-    }
-
-
-    /* =========================================================
-       MONTH
-    ========================================================= */
-
-    .month-card {
-
-      padding: 15px;
+      place-items: center;
 
       border-radius: 22px;
 
-      background:
-        rgba(17,22,31,.74);
+      background: #111318;
+      color: white;
 
-      border:
-        1px solid var(--border);
+      font-size: 28px;
+      font-weight: 800;
 
-      backdrop-filter:
-        blur(16px);
-
-      -webkit-backdrop-filter:
-        blur(16px);
-
-      animation:
-        cardReveal .75s var(--ease) 1.12s both;
+      box-shadow:
+        0 14px 35px rgba(0,0,0,.18);
     }
 
+    .login-card h1 {
+      margin: 0;
 
-    .month-grid {
+      font-size: 30px;
+      letter-spacing: -.8px;
+    }
+
+    .login-card p {
+      margin: 10px 0 28px;
+
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    #googleButton {
+      display: flex;
+      justify-content: center;
+
+      min-height: 44px;
+    }
+
+    .login-error {
+      display: none;
+
+      margin-top: 20px;
+      padding: 13px 15px;
+
+      border-radius: 16px;
+
+      background: #fff0f1;
+      color: #a62936;
+
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    /* ======================================================
+       APP
+    ====================================================== */
+
+    #appScreen {
+      display: none;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 14px;
+
+      padding: 10px 2px 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
 
       display: grid;
+      place-items: center;
 
-      grid-template-columns:
-        repeat(2, minmax(0,1fr));
+      border-radius: 15px;
 
+      background: #111318;
+      color: white;
+
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+
+    .brand-subtitle {
+      margin-top: 2px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
       gap: 9px;
     }
 
+    .profile img {
+      width: 36px;
+      height: 36px;
 
-    .month-stat {
+      border-radius: 50%;
 
-      min-height: 84px;
-
-      padding: 14px;
-
-      border-radius: 16px;
-
-      background:
-        rgba(7,10,15,.48);
-
-      border:
-        1px solid rgba(255,255,255,.055);
-
-      transition:
-        transform .25s var(--ease),
-        border-color .25s ease;
+      object-fit: cover;
     }
 
+    .logout {
+      padding: 8px;
 
-    .month-stat:hover {
-
-      transform:
-        translateY(-2px);
-
-      border-color:
-        rgba(255,255,255,.10);
-    }
-
-
-    .month-number {
-
-      color: #f0f3f8;
-
-      font-size: 21px;
-
-      font-weight: 850;
-
-      letter-spacing: -.5px;
-
-      font-variant-numeric:
-        tabular-nums;
-    }
-
-
-    .month-label {
-
-      margin-top: 4px;
-
-      color: #687488;
-
-      font-size: 9px;
-
-      font-weight: 750;
-
-      text-transform: uppercase;
-
-      letter-spacing: .55px;
-    }
-
-
-    .chabbat-card {
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      margin-top: 9px;
-
-      animation:
-        cardReveal .75s var(--ease) 1.18s both;
-    }
-
-
-    .chabbat-icon {
-
-      width: 40px;
-      height: 40px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 13px;
-
-      background:
-        rgba(139,92,246,.09);
-
-      color: #a78bfa;
-
-      font-size: 17px;
-    }
-
-
-    /* =========================================================
-       ABSENCE
-    ========================================================= */
-
-    .absence-button {
-
-      width: 100%;
-
-      min-height: 53px;
-
-      margin-top: 12px;
-
-      border-radius: 16px;
-
-      background:
-        rgba(255,255,255,.025);
-
-      border:
-        1px solid rgba(255,255,255,.08);
-
-      color: #858fa0;
+      color: var(--muted);
+      background: transparent;
 
       font-size: 12px;
-
-      font-weight: 750;
-
-      cursor: pointer;
-
-      transition:
-        transform .2s var(--ease),
-        background .2s ease,
-        color .2s ease,
-        border-color .2s ease;
-
-      animation:
-        fadeUp .7s var(--ease) 1.25s both;
     }
 
+    /* ======================================================
+       DATE
+    ====================================================== */
 
-    .absence-button:hover {
+    .date-card {
+      padding: 26px;
 
-      background:
-        rgba(255,255,255,.05);
-
-      border-color:
-        rgba(255,255,255,.12);
-
-      color: #cbd5e1;
-    }
-
-
-    .absence-button:active {
-
-      transform:
-        scale(.98);
-    }
-
-
-    /* =========================================================
-       MODALS
-    ========================================================= */
-
-    .modal {
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 1000;
-
-      display: flex;
-
-      align-items: flex-end;
-
-      justify-content: center;
-
-      padding: 0;
-
-      background:
-        rgba(0,0,0,.68);
-
-      opacity: 0;
-
-      visibility: hidden;
-
-      pointer-events: none;
-
-      backdrop-filter:
-        blur(0);
-
-      -webkit-backdrop-filter:
-        blur(0);
-
-      transition:
-        opacity .3s ease,
-        visibility .3s ease,
-        backdrop-filter .3s ease;
-    }
-
-
-    .modal.show {
-
-      opacity: 1;
-
-      visibility: visible;
-
-      pointer-events: auto;
-
-      backdrop-filter:
-        blur(10px);
-
-      -webkit-backdrop-filter:
-        blur(10px);
-    }
-
-
-    .modal-content {
-
-      width: 100%;
-
-      max-width: 620px;
-
-      padding:
-        10px
-        18px
-        max(
-          25px,
-          env(safe-area-inset-bottom)
-        );
-
-      border-radius:
-        28px
-        28px
-        0
-        0;
+      border-radius: var(--radius);
 
       background:
         linear-gradient(
           145deg,
-          #151a24,
-          #10141c
-        );
-
-      border-top:
-        1px solid rgba(255,255,255,.10);
-
-      box-shadow:
-        0 -25px 80px rgba(0,0,0,.35);
-
-      transform:
-        translateY(100%);
-
-      transition:
-        transform .45s var(--ease);
-    }
-
-
-    .modal.show .modal-content {
-
-      transform:
-        translateY(0);
-    }
-
-
-    .modal-handle {
-
-      width: 38px;
-      height: 4px;
-
-      margin:
-        3px auto 19px;
-
-      border-radius: 999px;
-
-      background: #3b4554;
-    }
-
-
-    .modal-title {
-
-      font-size: 21px;
-
-      font-weight: 850;
-
-      letter-spacing: -.5px;
-    }
-
-
-    .modal-description {
-
-      margin-top: 5px;
-
-      color: #7b8697;
-
-      font-size: 12px;
-
-      line-height: 1.5;
-    }
-
-
-    .choices {
-
-      display: grid;
-
-      gap: 8px;
-
-      margin-top: 18px;
-    }
-
-
-    .choice {
-
-      width: 100%;
-
-      min-height: 57px;
-
-      padding:
-        0 15px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      border-radius: 15px;
-
-      background:
-        rgba(5,8,13,.48);
-
-      border:
-        1px solid rgba(255,255,255,.07);
-
-      color: #cbd4e1;
-
-      font-size: 13px;
-
-      font-weight: 700;
-
-      cursor: pointer;
-
-      transition:
-        transform .2s var(--ease),
-        background .2s ease,
-        border-color .2s ease;
-    }
-
-
-    .choice:active {
-
-      transform:
-        scale(.985);
-    }
-
-
-    .choice.selected {
-
-      background:
-        rgba(59,130,246,.10);
-
-      border-color:
-        rgba(59,130,246,.6);
-
-      color: #93c5fd;
-    }
-
-
-    .choice-check {
-
-      width: 21px;
-      height: 21px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 50%;
-
-      background: var(--blue);
-
-      color: #fff;
-
-      font-size: 10px;
-
-      opacity: 0;
-
-      transform:
-        scale(.6);
-
-      transition:
-        opacity .2s ease,
-        transform .25s var(--ease);
-    }
-
-
-    .choice.selected .choice-check {
-
-      opacity: 1;
-
-      transform:
-        scale(1);
-    }
-
-
-    .modal-buttons {
-
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap: 8px;
-
-      margin-top: 17px;
-    }
-
-
-    .modal-button {
-
-      min-height: 55px;
-
-      border-radius: 15px;
-
-      font-size: 13px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      transition:
-        transform .18s ease,
-        filter .2s ease;
-    }
-
-
-    .modal-button:active {
-
-      transform:
-        scale(.97);
-    }
-
-
-    .cancel {
-
-      background:
-        #1b222e;
-
-      color: #aeb8c8;
-    }
-
-
-    .confirm {
-
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #4f46e5
+          #111318,
+          #252832
         );
 
       color: white;
 
       box-shadow:
-        0 10px 25px rgba(37,99,235,.18);
+        0 24px 55px rgba(0,0,0,.18);
     }
 
+    .date-label {
+      color: rgba(255,255,255,.58);
 
-    /* =========================================================
-       LOADING / INTRO
-    ========================================================= */
+      text-transform: uppercase;
 
-    .loading {
+      font-size: 11px;
+      font-weight: 700;
 
-      position: fixed;
+      letter-spacing: 1.2px;
+    }
 
-      inset: 0;
+    .date {
+      margin-top: 8px;
 
-      z-index: 5000;
+      font-size: clamp(23px, 6vw, 34px);
 
+      font-weight: 800;
+      letter-spacing: -1px;
+
+      text-transform: capitalize;
+    }
+
+    .clock {
+      margin-top: 14px;
+
+      font-size: 44px;
+      line-height: 1;
+
+      font-weight: 300;
+      letter-spacing: -2px;
+    }
+
+    /* ======================================================
+       STATUS
+    ====================================================== */
+
+    .status-card {
+      margin-top: 16px;
+
+      padding: 19px 20px;
+
+      border-radius: 22px;
+
+      background: var(--card);
+
+      border:
+        1px solid var(--border);
+
+      box-shadow: var(--shadow);
+    }
+
+    .status-row {
       display: flex;
-
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
 
-      background:
-        radial-gradient(
-          circle at 50% 40%,
-          rgba(59,130,246,.12),
-          transparent 28%
-        ),
-        #07090e;
+      gap: 15px;
+    }
+
+    .status-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 7px 11px;
+
+      border-radius: 999px;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status::before {
+      content: "";
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: currentColor;
+    }
+
+    .status.green {
+      color: var(--green-dark);
+      background: #e8f7ef;
+    }
+
+    .status.red {
+      color: var(--red-dark);
+      background: #fff0f1;
+    }
+
+    .status.gray {
+      color: #666b74;
+      background: #eceef1;
+    }
+
+    .status.yellow {
+      color: #956e00;
+      background: #fff7d9;
+    }
+
+    /* ======================================================
+       ACTIONS
+    ====================================================== */
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 13px;
+
+      margin-top: 16px;
+    }
+
+    .action {
+      min-height: 122px;
+
+      padding: 19px;
+
+      border-radius: 23px;
+
+      color: white;
+
+      text-align: left;
+
+      box-shadow:
+        0 18px 35px rgba(0,0,0,.12);
 
       transition:
-        opacity .55s ease,
-        visibility .55s ease;
+        transform .15s ease,
+        opacity .15s ease;
     }
 
-
-    .loading.hidden {
-
-      opacity: 0;
-
-      visibility: hidden;
-
-      pointer-events: none;
+    .action:active {
+      transform: scale(.97);
     }
 
-
-    .loader {
-
-      display: flex;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      justify-content: center;
-
-      animation:
-        introLoader .7s var(--ease) both;
-    }
-
-
-    .loader-icon {
-
-      position: relative;
-
-      width: 58px;
-      height: 58px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 18px;
-
+    .action.green {
       background:
         linear-gradient(
           145deg,
-          #2563eb,
-          #4f46e5
+          #24a866,
+          #16804e
         );
-
-      box-shadow:
-        0 20px 55px rgba(37,99,235,.3);
-
-      font-size: 25px;
     }
 
-
-    .loader-icon::before {
-
-      content: "⏱";
-
-      animation:
-        iconFloat 1.8s ease-in-out infinite;
+    .action.red {
+      background:
+        linear-gradient(
+          145deg,
+          #e04b59,
+          #bd303e
+        );
     }
 
+    .action.disabled {
+      opacity: .35;
+      pointer-events: none;
+    }
 
-    .loader-ring {
+    .action-icon {
+      font-size: 23px;
+      margin-bottom: 18px;
+    }
 
-      position: absolute;
+    .action-title {
+      font-size: 17px;
+      font-weight: 800;
+    }
 
-      inset: -7px;
+    .action-subtitle {
+      margin-top: 4px;
 
-      border-radius: 24px;
+      color: rgba(255,255,255,.7);
+
+      font-size: 12px;
+    }
+
+    /* ======================================================
+       INFOS
+    ====================================================== */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .info {
+      padding: 18px;
+
+      border-radius: 21px;
+
+      background: var(--card);
 
       border:
-        1px solid rgba(96,165,250,.28);
+        1px solid var(--border);
 
-      animation:
-        ringPulse 1.8s ease-out infinite;
+      box-shadow: var(--shadow);
     }
 
+    .info-label {
+      color: var(--muted);
 
-    .loader-text {
+      font-size: 12px;
+    }
 
-      margin-top: 17px;
+    .info-value {
+      margin-top: 8px;
 
-      color: #687488;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
 
-      font-size: 11px;
+    /* ======================================================
+       ABSENCE
+    ====================================================== */
+
+    .absence-button {
+      width: 100%;
+
+      margin-top: 16px;
+      padding: 16px;
+
+      border-radius: 18px;
+
+      background: transparent;
+
+      border:
+        1px solid var(--border);
+
+      color: #555b66;
 
       font-weight: 700;
-
-      letter-spacing: .2px;
     }
 
+    /* ======================================================
+       MODAL
+    ====================================================== */
 
-    /* =========================================================
-       TOAST
-    ========================================================= */
-
-    .toast {
-
+    .modal {
       position: fixed;
+      inset: 0;
 
-      z-index: 6000;
+      z-index: 100;
 
-      left: 16px;
-      right: 16px;
+      display: none;
 
-      bottom:
-        max(
-          18px,
-          env(safe-area-inset-bottom)
-        );
-
-      max-width: 580px;
-
-      margin: auto;
+      align-items: flex-end;
+      justify-content: center;
 
       padding:
-        14px 16px;
+        16px
+        16px
+        max(16px, env(safe-area-inset-bottom));
+
+      background:
+        rgba(0,0,0,.42);
+
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(500px, 100%);
+
+      padding: 24px;
+
+      border-radius: 28px;
+
+      background: white;
+
+      box-shadow:
+        0 -10px 50px rgba(0,0,0,.18);
+    }
+
+    .modal-card h2 {
+      margin: 0;
+
+      font-size: 23px;
+      letter-spacing: -.5px;
+    }
+
+    .modal-card p {
+      margin: 7px 0 19px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .pause-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pause-option {
+      padding: 16px;
+
+      border-radius: 17px;
+
+      background: #f3f4f6;
+
+      text-align: left;
+
+      font-weight: 750;
+    }
+
+    .pause-option:active {
+      transform: scale(.98);
+    }
+
+    .cancel {
+      width: 100%;
+
+      margin-top: 10px;
+      padding: 14px;
 
       border-radius: 16px;
 
+      background: transparent;
+
+      color: var(--muted);
+
+      font-weight: 700;
+    }
+
+    /* ======================================================
+       LOADING
+    ====================================================== */
+
+    .loading {
+      position: fixed;
+      inset: 0;
+
+      z-index: 200;
+
+      display: none;
+
+      place-items: center;
+
       background:
-        rgba(23,30,42,.94);
+        rgba(244,245,247,.82);
+
+      backdrop-filter: blur(8px);
+    }
+
+    .loading.show {
+      display: grid;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
 
       border:
-        1px solid rgba(255,255,255,.09);
+        3px solid #ddd;
 
-      box-shadow:
-        0 15px 45px rgba(0,0,0,.35);
+      border-top-color:
+        #111318;
 
-      color: #e7ebf2;
+      border-radius: 50%;
 
-      text-align: center;
+      animation:
+        spin .7s linear infinite;
+    }
 
-      font-size: 12px;
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-      font-weight: 750;
+    /* ======================================================
+       TOAST
+    ====================================================== */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom:
+        max(22px, env(safe-area-inset-bottom));
+
+      z-index: 300;
 
       transform:
-        translateY(150%);
+        translate(-50%, 20px);
 
       opacity: 0;
 
-      transition:
-        transform .45s var(--ease),
-        opacity .3s ease;
-    }
+      pointer-events: none;
 
+      width: min(
+        calc(100% - 34px),
+        420px
+      );
+
+      padding: 14px 16px;
+
+      border-radius: 17px;
+
+      background: #111318;
+      color: white;
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+
+      font-size: 14px;
+      font-weight: 650;
+
+      transition:
+        opacity .2s ease,
+        transform .2s ease;
+    }
 
     .toast.show {
+      opacity: 1;
 
       transform:
-        translateY(0);
-
-      opacity: 1;
+        translate(-50%, 0);
     }
 
-
-    .toast.success {
-
-      background:
-        rgba(12,31,20,.96);
-
-      border-color:
-        rgba(34,197,94,.25);
-
-      color: #86efac;
-    }
-
-
-    .toast.error {
-
-      background:
-        rgba(40,15,18,.96);
-
-      border-color:
-        rgba(239,68,68,.25);
-
-      color: #fca5a5;
-    }
-
-
-    /* =========================================================
-       ANIMATIONS
-    ========================================================= */
-
-    @keyframes appReveal {
-
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-
-    @keyframes fadeUp {
-
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-
-    @keyframes cardReveal {
-
-      from {
-        opacity: 0;
-        transform:
-          translateY(18px)
-          scale(.985);
-      }
-
-      to {
-        opacity: 1;
-        transform:
-          translateY(0)
-          scale(1);
-      }
-    }
-
-
-    @keyframes clockAppear {
-
-      from {
-        opacity: 0;
-        transform:
-          translateY(12px)
-          scale(.97);
-        filter: blur(5px);
-      }
-
-      to {
-        opacity: 1;
-        transform:
-          translateY(0)
-          scale(1);
-        filter: blur(0);
-      }
-    }
-
-
-    @keyframes introLoader {
-
-      from {
-        opacity: 0;
-        transform:
-          translateY(12px)
-          scale(.92);
-      }
-
-      to {
-        opacity: 1;
-        transform:
-          translateY(0)
-          scale(1);
-      }
-    }
-
-
-    @keyframes iconFloat {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-3px);
-      }
-    }
-
-
-    @keyframes ringPulse {
-
-      0% {
-        opacity: .8;
-        transform: scale(.92);
-      }
-
-      100% {
-        opacity: 0;
-        transform: scale(1.12);
-      }
-    }
-
-
-    @keyframes statusPulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: .45;
-      }
-    }
-
-
-    @keyframes ambientMove {
-
-      from {
-        transform:
-          translate3d(-2%,0,0)
-          scale(1);
-      }
-
-      to {
-        transform:
-          translate3d(2%,2%,0)
-          scale(1.04);
-      }
-    }
-
-
-    @keyframes glowFloat {
-
-      from {
-        transform:
-          translate3d(0,0,0);
-      }
-
-      to {
-        transform:
-          translate3d(-20px,15px,0);
-      }
-    }
-
-
-    @keyframes logoShine {
-
-      0% {
-        left: -100%;
-      }
-
-      25%,
-      100% {
-        left: 120%;
-      }
-    }
-
-
-    @keyframes buttonShine {
-
-      0%,
-      35% {
-        transform: translateX(-120%);
-      }
-
-      60%,
-      100% {
-        transform: translateX(120%);
-      }
-    }
-
-
-    @media (prefers-reduced-motion: reduce) {
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: .001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .001ms !important;
-      }
-
-    }
-
-
-    /* =========================================================
-       TABLET
-    ========================================================= */
+    /* ======================================================
+       DESKTOP
+    ====================================================== */
 
     @media (min-width: 700px) {
 
-      body {
-        background:
-          radial-gradient(
-            circle at 50% -15%,
-            rgba(59,130,246,.17),
-            transparent 34%
-          ),
-          #07090e;
-      }
-
-
       .app {
-
-        max-width: 1100px;
-
-        padding:
-          34px
-          30px
-          60px;
+        padding-top: 34px;
       }
 
-
-      .topbar {
-
-        margin-bottom: 28px;
+      .actions {
+        gap: 16px;
       }
 
-
-      .desktop-main {
-
-        display: grid;
-
-        grid-template-columns:
-          minmax(0,1.15fr)
-          minmax(320px,.85fr);
-
-        gap: 12px;
-
-        align-items: start;
-      }
-
-
-      .clock-card {
-
-        grid-row:
-          span 2;
-      }
-
-
-      .today-grid {
-
-        margin-top: 0;
-      }
-
-
-      .section-header {
-
-        margin-top: 34px;
-      }
-
-
-      .month-grid {
-
-        grid-template-columns:
-          repeat(4, minmax(0,1fr));
-      }
-
-
-      .absence-button {
-
-        max-width: 360px;
-
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-
-
-    /* =========================================================
-       LARGE DESKTOP
-    ========================================================= */
-
-    @media (min-width: 1100px) {
-
-      .app {
-        max-width: 1180px;
-      }
-
-
-      .clock-card {
-        padding:
-          38px
-          28px
-          26px;
-      }
-
-
-      .clock {
-        font-size: 112px;
-      }
-
-
-      .today-card {
-        min-height: 105px;
+      .modal {
+        align-items: center;
       }
     }
 
   </style>
-
 </head>
 
 
 <body>
 
 
-  <!-- =======================================================
-       INTRO
-  ======================================================== -->
+  <!-- =====================================================
+       LOGIN
+  ====================================================== -->
 
-  <div id="loading" class="loading">
+  <section id="loginScreen">
 
-    <div class="loader">
+    <div class="login-card">
 
-      <div class="loader-icon">
-
-        <div class="loader-ring"></div>
-
+      <div class="logo">
+        MP
       </div>
 
-      <div class="loader-text">
-        Chargement de Mon Pointage
+      <h1>
+        Mon Pointage
+      </h1>
+
+      <p>
+        Connectez-vous avec votre compte Google
+        pour accéder à votre espace de pointage.
+      </p>
+
+      <div id="googleButton"></div>
+
+      <div
+        id="loginError"
+        class="login-error">
       </div>
 
     </div>
 
-  </div>
+  </section>
 
 
-  <!-- =======================================================
+  <!-- =====================================================
        APPLICATION
-  ======================================================== -->
+  ====================================================== -->
 
-  <main class="app">
+  <main
+    id="appScreen"
+    class="app">
 
+    <div class="shell">
 
-    <!-- TOPBAR -->
+      <header>
 
-    <header class="topbar">
+        <div class="brand">
 
-      <div class="brand">
-
-        <div class="brand-logo">
-          ⏱
-        </div>
-
-        <div>
-
-          <div class="brand-name">
-            Mon Pointage
+          <div class="brand-icon">
+            MP
           </div>
 
-          <div class="brand-subtitle">
-            Votre journée de travail
+          <div>
+
+            <div class="brand-title">
+              Mon Pointage
+            </div>
+
+            <div class="brand-subtitle">
+              Votre journée de travail
+            </div>
+
           </div>
 
         </div>
 
-      </div>
+
+        <div class="profile">
+
+          <img
+            id="profilePicture"
+            alt="Profil"
+            style="display:none"
+          >
+
+          <button
+            class="logout"
+            onclick="deconnexion()">
+            Déconnexion
+          </button>
+
+        </div>
+
+      </header>
 
 
-      <button
-        id="refreshButton"
-        class="refresh"
-        onclick="chargerEtat()"
-        aria-label="Actualiser"
-      >
+      <!-- DATE -->
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+      <section class="date-card">
 
-          <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4"/>
-
-          <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/>
-
-        </svg>
-
-      </button>
-
-    </header>
-
-
-    <!-- DATE -->
-
-    <section class="date-block">
-
-      <div
-        id="dateWeek"
-        class="date-week"
-      >
-        —
-      </div>
-
-      <div
-        id="dateFull"
-        class="date-full"
-      >
-        —
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         DESKTOP MAIN
-    ====================================================== -->
-
-    <div class="desktop-main">
-
-
-      <!-- HORLOGE -->
-
-      <section class="clock-card">
-
+        <div class="date-label">
+          Aujourd'hui
+        </div>
 
         <div
-          id="status"
-          class="status"
-        >
-
-          <span class="status-dot"></span>
-
-          <span id="statusText">
-            NON POINTÉ
-          </span>
-
+          id="date"
+          class="date">
+          Chargement...
         </div>
-
 
         <div
           id="clock"
-          class="clock"
-        >
+          class="clock">
+          --:--
+        </div>
 
-          00:00
+      </section>
 
-          <span class="clock-seconds">
-            :00
-          </span>
+
+      <!-- STATUS -->
+
+      <section class="status-card">
+
+        <div class="status-row">
+
+          <div class="status-label">
+            État de la journée
+          </div>
+
+          <div
+            id="status"
+            class="status gray">
+            Chargement
+          </div>
 
         </div>
 
+      </section>
 
-        <div class="clock-label">
-          Heure actuelle
-        </div>
+
+      <!-- ACTIONS -->
+
+      <section class="actions">
+
+        <button
+          id="startButton"
+          class="action green"
+          onclick="commencer()">
+
+          <div class="action-icon">
+            ▶
+          </div>
+
+          <div class="action-title">
+            Je commence
+          </div>
+
+          <div class="action-subtitle">
+            Pointer mon arrivée
+          </div>
+
+        </button>
 
 
         <button
-          id="mainAction"
-          class="main-action"
-          onclick="actionPrincipale()"
-        >
+          id="finishButton"
+          class="action red disabled"
+          onclick="ouvrirModalPause()">
 
-          <span
-            id="actionIcon"
-            class="action-icon"
-          >
-            ▶
-          </span>
+          <div class="action-icon">
+            ■
+          </div>
 
-          <span id="actionText">
-            Commencer ma journée
-          </span>
+          <div class="action-title">
+            Je termine
+          </div>
+
+          <div class="action-subtitle">
+            Pointer mon départ
+          </div>
 
         </button>
 
       </section>
 
 
-      <!-- TODAY -->
+      <!-- INFOS -->
 
-      <section class="today-grid">
+      <section class="info-grid">
 
+        <div class="info">
 
-        <div class="today-card">
-
-          <div class="today-label">
+          <div class="info-label">
             Arrivée
           </div>
 
           <div
             id="arrival"
-            class="today-value"
-          >
+            class="info-value">
             —
           </div>
 
         </div>
 
 
-        <div class="today-card">
+        <div class="info">
 
-          <div class="today-label">
+          <div class="info-label">
             Départ
           </div>
 
           <div
             id="departure"
-            class="today-value"
-          >
+            class="info-value">
             —
           </div>
 
         </div>
 
 
-        <div class="today-card">
+        <div class="info">
 
-          <div class="today-label">
+          <div class="info-label">
             Pause
           </div>
 
           <div
-            id="pause"
-            class="today-value"
-          >
-            0 min
-          </div>
-
-        </div>
-
-
-        <div class="today-card">
-
-          <div class="today-label">
-            Travaillé
-          </div>
-
-          <div
-            id="worked"
-            class="today-value"
-          >
+            id="break"
+            class="info-value">
             —
           </div>
 
         </div>
 
 
+        <div class="info">
+
+          <div class="info-label">
+            Heures travaillées
+          </div>
+
+          <div
+            id="worked"
+            class="info-value">
+            —
+          </div>
+
+        </div>
+
       </section>
 
 
-    </div>
+      <!-- ABSENCE -->
 
+      <button
+        id="absenceButton"
+        class="absence-button"
+        onclick="ouvrirAbsence()">
 
-    <!-- =====================================================
-         TIMELINE
-    ====================================================== -->
+        Signaler une absence
 
-    <div class="section-header">
-
-      <div class="section-title">
-        Aujourd'hui
-      </div>
-
-      <div class="section-subtitle">
-        Détails
-      </div>
+      </button>
 
     </div>
-
-
-    <section class="timeline-card">
-
-      <div class="timeline">
-
-
-        <div
-          id="timelineArrival"
-          class="timeline-row"
-        >
-
-          <div class="timeline-line"></div>
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-label">
-              Arrivée
-            </span>
-
-            <span
-              id="timelineArrivalTime"
-              class="timeline-time"
-            >
-              —
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div class="timeline-row">
-
-          <div class="timeline-line"></div>
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-label">
-              Pause
-            </span>
-
-            <span
-              id="timelinePauseTime"
-              class="timeline-time"
-            >
-              —
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div
-          id="timelineDeparture"
-          class="timeline-row"
-        >
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-label">
-              Départ
-            </span>
-
-            <span
-              id="timelineDepartureTime"
-              class="timeline-time"
-            >
-              —
-            </span>
-
-          </div>
-
-        </div>
-
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         MONTH
-    ====================================================== -->
-
-    <div class="section-header">
-
-      <div class="section-title">
-        Ce mois-ci
-      </div>
-
-      <div
-        id="monthName"
-        class="section-subtitle"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <section class="month-card">
-
-      <div class="month-grid">
-
-
-        <div class="month-stat">
-
-          <div
-            id="recapHours"
-            class="month-number"
-          >
-            0h00
-          </div>
-
-          <div class="month-label">
-            Heures
-          </div>
-
-        </div>
-
-
-        <div class="month-stat">
-
-          <div
-            id="recapDays"
-            class="month-number"
-          >
-            0
-          </div>
-
-          <div class="month-label">
-            Jours travaillés
-          </div>
-
-        </div>
-
-
-        <div class="month-stat">
-
-          <div
-            id="recapAbsences"
-            class="month-number"
-          >
-            0
-          </div>
-
-          <div class="month-label">
-            Absences
-          </div>
-
-        </div>
-
-
-        <div class="month-stat">
-
-          <div
-            id="recapFetes"
-            class="month-number"
-          >
-            0
-          </div>
-
-          <div class="month-label">
-            Fêtes
-          </div>
-
-        </div>
-
-
-      </div>
-
-
-      <div class="month-stat chabbat-card">
-
-        <div>
-
-          <div
-            id="recapChabbat"
-            class="month-number"
-          >
-            0
-          </div>
-
-          <div class="month-label">
-            Chabbat
-          </div>
-
-        </div>
-
-
-        <div class="chabbat-icon">
-          ✦
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ABSENCE -->
-
-    <button
-      id="absenceButton"
-      class="absence-button"
-      onclick="ouvrirAbsence()"
-    >
-      Signaler une absence
-    </button>
-
 
   </main>
 
 
-  <!-- =======================================================
+  <!-- =====================================================
        MODAL PAUSE
-  ======================================================== -->
+  ====================================================== -->
 
   <div
     id="pauseModal"
-    class="modal"
-  >
+    class="modal">
 
-    <div class="modal-content">
+    <div class="modal-card">
 
-      <div class="modal-handle"></div>
+      <h2>
+        Quelle pause avez-vous prise ?
+      </h2>
 
-      <div class="modal-title">
-        Votre pause
-      </div>
-
-      <div class="modal-description">
+      <p>
         Sélectionnez la durée de votre pause.
-      </div>
+      </p>
 
-
-      <div class="choices">
-
+      <div class="pause-options">
 
         <button
-          class="choice"
-          onclick="selectionnerPause(0,this)"
-        >
-
-          <span>
-            Aucune pause
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-        <button
-          class="choice"
-          onclick="selectionnerPause(30,this)"
-        >
-
-          <span>
-            30 minutes
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-        <button
-          class="choice"
-          onclick="selectionnerPause(60,this)"
-        >
-
-          <span>
-            1 heure
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-      </div>
-
-
-      <div class="modal-buttons">
-
-        <button
-          class="modal-button cancel"
-          onclick="fermerPause()"
-        >
-          Annuler
+          class="pause-option"
+          onclick="terminer(0)">
+          0 minute
         </button>
 
         <button
-          class="modal-button confirm"
-          onclick="confirmerFin()"
-        >
-          Terminer
+          class="pause-option"
+          onclick="terminer(30)">
+          30 minutes
+        </button>
+
+        <button
+          class="pause-option"
+          onclick="terminer(60)">
+          1 heure
         </button>
 
       </div>
+
+      <button
+        class="cancel"
+        onclick="fermerModalPause()">
+        Annuler
+      </button>
 
     </div>
 
   </div>
 
 
-  <!-- =======================================================
-       MODAL ABSENCE
-  ======================================================== -->
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
 
   <div
-    id="absenceModal"
-    class="modal"
-  >
+    id="loading"
+    class="loading">
 
-    <div class="modal-content">
-
-      <div class="modal-handle"></div>
-
-      <div class="modal-title">
-        Signaler une absence
-      </div>
-
-      <div class="modal-description">
-        Indiquez le motif de votre absence.
-      </div>
-
-
-      <div class="choices">
-
-
-        <button
-          class="choice"
-          onclick="selectionnerAbsence('Congé',this)"
-        >
-
-          <span>
-            Congé
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-        <button
-          class="choice"
-          onclick="selectionnerAbsence('Maladie',this)"
-        >
-
-          <span>
-            Maladie
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-        <button
-          class="choice"
-          onclick="selectionnerAbsence('Absence exceptionnelle',this)"
-        >
-
-          <span>
-            Absence exceptionnelle
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-        <button
-          class="choice"
-          onclick="selectionnerAbsence('Autre',this)"
-        >
-
-          <span>
-            Autre
-          </span>
-
-          <span class="choice-check">
-            ✓
-          </span>
-
-        </button>
-
-
-      </div>
-
-
-      <div class="modal-buttons">
-
-        <button
-          class="modal-button cancel"
-          onclick="fermerAbsence()"
-        >
-          Annuler
-        </button>
-
-        <button
-          class="modal-button confirm"
-          onclick="confirmerAbsence()"
-        >
-          Confirmer
-        </button>
-
-      </div>
-
-    </div>
+    <div class="spinner"></div>
 
   </div>
 
 
-  <!-- TOAST -->
+  <!-- =====================================================
+       TOAST
+  ====================================================== -->
 
   <div
     id="toast"
-    class="toast"
-  ></div>
+    class="toast">
+  </div>
 
-
-  <!-- =======================================================
-       JAVASCRIPT
-  ======================================================== -->
 
   <script>
 
-
-    /* =====================================================
-       API
-    ===================================================== */
+    /* ======================================================
+       CONFIGURATION
+    ====================================================== */
 
     const API_URL =
       "https://script.google.com/macros/s/AKfycbyGHfIcUVimauPjm9mrhUHoIDFl7iAjcQQHkQAZxLCSD1GvVDKDCGIKo1169CVVRKuiBw/exec";
 
 
-    /* =====================================================
-       VARIABLES
-    ===================================================== */
-
-    let etat = null;
-
-    let pauseSelectionnee = 0;
-
-    let absenceSelectionnee = null;
-
-    let horlogeInterval = null;
-
-    let toastTimeout = null;
-
-    let requeteEnCours = false;
+    /*
+     * REMPLACE cette valeur par ton vrai
+     * Client ID Google.
+     */
+    const GOOGLE_CLIENT_ID =
+      "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com.apps.googleusercontent.com";
 
 
-    /* =====================================================
-       INITIALISATION
-    ===================================================== */
+    let idToken = null;
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      function() {
+    let utilisateur = null;
 
-        mettreDate();
-
-        chargerEtat();
-
-        demarrerHorloge();
-
-      }
-    );
+    let callbackCounter = 0;
 
 
-    /* =====================================================
-       DATE
-    ===================================================== */
+    /* ======================================================
+       INITIALISATION GOOGLE
+    ====================================================== */
 
-    function mettreDate() {
+    window.onload = function () {
 
-      const maintenant =
-        new Date();
+      initialiserGoogle();
 
+      mettreAJourHorloge();
 
-      const jour =
-        maintenant.toLocaleDateString(
-          "fr-FR",
-          {
-            weekday: "long"
-          }
-        );
+      setInterval(
+        mettreAJourHorloge,
+        1000
+      );
+    };
 
 
-      const date =
-        maintenant.toLocaleDateString(
-          "fr-FR",
-          {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
-          }
-        );
-
-
-      document.getElementById(
-        "dateWeek"
-      ).textContent =
-        jour.toUpperCase();
-
-
-      document.getElementById(
-        "dateFull"
-      ).textContent =
-        date.charAt(0).toUpperCase() +
-        date.slice(1);
-    }
-
-
-    /* =====================================================
-       HORLOGE
-    ===================================================== */
-
-    function demarrerHorloge() {
-
-      mettreHorloge();
-
-
-      if (horlogeInterval) {
-
-        clearInterval(
-          horlogeInterval
-        );
-      }
-
-
-      horlogeInterval =
-        setInterval(
-          mettreHorloge,
-          1000
-        );
-    }
-
-
-    function mettreHorloge() {
-
-      const maintenant =
-        new Date();
-
-
-      const h =
-        String(
-          maintenant.getHours()
-        )
-        .padStart(2, "0");
-
-
-      const m =
-        String(
-          maintenant.getMinutes()
-        )
-        .padStart(2, "0");
-
-
-      const s =
-        String(
-          maintenant.getSeconds()
-        )
-        .padStart(2, "0");
-
-
-      document.getElementById(
-        "clock"
-      ).innerHTML =
-
-        h +
-        ":" +
-        m +
-
-        '<span class="clock-seconds">:' +
-        s +
-        "</span>";
-
+    function initialiserGoogle() {
 
       if (
-        etat &&
-        etat.debut &&
-        !etat.fin
+        !window.google ||
+        !google.accounts ||
+        !google.accounts.id
       ) {
 
-        afficherTempsTravaille();
+        afficherErreurConnexion(
+          "Le service Google n'a pas pu être chargé. Vérifiez votre connexion Internet puis rechargez la page."
+        );
 
+        return;
       }
-    }
 
+      if (
+        GOOGLE_CLIENT_ID.indexOf(
+          "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com"
+        ) === 0
+      ) {
 
-    /* =====================================================
-       HEURE LOCALE
-    ===================================================== */
+        afficherErreurConnexion(
+          "Le Client ID Google n'est pas encore configuré dans index.html."
+        );
 
-    function heureLocale() {
+        return;
+      }
 
-      const maintenant =
-        new Date();
+      google.accounts.id.initialize({
 
+        client_id:
+          GOOGLE_CLIENT_ID,
 
-      return (
+        callback:
+          recevoirConnexionGoogle,
 
-        String(
-          maintenant.getHours()
-        )
-        .padStart(2, "0") +
+        auto_select: false,
 
-        ":" +
+        cancel_on_tap_outside: true
 
-        String(
-          maintenant.getMinutes()
-        )
-        .padStart(2, "0")
+      });
+
+      google.accounts.id.renderButton(
+
+        document.getElementById(
+          "googleButton"
+        ),
+
+        {
+          type: "standard",
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          shape: "pill",
+          logo_alignment: "left",
+          width: 300,
+          locale: "fr"
+        }
 
       );
     }
 
 
-    /* =====================================================
-       JSONP
-    ===================================================== */
+    /* ======================================================
+       CONNEXION GOOGLE
+    ====================================================== */
+
+    function recevoirConnexionGoogle(
+      response
+    ) {
+
+      if (
+        !response ||
+        !response.credential
+      ) {
+
+        afficherErreurConnexion(
+          "Impossible de récupérer la connexion Google."
+        );
+
+        return;
+      }
+
+      idToken =
+        response.credential;
+
+      sessionStorage.setItem(
+        "monPointageGoogleToken",
+        idToken
+      );
+
+      const payload =
+        decoderJwt(
+          idToken
+        );
+
+      if (!payload) {
+
+        deconnexion();
+
+        afficherErreurConnexion(
+          "Le jeton Google est invalide."
+        );
+
+        return;
+      }
+
+      utilisateur = {
+        email:
+          payload.email || "",
+
+        nom:
+          payload.name || "",
+
+        picture:
+          payload.picture || ""
+      };
+
+      /*
+       * Vérification visuelle immédiate.
+       *
+       * La vraie sécurité est faite côté Apps Script.
+       */
+      if (
+        utilisateur.email
+          .toLowerCase() !==
+        "aharonelbaz6@gmail.com"
+      ) {
+
+        deconnexion();
+
+        afficherErreurConnexion(
+          "Ce compte Google n'est pas autorisé à utiliser Mon Pointage."
+        );
+
+        return;
+      }
+
+      afficherApplication();
+
+      chargerEtat();
+    }
+
+
+    function afficherApplication() {
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .style.display = "none";
+
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .style.display = "block";
+
+      if (
+        utilisateur &&
+        utilisateur.picture
+      ) {
+
+        const image =
+          document.getElementById(
+            "profilePicture"
+          );
+
+        image.src =
+          utilisateur.picture;
+
+        image.style.display =
+          "block";
+      }
+    }
+
+
+    /* ======================================================
+       API JSONP
+    ====================================================== */
 
     function appelerAPI(
       action,
@@ -3109,44 +1322,69 @@
     ) {
 
       return new Promise(
-        function(resolve, reject) {
+        function (
+          resolve,
+          reject
+        ) {
 
+          if (!idToken) {
+
+            reject(
+              new Error(
+                "Connexion Google requise."
+              )
+            );
+
+            return;
+          }
 
           const callbackName =
             "monPointageCallback_" +
             Date.now() +
             "_" +
-            Math.floor(
-              Math.random() * 100000
-            );
-
+            (++callbackCounter);
 
           const script =
             document.createElement(
               "script"
             );
 
+          const query =
+            new URLSearchParams();
 
-          let termine = false;
+          query.set(
+            "action",
+            action
+          );
 
+          query.set(
+            "id_token",
+            idToken
+          );
+
+          query.set(
+            "callback",
+            callbackName
+          );
+
+          Object.keys(params)
+            .forEach(function (key) {
+
+              query.set(
+                key,
+                params[key]
+              );
+            });
 
           const timeout =
             setTimeout(
-              function() {
+              function () {
 
-                if (termine) {
-                  return;
-                }
-
-
-                termine = true;
-
-                nettoyer();
-
+                cleanup();
 
                 reject(
                   new Error(
-                    "Le serveur ne répond pas."
+                    "Le serveur Mon Pointage ne répond pas."
                   )
                 );
 
@@ -3154,1203 +1392,594 @@
               15000
             );
 
+          function cleanup() {
 
-          function nettoyer() {
+            clearTimeout(timeout);
 
-            clearTimeout(
-              timeout
-            );
+            delete window[
+              callbackName
+            ];
 
+            if (
+              script.parentNode
+            ) {
 
-            script.remove();
-
-
-            try {
-
-              delete window[
-                callbackName
-              ];
-
-            }
-
-            catch (e) {
-
-              window[
-                callbackName
-              ] = undefined;
-
+              script.parentNode
+                .removeChild(
+                  script
+                );
             }
           }
 
+          window[callbackName] =
+            function (result) {
 
-          window[
-            callbackName
-          ] =
-            function(reponse) {
-
-
-              if (termine) {
-                return;
-              }
-
-
-              termine = true;
-
-
-              nettoyer();
-
+              cleanup();
 
               if (
-                !reponse ||
-                reponse.success !== true
+                result &&
+                result.success
               ) {
+
+                resolve(result);
+
+              } else {
 
                 reject(
                   new Error(
-                    reponse &&
-                    reponse.error
-                      ? reponse.error
-                      : "Erreur API."
+                    result &&
+                    result.error
+                      ? result.error
+                      : "Erreur inconnue."
                   )
                 );
-
-                return;
               }
-
-
-              resolve(
-                reponse.data
-              );
-
             };
 
-
-          const query =
-            new URLSearchParams();
-
-
-          query.set(
-            "action",
-            action
-          );
-
-
-          query.set(
-            "callback",
-            callbackName
-          );
-
-
-          Object.keys(params)
-            .forEach(
-              function(cle) {
-
-                const valeur =
-                  params[cle];
-
-
-                if (
-                  valeur !== undefined &&
-                  valeur !== null
-                ) {
-
-                  query.set(
-                    cle,
-                    String(valeur)
-                  );
-
-                }
-
-              }
-            );
-
-
-          script.src =
-            API_URL +
-            (
-              API_URL.indexOf("?") >= 0
-                ? "&"
-                : "?"
-            ) +
-            query.toString();
-
-
-          script.async = true;
-
-
           script.onerror =
-            function() {
+            function () {
 
-              if (termine) {
-                return;
-              }
-
-
-              termine = true;
-
-
-              nettoyer();
-
+              cleanup();
 
               reject(
                 new Error(
                   "Impossible de contacter Mon Pointage."
                 )
               );
-
             };
 
+          script.src =
+            API_URL +
+            "?" +
+            query.toString();
 
-          document.head.appendChild(
-            script
-          );
-
+          document
+            .head
+            .appendChild(
+              script
+            );
         }
       );
     }
 
 
-    /* =====================================================
-       CHARGER ÉTAT
-    ===================================================== */
+    /* ======================================================
+       ÉTAT
+    ====================================================== */
 
     async function chargerEtat() {
 
-      if (requeteEnCours) {
-        return;
-      }
-
-
-      const refresh =
-        document.getElementById(
-          "refreshButton"
-        );
-
-
-      refresh.style.transform =
-        "rotate(180deg)";
-
+      afficherLoading(true);
 
       try {
 
-        requeteEnCours = true;
-
-
-        const data =
+        const resultat =
           await appelerAPI(
             "getEtatDuJour"
           );
 
+        appliquerEtat(
+          resultat.data
+        );
 
-        etat = data;
-
-
-        afficherEtat();
-
-
-        cacherLoading();
-
-      }
-
-      catch (error) {
-
-        cacherLoading();
-
+      } catch (erreur) {
 
         afficherErreur(
-          error
+          erreur
         );
 
-      }
+      } finally {
 
-      finally {
-
-        requeteEnCours = false;
-
-
-        setTimeout(
-          function() {
-
-            refresh.style.transform =
-              "rotate(0deg)";
-
-          },
-          300
-        );
-
+        afficherLoading(false);
       }
     }
 
 
-    /* =====================================================
-       AFFICHAGE GLOBAL
-    ===================================================== */
+    function appliquerEtat(
+      etat
+    ) {
 
-    function afficherEtat() {
+      if (!etat) return;
 
-      if (!etat) {
-        return;
-      }
+      document
+        .getElementById(
+          "date"
+        )
+        .textContent =
+        formaterDateFr(
+          etat.date
+        );
 
-
-      document.getElementById(
-        "arrival"
-      ).textContent =
+      document
+        .getElementById(
+          "arrival"
+        )
+        .textContent =
         etat.debut || "—";
 
-
-      document.getElementById(
-        "departure"
-      ).textContent =
+      document
+        .getElementById(
+          "departure"
+        )
+        .textContent =
         etat.fin || "—";
 
+      document
+        .getElementById(
+          "break"
+        )
+        .textContent =
+        etat.pause || "—";
 
-      document.getElementById(
-        "pause"
-      ).textContent =
-        formaterPause(
-          etat.pause
-        );
+      document
+        .getElementById(
+          "worked"
+        )
+        .textContent =
+        etat.travaille || "—";
 
-
-      afficherTempsTravaille();
-
-      afficherStatut();
-
-      afficherTimeline();
-
-      afficherRecap();
-
-      mettreAction();
-    }
-
-
-    /* =====================================================
-       STATUT
-    ===================================================== */
-
-    function afficherStatut() {
 
       const status =
         document.getElementById(
           "status"
         );
 
-
-      const text =
-        document.getElementById(
-          "statusText"
-        );
-
-
-      const type =
-        String(
-          etat.type || ""
-        )
-        .toUpperCase()
-        .trim();
-
+      status.textContent =
+        etat.statut;
 
       status.className =
-        "status";
-
-
-      if (type === "ABSENT") {
-
-        status.classList.add(
-          "absent"
+        "status " +
+        classeStatut(
+          etat.statut
         );
 
-        text.textContent =
-          "ABSENT";
 
-        return;
-      }
-
-
-      if (type === "FETE") {
-
-        status.classList.add(
-          "fete"
-        );
-
-        text.textContent =
-          "FÊTE";
-
-        return;
-      }
-
-
-      if (type === "CHABBAT") {
-
-        status.classList.add(
-          "chabbat"
-        );
-
-        text.textContent =
-          "CHABBAT";
-
-        return;
-      }
-
-
-      if (
-        etat.debut &&
-        !etat.fin
-      ) {
-
-        status.classList.add(
-          "en-cours"
-        );
-
-        text.textContent =
-          "JOURNÉE EN COURS";
-
-        return;
-      }
-
-
-      if (
-        etat.debut &&
-        etat.fin
-      ) {
-
-        status.classList.add(
-          "termine"
-        );
-
-        text.textContent =
-          "JOURNÉE TERMINÉE";
-
-        return;
-      }
-
-
-      text.textContent =
-        "NON POINTÉ";
-    }
-
-
-    /* =====================================================
-       ACTION
-    ===================================================== */
-
-    function mettreAction() {
-
-      const button =
+      const start =
         document.getElementById(
-          "mainAction"
+          "startButton"
         );
 
-
-      const icon =
+      const finish =
         document.getElementById(
-          "actionIcon"
+          "finishButton"
         );
 
+      start.classList.toggle(
+        "disabled",
+        !etat.peutCommencer
+      );
 
-      const text =
-        document.getElementById(
-          "actionText"
-        );
+      finish.classList.toggle(
+        "disabled",
+        !etat.peutTerminer
+      );
 
 
-      const absenceButton =
+      const absence =
         document.getElementById(
           "absenceButton"
         );
 
-
-      const type =
-        String(
-          etat.type || ""
-        )
-        .toUpperCase()
-        .trim();
-
-
-      if (
-        type === "ABSENT" ||
-        type === "FETE" ||
-        type === "CHABBAT"
-      ) {
-
-        button.style.display =
-          "none";
-
-
-        absenceButton.style.display =
-          type === "ABSENT"
-            ? "none"
-            : "block";
-
-
-        return;
-      }
-
-
-      absenceButton.style.display =
-        etat.debut
-          ? "none"
-          : "block";
-
-
-      button.style.display =
-        "flex";
-
-
-      if (
-        etat.debut &&
-        !etat.fin
-      ) {
-
-        button.classList.add(
-          "finish"
-        );
-
-
-        icon.textContent =
-          "■";
-
-
-        text.textContent =
-          "Terminer ma journée";
-
-
-        return;
-      }
-
-
-      if (
-        etat.debut &&
-        etat.fin
-      ) {
-
-        button.style.display =
-          "none";
-
-        return;
-      }
-
-
-      button.classList.remove(
-        "finish"
-      );
-
-
-      icon.textContent =
-        "▶";
-
-
-      text.textContent =
-        "Commencer ma journée";
+      absence.style.display =
+        etat.peutSignalerAbsence
+          ? "block"
+          : "none";
     }
 
 
-    function actionPrincipale() {
-
-      if (!etat) {
-        return;
-      }
-
-
-      if (
-        etat.debut &&
-        !etat.fin
-      ) {
-
-        ouvrirPause();
-
-      }
-
-      else {
-
-        commencer();
-
-      }
-    }
-
-
-    /* =====================================================
-       TEMPS TRAVAILLÉ
-    ===================================================== */
-
-    function afficherTempsTravaille() {
-
-      const valeur =
-        calculerTempsTravaille();
-
-
-      document.getElementById(
-        "worked"
-      ).textContent =
-        valeur || "—";
-    }
-
-
-    function calculerTempsTravaille() {
-
-      if (
-        !etat ||
-        !etat.debut
-      ) {
-
-        return "";
-      }
-
-
-      const debut =
-        convertirHeureEnMinutes(
-          etat.debut
-        );
-
-
-      if (debut === null) {
-        return "";
-      }
-
-
-      const fin =
-        convertirHeureEnMinutes(
-          etat.fin ||
-          heureLocale()
-        );
-
-
-      if (fin === null) {
-        return "";
-      }
-
-
-      let duree =
-        fin - debut;
-
-
-      if (duree < 0) {
-        duree += 1440;
-      }
-
-
-      duree -=
-        convertirPauseEnMinutes(
-          etat.pause
-        );
-
-
-      if (duree < 0) {
-        duree = 0;
-      }
-
-
-      return formaterDuree(
-        duree
-      );
-    }
-
-
-    function formaterDuree(
-      minutes
+    function classeStatut(
+      statut
     ) {
 
-      minutes =
-        Math.max(
-          0,
-          Math.round(
-            Number(minutes) || 0
-          )
+      switch (statut) {
+
+        case "En cours":
+          return "green";
+
+        case "Terminé":
+          return "gray";
+
+        case "Fête":
+          return "yellow";
+
+        case "Chabbat":
+          return "gray";
+
+        case "Absent":
+          return "red";
+
+        default:
+          return "gray";
+      }
+    }
+
+
+    /* ======================================================
+       COMMENCER
+    ====================================================== */
+
+    async function commencer() {
+
+      afficherLoading(true);
+
+      try {
+
+        const heure =
+          heureActuelle();
+
+        const resultat =
+          await appelerAPI(
+            "commencerJour",
+            {
+              heure:
+                heure
+            }
+          );
+
+        appliquerEtat(
+          resultat.data
         );
 
-
-      const heures =
-        Math.floor(
-          minutes / 60
+        afficherToast(
+          "Arrivée enregistrée."
         );
 
+      } catch (erreur) {
 
-      const reste =
-        minutes % 60;
+        afficherErreur(
+          erreur
+        );
 
+      } finally {
+
+        afficherLoading(false);
+      }
+    }
+
+
+    /* ======================================================
+       TERMINER
+    ====================================================== */
+
+    function ouvrirModalPause() {
+
+      const button =
+        document.getElementById(
+          "finishButton"
+        );
+
+      if (
+        button.classList.contains(
+          "disabled"
+        )
+      ) {
+        return;
+      }
+
+      document
+        .getElementById(
+          "pauseModal"
+        )
+        .classList.add(
+          "show"
+        );
+    }
+
+
+    function fermerModalPause() {
+
+      document
+        .getElementById(
+          "pauseModal"
+        )
+        .classList.remove(
+          "show"
+        );
+    }
+
+
+    async function terminer(
+      pauseMinutes
+    ) {
+
+      fermerModalPause();
+
+      afficherLoading(true);
+
+      try {
+
+        const resultat =
+          await appelerAPI(
+            "terminerJour",
+            {
+              heure:
+                heureActuelle(),
+
+              pauseMinutes:
+                pauseMinutes
+            }
+          );
+
+        appliquerEtat(
+          resultat.data
+        );
+
+        afficherToast(
+          "Départ enregistré."
+        );
+
+      } catch (erreur) {
+
+        afficherErreur(
+          erreur
+        );
+
+      } finally {
+
+        afficherLoading(false);
+      }
+    }
+
+
+    /* ======================================================
+       ABSENCE
+    ====================================================== */
+
+    async function ouvrirAbsence() {
+
+      const motif =
+        window.prompt(
+          "Motif de l'absence :"
+        );
+
+      if (
+        motif === null
+      ) {
+        return;
+      }
+
+      afficherLoading(true);
+
+      try {
+
+        const resultat =
+          await appelerAPI(
+            "signalerAbsence",
+            {
+              motif:
+                motif.trim() ||
+                "Non précisé"
+            }
+          );
+
+        appliquerEtat(
+          resultat.data
+        );
+
+        afficherToast(
+          "Absence enregistrée."
+        );
+
+      } catch (erreur) {
+
+        afficherErreur(
+          erreur
+        );
+
+      } finally {
+
+        afficherLoading(false);
+      }
+    }
+
+
+    /* ======================================================
+       HORLOGE
+    ====================================================== */
+
+    function mettreAJourHorloge() {
+
+      const maintenant =
+        new Date();
+
+      document
+        .getElementById(
+          "clock"
+        )
+        .textContent =
+        maintenant.toLocaleTimeString(
+          "fr-FR",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          }
+        );
+    }
+
+
+    function heureActuelle() {
+
+      const maintenant =
+        new Date();
 
       return (
-
-        String(heures)
-          .padStart(2,"0") +
-
+        String(
+          maintenant.getHours()
+        ).padStart(2, "0") +
         ":" +
-
-        String(reste)
-          .padStart(2,"0")
-
+        String(
+          maintenant.getMinutes()
+        ).padStart(2, "0")
       );
     }
 
 
-    /* =====================================================
-       CONVERSIONS
-    ===================================================== */
+    /* ======================================================
+       DATE
+    ====================================================== */
 
-    function convertirHeureEnMinutes(
+    function formaterDateFr(
       valeur
     ) {
 
       if (!valeur) {
-        return null;
+        return "";
       }
 
+      const date =
+        new Date(
+          valeur + "T12:00:00"
+        );
 
-      const match =
-        String(valeur)
-          .trim()
-          .match(
-            /^(\d{1,2}):(\d{2})/
-          );
-
-
-      if (!match) {
-        return null;
-      }
-
-
-      return (
-        Number(match[1]) * 60 +
-        Number(match[2])
+      return date.toLocaleDateString(
+        "fr-FR",
+        {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        }
       );
     }
 
 
-    function convertirPauseEnMinutes(
-      valeur
+    /* ======================================================
+       JWT
+    ====================================================== */
+
+    function decoderJwt(
+      token
     ) {
 
-      if (
-        valeur === null ||
-        valeur === undefined ||
-        valeur === ""
-      ) {
+      try {
 
-        return 0;
-      }
-
-
-      if (
-        typeof valeur === "number"
-      ) {
+        const morceaux =
+          token.split(".");
 
         if (
-          valeur > 0 &&
-          valeur < 1
+          morceaux.length !== 3
         ) {
-
-          return Math.round(
-            valeur * 1440
-          );
+          return null;
         }
 
-
-        return Math.round(
-          valeur
-        );
-      }
-
-
-      const texte =
-        String(
-          valeur
-        ).trim();
-
-
-      const match =
-        texte.match(
-          /^(\d+):(\d{2})/
-        );
-
-
-      if (match) {
-
-        return (
-          Number(match[1]) * 60 +
-          Number(match[2])
-        );
-      }
-
-
-      return 0;
-    }
-
-
-    function formaterPause(
-      valeur
-    ) {
-
-      const minutes =
-        convertirPauseEnMinutes(
-          valeur
-        );
-
-
-      if (!minutes) {
-        return "0 min";
-      }
-
-
-      if (minutes < 60) {
-
-        return (
-          minutes +
-          " min"
-        );
-      }
-
-
-      const heures =
-        Math.floor(
-          minutes / 60
-        );
-
-
-      const reste =
-        minutes % 60;
-
-
-      if (!reste) {
-
-        return (
-          heures +
-          (
-            heures > 1
-              ? " heures"
-              : " heure"
-          )
-        );
-      }
-
-
-      return (
-        heures +
-        "h" +
-        String(
-          reste
-        ).padStart(
-          2,
-          "0"
-        )
-      );
-    }
-
-
-    /* =====================================================
-       TIMELINE
-    ===================================================== */
-
-    function afficherTimeline() {
-
-      document.getElementById(
-        "timelineArrivalTime"
-      ).textContent =
-        etat.debut || "—";
-
-
-      document.getElementById(
-        "timelineDepartureTime"
-      ).textContent =
-        etat.fin || "—";
-
-
-      document.getElementById(
-        "timelinePauseTime"
-      ).textContent =
-        etat.pause
-          ? formaterPause(etat.pause)
-          : "—";
-
-
-      document.getElementById(
-        "timelineArrival"
-      ).classList.toggle(
-        "active",
-        !!etat.debut
-      );
-
-
-      document.getElementById(
-        "timelineDeparture"
-      ).classList.toggle(
-        "active",
-        !!etat.fin
-      );
-    }
-
-
-    /* =====================================================
-       RÉCAP
-    ===================================================== */
-
-    function afficherRecap() {
-
-      document.getElementById(
-        "recapHours"
-      ).textContent =
-        etat.totalMois ||
-        "0h00";
-
-
-      document.getElementById(
-        "recapDays"
-      ).textContent =
-        etat.joursMois ||
-        "0";
-
-
-      document.getElementById(
-        "recapAbsences"
-      ).textContent =
-        etat.absencesMois ||
-        "0";
-
-
-      document.getElementById(
-        "recapFetes"
-      ).textContent =
-        etat.fetesMois ||
-        "0";
-
-
-      document.getElementById(
-        "recapChabbat"
-      ).textContent =
-        etat.chabbatMois ||
-        "0";
-
-
-      if (etat.moisActuel) {
-
-        document.getElementById(
-          "monthName"
-        ).textContent =
-          etat.moisActuel;
-      }
-    }
-
-
-    /* =====================================================
-       COMMENCER
-    ===================================================== */
-
-    async function commencer() {
-
-      const button =
-        document.getElementById(
-          "mainAction"
-        );
-
-
-      button.disabled = true;
-
-
-      try {
-
-        await appelerAPI(
-          "commencerJour",
-          {
-            heure:
-              heureLocale()
-          }
-        );
-
-
-        afficherToast(
-          "Arrivée enregistrée",
-          "success"
-        );
-
-
-        await chargerEtat();
-
-      }
-
-      catch (error) {
-
-        button.disabled =
-          false;
-
-
-        afficherErreur(
-          error
-        );
-      }
-    }
-
-
-    /* =====================================================
-       PAUSE
-    ===================================================== */
-
-    function ouvrirPause() {
-
-      pauseSelectionnee = 0;
-
-
-      document
-        .querySelectorAll(
-          "#pauseModal .choice"
-        )
-        .forEach(
-          function(element) {
-
-            element.classList.remove(
-              "selected"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "pauseModal"
-      ).classList.add(
-        "show"
-      );
-    }
-
-
-    function fermerPause() {
-
-      document.getElementById(
-        "pauseModal"
-      ).classList.remove(
-        "show"
-      );
-    }
-
-
-    function selectionnerPause(
-      minutes,
-      bouton
-    ) {
-
-      pauseSelectionnee =
-        minutes;
-
-
-      document
-        .querySelectorAll(
-          "#pauseModal .choice"
-        )
-        .forEach(
-          function(element) {
-
-            element.classList.remove(
-              "selected"
-            );
-
-          }
-        );
-
-
-      bouton.classList.add(
-        "selected"
-      );
-    }
-
-
-    async function confirmerFin() {
-
-      fermerPause();
-
-
-      const button =
-        document.getElementById(
-          "mainAction"
-        );
-
-
-      button.disabled = true;
-
-
-      try {
-
-        await appelerAPI(
-          "terminerJour",
-          {
-            heure:
-              heureLocale(),
-
-            pauseMinutes:
-              pauseSelectionnee
-          }
-        );
-
-
-        afficherToast(
-          "Départ enregistré",
-          "success"
-        );
-
-
-        await chargerEtat();
-
-      }
-
-      catch (error) {
-
-        button.disabled =
-          false;
-
-
-        afficherErreur(
-          error
-        );
-      }
-    }
-
-
-    /* =====================================================
-       ABSENCE
-    ===================================================== */
-
-    function ouvrirAbsence() {
-
-      absenceSelectionnee =
-        null;
-
-
-      document
-        .querySelectorAll(
-          "#absenceModal .choice"
-        )
-        .forEach(
-          function(element) {
-
-            element.classList.remove(
-              "selected"
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "absenceModal"
-      ).classList.add(
-        "show"
-      );
-    }
-
-
-    function fermerAbsence() {
-
-      document.getElementById(
-        "absenceModal"
-      ).classList.remove(
-        "show"
-      );
-    }
-
-
-    function selectionnerAbsence(
-      motif,
-      bouton
-    ) {
-
-      absenceSelectionnee =
-        motif;
-
-
-      document
-        .querySelectorAll(
-          "#absenceModal .choice"
-        )
-        .forEach(
-          function(element) {
-
-            element.classList.remove(
-              "selected"
-            );
-
-          }
-        );
-
-
-      bouton.classList.add(
-        "selected"
-      );
-    }
-
-
-    async function confirmerAbsence() {
-
-      if (!absenceSelectionnee) {
-
-        afficherToast(
-          "Sélectionnez un motif",
-          "error"
-        );
-
-        return;
-      }
-
-
-      fermerAbsence();
-
-
-      try {
-
-        await appelerAPI(
-          "signalerAbsence",
-          {
-            motif:
-              absenceSelectionnee
-          }
-        );
-
-
-        afficherToast(
-          "Absence enregistrée",
-          "success"
-        );
-
-
-        await chargerEtat();
-
-      }
-
-      catch (error) {
-
-        afficherErreur(
-          error
-        );
-      }
-    }
-
-
-    /* =====================================================
-       LOADING
-    ===================================================== */
-
-    function cacherLoading() {
-
-      setTimeout(
-        function() {
-
-          document.getElementById(
-            "loading"
-          ).classList.add(
-            "hidden"
+        const base64 =
+          morceaux[1]
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+        const json =
+          decodeURIComponent(
+            atob(base64)
+              .split("")
+              .map(function (c) {
+
+                return (
+                  "%" +
+                  (
+                    "00" +
+                    c
+                      .charCodeAt(0)
+                      .toString(16)
+                  )
+                  .slice(-2)
+                );
+
+              })
+              .join("")
           );
 
-        },
-        450
-      );
+        return JSON.parse(
+          json
+        );
+
+      } catch (erreur) {
+
+        return null;
+      }
     }
 
 
-    /* =====================================================
-       TOAST
-    ===================================================== */
+    /* ======================================================
+       DÉCONNEXION
+    ====================================================== */
+
+    function deconnexion() {
+
+      idToken = null;
+
+      utilisateur = null;
+
+      sessionStorage.removeItem(
+        "monPointageGoogleToken"
+      );
+
+      if (
+        window.google &&
+        google.accounts &&
+        google.accounts.id
+      ) {
+
+        google.accounts.id.disableAutoSelect();
+      }
+
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .style.display =
+        "none";
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .style.display =
+        "flex";
+    }
+
+
+    /* ======================================================
+       UI
+    ====================================================== */
+
+    function afficherLoading(
+      afficher
+    ) {
+
+      document
+        .getElementById(
+          "loading"
+        )
+        .classList.toggle(
+          "show",
+          afficher
+        );
+    }
+
 
     function afficherToast(
-      message,
-      type = ""
+      message
     ) {
 
       const toast =
@@ -4358,150 +1987,60 @@
           "toast"
         );
 
-
       toast.textContent =
         message;
 
+      toast.classList.add(
+        "show"
+      );
 
-      toast.className =
-        "toast";
+      setTimeout(
+        function () {
 
-
-      if (type) {
-
-        toast.classList.add(
-          type
-        );
-      }
-
-
-      requestAnimationFrame(
-        function() {
-
-          toast.classList.add(
+          toast.classList.remove(
             "show"
           );
 
-        }
+        },
+        2600
       );
-
-
-      if (toastTimeout) {
-
-        clearTimeout(
-          toastTimeout
-        );
-      }
-
-
-      toastTimeout =
-        setTimeout(
-          function() {
-
-            toast.classList.remove(
-              "show"
-            );
-
-          },
-          3000
-        );
     }
 
-
-    /* =====================================================
-       ERREUR
-    ===================================================== */
 
     function afficherErreur(
-      error
+      erreur
     ) {
 
-      console.error(error);
-
-
-      const message =
-        error &&
-        error.message
-          ? error.message
-          : "Une erreur est survenue.";
-
+      console.error(
+        erreur
+      );
 
       afficherToast(
-        message,
-        "error"
+        erreur &&
+        erreur.message
+          ? erreur.message
+          : "Une erreur est survenue."
       );
     }
 
 
-    /* =====================================================
-       FERMETURE MODALES
-    ===================================================== */
+    function afficherErreurConnexion(
+      message
+    ) {
 
-    document
-      .getElementById(
-        "pauseModal"
-      )
-      .addEventListener(
-        "click",
-        function(event) {
+      const element =
+        document.getElementById(
+          "loginError"
+        );
 
-          if (
-            event.target === this
-          ) {
+      element.textContent =
+        message;
 
-            fermerPause();
-
-          }
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "absenceModal"
-      )
-      .addEventListener(
-        "click",
-        function(event) {
-
-          if (
-            event.target === this
-          ) {
-
-            fermerAbsence();
-
-          }
-
-        }
-      );
-
-
-    /* =====================================================
-       ESC
-    ===================================================== */
-
-    document.addEventListener(
-      "keydown",
-      function(event) {
-
-        if (
-          event.key !== "Escape"
-        ) {
-          return;
-        }
-
-
-        fermerPause();
-
-        fermerAbsence();
-
-      }
-    );
-
+      element.style.display =
+        "block";
+    }
 
   </script>
 
 </body>
-
 </html>
