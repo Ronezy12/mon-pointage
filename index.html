@@ -1397,9 +1397,9 @@ button{
 
   <div class="login">
 
-    <div class="logo">MP</div>
+    <div class="logo">ÀL</div>
 
-    <h1>Mon Pointage</h1>
+    <h1>À L’HEURE</h1>
 
     <p>
       Votre espace personnel pour pointer,
@@ -1440,13 +1440,13 @@ button{
       <div class="brand">
 
         <div class="brandmark">
-          MP
+          ÀL
         </div>
 
         <div>
 
           <div class="brandname">
-            Mon Pointage
+            À L’HEURE
           </div>
 
           <div id="welcome" class="brandsub">
@@ -1955,6 +1955,17 @@ button{
 
         </div>
 
+
+        <div class="app-page-grid" style="margin-top:16px">
+          <button class="page-card" style="text-align:left;color:var(--ink)" onclick="ouvrirVue('observationsView',null);document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'))">
+            <h3>Observations</h3>
+            <p>Retrouver les remarques saisies à la fin de vos journées.</p>
+          </button>
+          <button class="page-card" style="text-align:left;color:var(--ink)" onclick="ouvrirVue('settingsView',null);document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'))">
+            <h3>Réglages</h3>
+            <p>Synchronisation, compte et paramètres de l’application.</p>
+          </button>
+        </div>
 
         <button
           class="primary"
