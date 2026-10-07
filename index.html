@@ -996,199 +996,7 @@ button{
 }
 
 @media print{
-  @page{
-    size:A4;
-    margin:14mm;
-  }
-
-  body *{
-    visibility:hidden !important;
-  }
-
-  #pdfExportArea,
-  #pdfExportArea *{
-    visibility:visible !important;
-  }
-
-  #pdfExportArea{
-    position:absolute;
-    inset:0;
-    width:100%;
-    min-height:100vh;
-    padding:0;
-    box-sizing:border-box;
-    background:#fff !important;
-    color:#111827 !important;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  }
-
-  #pdfExportArea .pdf-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:24px;
-    padding:0 0 18px;
-    border-bottom:2px solid #111827;
-  }
-
-  #pdfExportArea .pdf-brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
-
-  #pdfExportArea .pdf-logo{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    object-fit:cover;
-  }
-
-  #pdfExportArea .pdf-brand strong{
-    display:block;
-    font-size:18px;
-    letter-spacing:-.5px;
-  }
-
-  #pdfExportArea .pdf-brand span{
-    display:block;
-    margin-top:2px;
-    color:#6b7280 !important;
-    font-size:9px;
-  }
-
-  #pdfExportArea .pdf-period{
-    text-align:right;
-  }
-
-  #pdfExportArea .pdf-period span{
-    display:block;
-    color:#6b7280 !important;
-    font-size:8px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-  }
-
-  #pdfExportArea .pdf-period strong{
-    display:block;
-    margin-top:3px;
-    font-size:16px;
-    text-transform:capitalize;
-  }
-
-  #pdfExportArea .pdf-hero{
-    margin:18px 0 20px;
-    padding:18px 20px;
-    border-radius:16px;
-    background:#111827 !important;
-    color:#fff !important;
-  }
-
-  #pdfExportArea .pdf-hero-label{
-    font-size:8px;
-    letter-spacing:1.4px;
-    text-transform:uppercase;
-    opacity:.68;
-  }
-
-  #pdfExportArea .pdf-total{
-    margin-top:5px;
-    font-size:31px;
-    line-height:1;
-    font-weight:800;
-    letter-spacing:-1px;
-  }
-
-  #pdfExportArea .pdf-total-note{
-    margin-top:7px;
-    font-size:9px;
-    opacity:.72;
-  }
-
-  #pdfExportArea .pdf-summary{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-bottom:20px;
-  }
-
-  #pdfExportArea .pdf-box{
-    padding:12px 14px;
-    border:1px solid #e5e7eb;
-    border-radius:12px;
-    background:#fff !important;
-  }
-
-  #pdfExportArea .pdf-box span{
-    display:block;
-    color:#6b7280 !important;
-    font-size:8px;
-    text-transform:uppercase;
-    letter-spacing:.6px;
-  }
-
-  #pdfExportArea .pdf-box strong{
-    display:block;
-    margin-top:5px;
-    font-size:15px;
-  }
-
-  #pdfExportArea .pdf-section-title{
-    margin:0 0 8px;
-    font-size:11px;
-    font-weight:800;
-  }
-
-  #pdfExportArea table{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0;
-    overflow:hidden;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    font-size:8.5px;
-  }
-
-  #pdfExportArea th,
-  #pdfExportArea td{
-    padding:7px 7px;
-    border-bottom:1px solid #eef0f2;
-    text-align:left;
-    vertical-align:middle;
-  }
-
-  #pdfExportArea th{
-    background:#f5f6f8 !important;
-    color:#4b5563 !important;
-    font-size:7.5px;
-    text-transform:uppercase;
-    letter-spacing:.4px;
-    font-weight:800;
-  }
-
-  #pdfExportArea tr:last-child td{
-    border-bottom:0;
-  }
-
-  #pdfExportArea .pdf-hours{
-    font-weight:800;
-  }
-
-  #pdfExportArea .pdf-status{
-    color:#4b5563 !important;
-  }
-
-  #pdfExportArea .pdf-footer{
-    margin-top:14px;
-    padding-top:9px;
-    border-top:1px solid #e5e7eb;
-    color:#9ca3af !important;
-    font-size:7.5px;
-    text-align:right;
-  }
-}
-
-/* =========================================================
+@page{size:A4;margin:14mm}body *{visibility:hidden!important}#pdfExportArea,#pdfExportArea *{visibility:visible!important}#pdfExportArea{position:absolute;inset:0;width:100%;min-height:100vh;padding:0;box-sizing:border-box;background:#fff!important;color:#111827!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}#pdfExportArea .pdf-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 0 18px;border-bottom:2px solid #111827}#pdfExportArea .pdf-brand{display:flex;align-items:center;gap:12px}#pdfExportArea .pdf-logo{width:42px;height:42px;border-radius:12px;object-fit:cover}#pdfExportArea .pdf-brand strong{display:block;font-size:18px;letter-spacing:-.5px}#pdfExportArea .pdf-brand span{display:block;margin-top:2px;color:#6b7280!important;font-size:9px}#pdfExportArea .pdf-period{text-align:right}#pdfExportArea .pdf-period span{display:block;color:#6b7280!important;font-size:8px;text-transform:uppercase;letter-spacing:1px}#pdfExportArea .pdf-period strong{display:block;margin-top:3px;font-size:16px;text-transform:capitalize}#pdfExportArea .pdf-hero{margin:18px 0 20px;padding:18px 20px;border-radius:16px;background:#111827!important;color:#fff!important}#pdfExportArea .pdf-hero-label{font-size:8px;letter-spacing:1.4px;text-transform:uppercase;opacity:.68}#pdfExportArea .pdf-total{margin-top:5px;font-size:31px;line-height:1;font-weight:800;letter-spacing:-1px}#pdfExportArea .pdf-total-note{margin-top:7px;font-size:9px;opacity:.72}#pdfExportArea .pdf-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}#pdfExportArea .pdf-box{padding:12px 14px;border:1px solid #e5e7eb;border-radius:12px;background:#fff!important}#pdfExportArea .pdf-box span{display:block;color:#6b7280!important;font-size:8px;text-transform:uppercase;letter-spacing:.6px}#pdfExportArea .pdf-box strong{display:block;margin-top:5px;font-size:15px}#pdfExportArea .pdf-section-title{margin:0 0 8px;font-size:11px;font-weight:800}#pdfExportArea table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e5e7eb;border-radius:10px;font-size:8.5px}#pdfExportArea th,#pdfExportArea td{padding:7px;border-bottom:1px solid #eef0f2;text-align:left;vertical-align:middle}#pdfExportArea th{background:#f5f6f8!important;color:#4b5563!important;font-size:7.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:800}#pdfExportArea tr:last-child td{border-bottom:0}#pdfExportArea .pdf-hours{font-weight:800}#pdfExportArea .pdf-status{color:#4b5563!important}#pdfExportArea .pdf-footer{margin-top:14px;padding-top:9px;border-top:1px solid #e5e7eb;color:#9ca3af!important;font-size:7.5px;text-align:right}}/* =========================================================
    NAVIGATION
 ========================================================= */
 
@@ -5179,55 +4987,947 @@ function exporterMoisPDF(){
   const absences=rows.filter(r=>/absent/i.test(String(r?.statut||""))).length;
   const area=document.getElementById("pdfExportArea");
   if(!area)return;
-
   const safe=typeof esc==="function"?esc:(v)=>String(v??"");
   const moisLabel=titre.charAt(0).toUpperCase()+titre.slice(1);
-  const totalLabel=minutesEnTexte(total);
-  const today=new Date().toLocaleDateString("fr-FR");
+  const body=rows.map(r=>{const d=r.date?new Date(r.date):null;const date=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}):"—";return "<tr><td>"+safe(date)+"</td><td>"+safe(r.debut||"—")+"</td><td>"+safe(r.fin||"—")+"</td><td>"+safe(r.pause||"—")+"</td><td class='pdf-hours'>"+safe(r.travaille||r.heures||"—")+"</td><td class='pdf-status'>"+safe(r.statut||"—")+"</td></tr>";}).join("");
+  area.innerHTML="<div class='pdf-header'><div class='pdf-brand'><img class='pdf-logo' src='favicon12.png' alt=''><div><strong>À L’HEURE</strong><span>Suivi des heures de travail</span></div></div><div class='pdf-period'><span>Période</span><strong>"+safe(moisLabel)+"</strong></div></div><div class='pdf-hero'><div class='pdf-hero-label'>Total d'heures effectuées</div><div class='pdf-total'>"+safe(minutesEnTexte(total))+"</div><div class='pdf-total-note'>Cumul des journées enregistrées sur le mois sélectionné</div></div><div class='pdf-summary'><div class='pdf-box'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='pdf-box'><span>Absences</span><strong>"+absences+"</strong></div><div class='pdf-box'><span>Édition</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></div><div class='pdf-section-title'>Détail des journées</div><table><thead><tr><th>Date</th><th>Arrivée</th><th>Départ</th><th>Pause</th><th>Heures</th><th>Statut</th></tr></thead><tbody>"+(body||"<tr><td colspan='6'>Aucune donnée pour ce mois.</td></tr>")+"</tbody></table><div class='pdf-footer'>Document généré depuis À L’HEURE · Récapitulatif mensuel</div>";
+  const label=document.getElementById("exportMonthLabel");if(label)label.textContent="Récapitulatif du "+moisLabel;
+  setTimeout(()=>{window.print();setTimeout(()=>{area.innerHTML="";},700);},80);
+}
 
-  const body=rows.map(r=>{
+/* =========================================================
+   TITRE MOIS
+========================================================= */
+
+function afficherTitreMois() {
+
+  const element =
+    document.getElementById(
+      "monthTitle"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  const texte =
+    moisCourant.toLocaleDateString(
+      "fr-FR",
+      {
+        month:
+          "long",
+
+        year:
+          "numeric"
+      }
+    );
+
+
+  const titre =
+    texte.charAt(0).toUpperCase() +
+    texte.slice(1);
+
+
+  element.innerHTML =
+    esc(titre) +
+    "<small>Récapitulatif</small>";
+
+}
+
+
+/* =========================================================
+   RÉCAP MOIS
+========================================================= */
+
+function afficherRecap(recap, rows) {
+  const settingsEmail=document.getElementById("settingsEmail");
+  if(settingsEmail) settingsEmail.textContent=utilisateur?.email||"—";
+
+  const set=(id,value)=>{
+    const element=document.getElementById(id);
+    if(element) element.textContent=value ?? "—";
+  };
+
+  const history=Array.isArray(rows)?rows:[];
+  const workedRows=history.filter(r=>{
+    const value=String(r?.travaille||r?.heures||"").trim();
+    return /\d+\s*h|\d+:\d{2}/i.test(value);
+  });
+
+  const totalMinutes=workedRows.reduce((sum,r)=>{
+    return sum+heuresEnMinutes(r.travaille||r.heures);
+  },0);
+
+  const days=workedRows.length;
+  const absences=history.filter(r=>/absent/i.test(String(r?.statut||""))).length;
+  const apiHours=recap?.heuresTravaillees||recap?.heures;
+
+  set("monthHours",totalMinutes>0?minutesEnTexte(totalMinutes):(apiHours||"0h 00"));
+  set("monthDays",days);
+  set("monthAbsences",absences);
+
+  afficherTitreMois();
+}
+
+/* =========================================================
+   HISTORIQUE
+========================================================= */
+
+function afficherHistorique(
+  rows
+) {
+
+  const element =
+    document.getElementById(
+      "history"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  if (
+    !Array.isArray(rows) ||
+    !rows.length
+  ) {
+
+    element.innerHTML =
+      '<div class="empty">' +
+      "Aucune journée détaillée disponible pour ce mois." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  element.innerHTML =
+    rows
+      .map(
+        row => {
+
+          const date =
+            row.date
+              ? new Date(
+                  row.date
+                )
+              : null;
+
+
+          const label =
+            date &&
+            !isNaN(date)
+
+              ? date.toLocaleDateString(
+                  "fr-FR",
+                  {
+                    day:
+                      "2-digit",
+
+                    month:
+                      "short"
+                  }
+                )
+
+              : (
+                  row.libelle ||
+                  "—"
+                );
+
+
+          return (
+
+            '<div class="history-row">' +
+
+              '<div class="hdate">' +
+
+                esc(label) +
+
+                '<small>' +
+                esc(
+                  row.statut ||
+                  ""
+                ) +
+                "</small>" +
+
+              "</div>" +
+
+
+              '<div class="hinfo">' +
+
+                "<b>" +
+
+                  esc(
+                    row.debut ||
+                    "—"
+                  ) +
+
+                  " → " +
+
+                  esc(
+                    row.fin ||
+                    "—"
+                  ) +
+
+                "</b>" +
+
+                "<span>" +
+
+                  "Pause : " +
+
+                  esc(
+                    row.pause ||
+                    "—"
+                  ) +
+
+                  (
+                    row.observation
+                      ? " · 📝 " +
+                        esc(
+                          row.observation
+                        )
+                      : ""
+                  ) +
+
+                "</span>" +
+
+              "</div>" +
+
+
+              '<div class="hhours">' +
+
+                esc(
+                  row.travaille ||
+                  row.heures ||
+                  "—"
+                ) +
+
+              "</div>" +
+
+            "</div>"
+
+          );
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   PAGES À L’HEURE
+========================================================= */
+
+function heuresEnMinutes(value){
+  if(value===null||value===undefined)return 0;
+  const s=String(value).toLowerCase().trim();
+  let m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);
+  if(m)return Number(m[1])*60+Number(m[2]||0);
+  m=s.match(/^(\d+):(\d{2})/);
+  if(m)return Number(m[1])*60+Number(m[2]);
+  return 0;
+}
+
+function minutesEnTexte(min){
+  min=Math.max(0,Math.round(min||0));
+  const h=Math.floor(min/60), m=min%60;
+  return h ? h+"h"+(m?" "+String(m).padStart(2,"0"):"") : m+" min";
+}
+
+function rendrePlanning(){
+  const cal=document.getElementById("planningCalendar");
+  if(!cal)return;
+
+  const safeSet=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=value;
+  };
+
+  const y=moisCourant.getFullYear();
+  const m=moisCourant.getMonth();
+  const titre=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  const titleEl=document.getElementById("planningMonthTitle");
+
+  if(titleEl){
+    const t=titre.charAt(0).toUpperCase()+titre.slice(1);
+    titleEl.innerHTML=esc(t)+"<small>Calendrier</small>";
+  }
+
+  safeSet("planningMonthLabel",titre);
+
+  const map={};
+  historiqueCourant.forEach(r=>{
     const d=r.date?new Date(r.date):null;
-    const date=d&&!isNaN(d)
-      ?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"})
-      :"—";
+    if(d&&!isNaN(d)){
+      const key=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+      map[key]=r;
+    }
+  });
 
-    return "<tr>"+
-      "<td>"+safe(date)+"</td>"+
-      "<td>"+safe(r.debut||"—")+"</td>"+
-      "<td>"+safe(r.fin||"—")+"</td>"+
-      "<td>"+safe(r.pause||"—")+"</td>"+
-      "<td class='pdf-hours'>"+safe(r.travaille||r.heures||"—")+"</td>"+
-      "<td class='pdf-status'>"+safe(r.statut||"—")+"</td>"+
-    "</tr>";
+  const first=new Date(y,m,1).getDay();
+  const offset=(first+6)%7;
+  const total=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  const labels=["L","M","M","J","V","S","D"];
+
+  let html=labels.map(x=>'<div class="cal-head">'+x+'</div>').join("");
+
+  for(let i=0;i<offset;i++) html+='<div class="cal-empty"></div>';
+
+  for(let day=1;day<=total;day++){
+    const date=new Date(y,m,day);
+    const key=y+"-"+(m+1)+"-"+day;
+    const r=map[key];
+    const dayOfWeek=date.getDay();
+    const weekend=dayOfWeek===0||dayOfWeek===6;
+    const rawStatus=String(r?.statut||"").trim();
+    const lower=rawStatus.toLowerCase();
+
+    let status=weekend?"Repos":"À pointer";
+    let cls=weekend?" weekend":"";
+
+    if(/fête|chabbat/.test(lower)){
+      status=rawStatus||"Fête";
+      cls+=" holiday";
+    }else if(/absent/.test(lower)){
+      status="Absent";
+      cls+=" absent";
+    }else if(!weekend && r&&(r.travaille||r.heures||r.debut)){
+      status=r.travaille||r.heures||r.debut||"Travaillé";
+      cls+=" worked";
+    }else if(!weekend && rawStatus){
+      status=rawStatus;
+    }
+
+    const isToday=date.toDateString()===today.toDateString();
+    if(isToday) cls+=" today";
+
+    const hours=!weekend && r&&(r.travaille||r.heures)
+      ? '<span class="cal-hours">'+esc(r.travaille||r.heures)+'</span>'
+      : '';
+
+    html+='<div class="cal-day'+cls+'">'+
+      '<b>'+day+'</b>'+
+      '<span class="cal-status">'+esc(status)+'</span>'+
+      hours+
+      '</div>';
+  }
+
+  cal.innerHTML=html;
+
+  const worked=historiqueCourant.filter(r=>{
+    const d=r.date?new Date(r.date):null;
+    if(!d||isNaN(d))return false;
+    const weekend=d.getDay()===0||d.getDay()===6;
+    return !weekend && !!(r.debut||r.travaille||r.heures);
+  }).length;
+
+  const absent=historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length;
+
+  safeSet("planningWorked",worked);
+  safeSet("planningAbsent",absent);
+}
+
+function rendreStats(){
+  const rows=historiqueCourant.filter(r=>r.travaille||r.heures);
+  const mins=rows.map(r=>heuresEnMinutes(r.travaille||r.heures)).filter(Boolean);
+  const pauses=historiqueCourant.reduce((s,r)=>s+heuresEnMinutes(r.pause),0);
+  const total=mins.reduce((a,b)=>a+b,0);
+  const set=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=value;
+  };
+  set("statsTotal",minutesEnTexte(total));
+  set("statsAverage",minutesEnTexte(mins.length?total/mins.length:0));
+  set("statsMax",minutesEnTexte(mins.length?Math.max(...mins):0));
+  set("statsPause",minutesEnTexte(pauses));
+  const obs=historiqueCourant.filter(r=>r.observation).length;
+  set("statsSummary",obs+" observation"+(obs>1?"s":"")+" enregistrée"+(obs>1?"s":"")+" sur le mois.");
+}
+
+function rendreObservations(){
+  const el=document.getElementById("observationsList");
+  if(!el)return;
+  const rows=historiqueCourant.filter(r=>r.observation);
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune observation disponible pour ce mois.</div>';return;}
+  el.innerHTML=rows.map(r=>{
+    const d=r.date?new Date(r.date):null;
+    const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"long"}):"Journée";
+    return '<div class="obs-item"><b>'+esc(label)+'</b><span>'+esc(r.observation)+'</span></div>';
   }).join("");
+}
 
-  area.innerHTML=
-    "<div class='pdf-header'>"+
-      "<div class='pdf-brand'>"+
-        "<img class='pdf-logo' src='favicon12.png' alt=''>"+
-        "<div><strong>À L’HEURE</strong><span>Suivi des heures de travail</span></div>"+
-      "</div>"+
-      "<div class='pdf-period'><span>Période</span><strong>"+safe(moisLabel)+"</strong></div>"+
-    "</div>"+
-    "<div class='pdf-hero'>"+
-      "<div class='pdf-hero-label'>Total d'heures effectuées</div>"+
-      "<div class='pdf-total'>"+safe(totalLabel)+"</div>"+
-      "<div class='pdf-total-note'>Cumul des journées enregistrées sur le mois sélectionné</div>"+
-    "</div>"+
-    "<div class='pdf-summary'>"+
-      "<div class='pdf-box'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div>"+
-      "<div class='pdf-box'><span>Absences</span><strong>"+absences+"</strong></div>"+
-      "<div class='pdf-box'><span>Édition</span><strong>"+safe(today)+"</strong></div>"+
-    "</div>"+
-    "<div class='pdf-section-title'>Détail des journées</div>"+
-    "<table><thead><tr><th>Date</th><th>Arrivée</th><th>Départ</th><th>Pause</th><th>Heures</th><th>Statut</th></tr></thead>"+
-    "<tbody>"+(body||"<tr><td colspan='6'>Aucune donnée pour ce mois.</td></tr>")+"</tbody></table>"+
-    "<div class='pdf-footer'>Document généré depuis À L’HEURE · Récapitulatif mensuel</div>";
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-  const label=document.getElementById("exportMonthLabel");
-  if(label)label.textContent="Récapitulatif du "+moisLabel;
+function esc(value) {
 
-  setTimeout(()=>{
-    window.print();
-    setTimeout(()=>{area.innerHTML="";},700);
-  },80);
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    character =>
+      ({
+        "&":
+          "&amp;",
+
+        "<":
+          "&lt;",
+
+        ">":
+          "&gt;",
+
+        '"':
+          "&quot;",
+
+        "'":
+          "&#039;"
+
+      }[character])
+  );
+
+}
+
+
+/* =========================================================
+   HORLOGE
+========================================================= */
+
+function horloge() {
+
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "fr-FR",
+      {
+        hour:
+          "2-digit",
+
+        minute:
+          "2-digit",
+
+        second:
+          "2-digit"
+      }
+    );
+
+
+  const clock =
+    document.getElementById(
+      "clock"
+    );
+
+  const heroTime =
+    document.getElementById(
+      "heroTime"
+    );
+
+
+  if (clock) {
+
+    clock.textContent =
+      time;
+
+  }
+
+
+  if (heroTime) {
+
+    heroTime.textContent =
+      time;
+
+  }
+
+}
+
+
+/* =========================================================
+   HEURE ACTUELLE
+========================================================= */
+
+function heureActuelle() {
+
+  const now =
+    new Date();
+
+
+  return (
+    String(
+      now.getHours()
+    ).padStart(2,"0")
+    +
+    ":" +
+    String(
+      now.getMinutes()
+    ).padStart(2,"0")
+  );
+
+}
+
+
+/* =========================================================
+   DATE FRANÇAISE
+========================================================= */
+
+function formaterDate(
+  value
+) {
+
+  if (!value) {
+
+    return "Date indisponible";
+
+  }
+
+
+  if (
+    typeof value ===
+    "string"
+  ) {
+
+    let match =
+      value.match(
+        /^(\d{4})-(\d{2})-(\d{2})/
+      );
+
+
+    if (match) {
+
+      return new Date(
+        Number(match[1]),
+        Number(match[2]) - 1,
+        Number(match[3]),
+        12
+      ).toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:
+            "long",
+
+          day:
+            "2-digit",
+
+          month:
+            "long",
+
+          year:
+            "numeric"
+        }
+      );
+
+    }
+
+
+    match =
+      value.match(
+        /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/
+      );
+
+
+    if (match) {
+
+      return new Date(
+        Number(match[3]),
+        Number(match[2]) - 1,
+        Number(match[1]),
+        12
+      ).toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:
+            "long",
+
+          day:
+            "2-digit",
+
+          month:
+            "long",
+
+          year:
+            "numeric"
+        }
+      );
+
+    }
+
+  }
+
+
+  const date =
+    new Date(
+      value
+    );
+
+
+  if (
+    isNaN(date)
+  ) {
+
+    return "Date indisponible";
+
+  }
+
+
+  return date.toLocaleDateString(
+    "fr-FR",
+    {
+      weekday:
+        "long",
+
+      day:
+        "2-digit",
+
+      month:
+        "long",
+
+      year:
+        "numeric"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+function ouvrirModal(id) {
+
+  document
+    .getElementById(id)
+    ?.classList.add(
+      "show"
+    );
+
+}
+
+
+function fermerModal(id) {
+
+  document
+    .getElementById(id)
+    ?.classList.remove(
+      "show"
+    );
+
+}
+
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const modal =
+      event.target.closest?.(
+        ".modal"
+      );
+
+
+    if (
+      modal &&
+      event.target === modal
+    ) {
+
+      modal.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setLoading(
+  value
+) {
+
+  document
+    .getElementById(
+      "loading"
+    )
+    ?.classList.toggle(
+      "show",
+      Boolean(value)
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(
+  message
+) {
+
+  const element =
+    document.getElementById(
+      "toast"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  element.textContent =
+    message;
+
+
+  element.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    window.__toast
+  );
+
+
+  window.__toast =
+    setTimeout(
+      () => {
+
+        element.classList.remove(
+          "show"
+        );
+
+      },
+      2800
+    );
+
+}
+
+
+/* =========================================================
+   ERREUR APPLICATION
+========================================================= */
+
+function afficherErreur(
+  error
+) {
+
+  console.error(
+    "Mon Pointage :",
+    error
+  );
+
+
+  const code =
+    error?.code;
+
+
+  if (
+    code ===
+      "NO_GOOGLE_TOKEN" ||
+    code ===
+      "GOOGLE_TOKEN_EXPIRED"
+  ) {
+
+    /*
+      On ne laisse pas l'application
+      continuer avec un token invalide.
+    */
+
+    idToken = null;
+
+    utilisateur = null;
+
+    sessionStorage.removeItem(
+      "monPointageGoogleToken"
+    );
+
+
+    if (
+      synchronisationTimer
+    ) {
+
+      clearInterval(
+        synchronisationTimer
+      );
+
+    }
+
+
+    synchronisationTimer =
+      null;
+
+
+    afficherLogin();
+
+
+    googleRendered =
+      false;
+
+
+    if (
+      window.google?.accounts?.id
+    ) {
+
+      initialiserGoogle();
+
+    } else {
+
+      chargerBibliothequeGoogle();
+
+    }
+
+
+    afficherErreurGoogle(
+      "Votre connexion Google a expiré. Reconnectez-vous."
+    );
+
+
+    return;
+
+  }
+
+
+  toast(
+    error?.message ||
+    "Une erreur est survenue."
+  );
+
+}
+
+
+/* =========================================================
+   DÉCONNEXION
+========================================================= */
+
+function deconnexion() {
+
+  if (
+    synchronisationTimer
+  ) {
+
+    clearInterval(
+      synchronisationTimer
+    );
+
+  }
+
+
+  synchronisationTimer =
+    null;
+
+
+  idToken =
+    null;
+
+  utilisateur =
+    null;
+
+
+  sessionStorage.removeItem(
+    "monPointageGoogleToken"
+  );
+
+
+  try {
+
+    if (
+      window.google?.accounts?.id
+    ) {
+
+      google.accounts.id.disableAutoSelect();
+
+    }
+
+  } catch (_) {}
+
+
+  afficherLogin();
+
+
+  const error =
+    document.getElementById(
+      "loginError"
+    );
+
+
+  if (error) {
+
+    error.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const status =
+    document.getElementById(
+      "googleStatus"
+    );
+
+
+  if (status) {
+
+    status.textContent =
+      "Connexion sécurisée avec Google";
+
+  }
+
+
+  const mount =
+    document.getElementById(
+      "googleButtonRender"
+    );
+
+
+  if (mount) {
+
+    mount.innerHTML =
+      "";
+
+  }
+
+
+  googleRendered =
+    false;
+
+
+  if (
+    window.google?.accounts?.id
+  ) {
+
+    initialiserGoogle();
+
+  } else {
+
+    googleLoadStarted =
+      false;
+
+    chargerBibliothequeGoogle();
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
