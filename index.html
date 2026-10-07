@@ -1889,6 +1889,84 @@ button{
 
 
     <!-- =================================================
+         PLANNING
+    ================================================== -->
+
+    <section id="planningView" class="view">
+      <div class="section-head">
+        <h2>Planning</h2>
+        <span>Vue du mois</span>
+      </div>
+
+      <div class="month-toolbar">
+        <button class="round" onclick="changerMois(-1)">‹</button>
+        <div id="planningMonthTitle" class="month-name">Octobre 2026<small>Calendrier</small></div>
+        <button class="round" onclick="changerMois(1)">›</button>
+      </div>
+
+      <div class="month-total">
+        <div class="mini"><span>Jours travaillés</span><b id="planningWorked">—</b></div>
+        <div class="mini"><span>Absences</span><b id="planningAbsent">—</b></div>
+        <div class="mini"><span>Mois</span><b id="planningMonthLabel">—</b></div>
+      </div>
+
+      <div id="planningCalendar" class="panel" style="padding:16px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+    </section>
+
+
+    <!-- =================================================
+         STATISTIQUES
+    ================================================== -->
+
+    <section id="statsView" class="view">
+      <div class="section-head">
+        <h2>Statistiques</h2>
+        <span>Résumé mensuel</span>
+      </div>
+
+      <div class="metrics">
+        <div class="metric accent"><div class="metric-label">Total travaillé</div><div id="statsTotal" class="metric-value">—</div></div>
+        <div class="metric"><div class="metric-label">Moyenne / jour</div><div id="statsAverage" class="metric-value">—</div></div>
+        <div class="metric"><div class="metric-label">Meilleure journée</div><div id="statsMax" class="metric-value">—</div></div>
+        <div class="metric"><div class="metric-label">Pauses</div><div id="statsPause" class="metric-value">—</div></div>
+      </div>
+
+      <div id="statsSummary" class="dashboard-note" style="margin-top:12px">
+        Chargement des statistiques…
+      </div>
+    </section>
+
+
+    <!-- =================================================
+         OBSERVATIONS
+    ================================================== -->
+
+    <section id="observationsView" class="view">
+      <div class="section-head">
+        <h2>Observations</h2>
+        <span>Remarques du mois</span>
+      </div>
+      <div id="observationsList" class="history"></div>
+    </section>
+
+
+    <!-- =================================================
+         RÉGLAGES
+    ================================================== -->
+
+    <section id="settingsView" class="view">
+      <div class="section-head">
+        <h2>Réglages</h2>
+        <span>Application</span>
+      </div>
+      <div class="profile-panel">
+        <div class="setting"><span>Compte</span><strong id="settingsEmail">—</strong></div>
+        <div class="setting"><span>Synchronisation</span><strong>Automatique</strong></div>
+      </div>
+    </section>
+
+
+    <!-- =================================================
          PROFIL
     ================================================== -->
 
@@ -4877,12 +4955,16 @@ function rendreStats(){
   const mins=rows.map(r=>heuresEnMinutes(r.travaille||r.heures)).filter(Boolean);
   const pauses=historiqueCourant.reduce((s,r)=>s+heuresEnMinutes(r.pause),0);
   const total=mins.reduce((a,b)=>a+b,0);
-  document.getElementById("statsTotal").textContent=minutesEnTexte(total);
-  document.getElementById("statsAverage").textContent=minutesEnTexte(mins.length?total/mins.length:0);
-  document.getElementById("statsMax").textContent=minutesEnTexte(mins.length?Math.max(...mins):0);
-  document.getElementById("statsPause").textContent=minutesEnTexte(pauses);
+  const set=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=value;
+  };
+  set("statsTotal",minutesEnTexte(total));
+  set("statsAverage",minutesEnTexte(mins.length?total/mins.length:0));
+  set("statsMax",minutesEnTexte(mins.length?Math.max(...mins):0));
+  set("statsPause",minutesEnTexte(pauses));
   const obs=historiqueCourant.filter(r=>r.observation).length;
-  document.getElementById("statsSummary").textContent=obs+" observation"+(obs>1?"s":"")+" enregistrée"+(obs>1?"s":"")+" sur le mois.";
+  set("statsSummary",obs+" observation"+(obs>1?"s":"")+" enregistrée"+(obs>1?"s":"")+" sur le mois.");
 }
 
 function rendreObservations(){
