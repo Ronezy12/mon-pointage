@@ -2286,7 +2286,7 @@ button{
             <b>Exporter le mois</b>
             <small id="exportMonthLabel">Récapitulatif du mois sélectionné</small>
           </div>
-          <button class="export-button" type="button" onclick="exporterMoisPDF()">
+          <button class="export-button" type="button" onclick="window.open('pdf.html?mois='+encodeURIComponent(moisCourant.getFullYear()+'-'+String(moisCourant.getMonth()+1).padStart(2,'0')),'_blank')">
             <span aria-hidden="true">↓</span>
             PDF
           </button>
