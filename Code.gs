@@ -46,6 +46,8 @@ function route_(action, p) {
       return { success:true, data:commencerJour_(p.heure) };
     case "terminerJour":
       return { success:true, data:terminerJour_(p.heure, p.pauseMinutes, p.observation) };
+    case "modifierPointage":
+      return { success:true, data:modifierPointage_(p.date, p.debut, p.fin, p.pauseMinutes, p.observation) };
     case "signalerAbsence":
       return { success:true, data:signalerAbsence_(p.motif) };
     case "obtenirTableauDeBord":
@@ -593,6 +595,77 @@ function terminerJour_(heure,pauseMinutes,observation) {
   sheet.getRange(row,7).setValue("TRAVAIL");
 
   return getEtatDuJour();
+}
+
+function modifierPointage_(dateValue, debutValue, finValue, pauseMinutes, observation) {
+  const date = parseDate_(dateValue);
+  if (!date || normaliserDate_(date) !== String(dateValue || "").trim()) {
+    throw new Error("Date de pointage invalide.");
+  }
+
+  const sheet = getPlanning_();
+  const row = getRowForDate_(sheet, date);
+  if (!row) throw new Error("Cette journée n'existe pas dans le planning.");
+
+  const values = sheet.getRange(row,1,1,7).getValues()[0];
+  const type = String(values[6] || "").toUpperCase();
+
+  if (["FETE","CHABBAT","ABSENT"].includes(type)) {
+    throw new Error("Cette journée ne peut pas être modifiée comme une journée travaillée.");
+  }
+
+  const debut = String(debutValue || "").trim();
+  const fin = String(finValue || "").trim();
+
+  if (debut && !/^\d{1,2}:\d{2}$/.test(debut)) throw new Error("Heure d'arrivée invalide.");
+  if (fin && !/^\d{1,2}:\d{2}$/.test(fin)) throw new Error("Heure de départ invalide.");
+
+  const pause = Math.max(0, Math.min(1440, Number(pauseMinutes) || 0));
+
+  if (fin && !debut) throw new Error("Une heure de départ nécessite une heure d'arrivée.");
+
+  let worked = "";
+  if (debut && fin) {
+    const startMin = minutesFromHHMM_(debut);
+    let endMin = minutesFromHHMM_(fin);
+    if (startMin === null || endMin === null) throw new Error("Heure invalide.");
+    if (endMin < startMin) endMin += 24 * 60;
+    if (endMin - startMin < pause) throw new Error("La pause ne peut pas dépasser la durée travaillée.");
+    worked = formatDuree_(endMin - startMin - pause);
+  }
+
+  sheet.getRange(row,2).setValue(debut);
+  sheet.getRange(row,3).setValue(fin);
+
+  if (debut || fin) {
+    sheet.getRange(row,4).setValue(pause / (24 * 60));
+    sheet.getRange(row,4).setNumberFormat("[h]:mm");
+  } else {
+    sheet.getRange(row,4).clearContent();
+  }
+
+  sheet.getRange(row,5).setValue(worked);
+  sheet.getRange(row,6).setValue(String(observation || "").trim());
+  sheet.getRange(row,7).setValue(debut && fin ? "TRAVAIL" : "");
+
+  return obtenirEtatDuJourPourDate_(date);
+}
+
+function obtenirEtatDuJourPourDate_(date) {
+  const sheet = getPlanning_();
+  const row = getRowForDate_(sheet, date);
+  if (!row) return {};
+  const values = sheet.getRange(row,1,1,7).getValues()[0];
+  return {
+    date: normaliserDate_(date),
+    debut: valeurHeure_(values[1]),
+    fin: valeurHeure_(values[2]),
+    pause: valeurPause_(values[3]),
+    travaille: String(values[4] || "").trim(),
+    observation: String(values[5] || ""),
+    typeJour: String(values[6] || ""),
+    statut: values[2] ? "Terminé" : (values[1] ? "En cours" : "À pointer")
+  };
 }
 
 function signalerAbsence_(motif) {
