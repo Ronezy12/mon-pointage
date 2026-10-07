@@ -439,8 +439,48 @@ function valeurHeure_(value) {
 
 function valeurPause_(value) {
   if (value === "" || value === null || value === undefined) return "";
-  if (typeof value === "number") return String(Math.round(value)) + " min";
-  return String(value);
+
+  // Google Sheets peut renvoyer une pause sous forme de nombre,
+  // de durée (fraction de journée) ou d'objet Date.
+  if (value instanceof Date && !isNaN(value)) {
+    const hours = value.getHours();
+    const minutes = value.getMinutes();
+    const total = hours * 60 + minutes;
+    return formatPause_(total);
+  }
+
+  if (typeof value === "number") {
+    // Une durée Sheets est stockée comme fraction de journée.
+    // Une valeur >= 1 correspond à l'ancien stockage en minutes.
+    const total = value > 1
+      ? Math.round(value)
+      : Math.round(value * 24 * 60);
+
+    return formatPause_(total);
+  }
+
+  const minutes = parseMinutes_(value);
+  return formatPause_(minutes);
+}
+
+function formatPause_(minutes) {
+  minutes = Math.max(0, Math.round(Number(minutes) || 0));
+
+  if (minutes === 0) return "0 minute";
+
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  if (hours === 0) {
+    return minutes + " minute" + (minutes > 1 ? "s" : "");
+  }
+
+  if (mins === 0) {
+    return hours + " heure" + (hours > 1 ? "s" : "");
+  }
+
+  return hours + " heure" + (hours > 1 ? "s" : "") +
+    " " + mins + " minute" + (mins > 1 ? "s" : "");
 }
 
 function parseMinutes_(value) {
@@ -516,7 +556,9 @@ function terminerJour_(heure,pauseMinutes,observation) {
   const worked = Math.max(0,endMin-startMin-pause);
 
   sheet.getRange(row,3).setValue(fin);
-  sheet.getRange(row,4).setValue(pause);
+  // Stockage propre : une vraie durée Sheets (fraction de journée).
+  sheet.getRange(row,4).setValue(pause / (24 * 60));
+  sheet.getRange(row,4).setNumberFormat("[h]:mm");
   sheet.getRange(row,5).setValue(formatDuree_(worked));
   sheet.getRange(row,6).setValue(String(observation || "").trim());
   sheet.getRange(row,7).setValue("TRAVAIL");
