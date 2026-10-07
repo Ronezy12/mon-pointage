@@ -25,7 +25,6 @@
     <p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p>
     <div id="googleButton">
       <div id="googleButtonRender"></div>
-      <div id="googleHardDebug" style="display:block;margin-top:12px;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:12px;text-align:left;font:12px/1.5 monospace;white-space:pre-wrap;max-height:220px;overflow:auto">BOOT…</div>
       <div id="googleStatus" class="google-status">Chargement de Google…</div>
     </div>
     <div id="loginError" class="login-error hidden"></div>
@@ -61,19 +60,6 @@ let moisCourant=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
 window.addEventListener("error",e=>console.error("Mon Pointage:",e.error||e.message));
 window.addEventListener("unhandledrejection",e=>console.error("Mon Pointage promise:",e.reason));
-
-function googleHardLog(message,data){
- const box=document.getElementById("googleHardDebug");
- const time=new Date().toLocaleTimeString("fr-FR",{hour12:false});
- let extra="";
- try{if(data!==undefined)extra=" | "+(typeof data==="string"?data:JSON.stringify(data));}catch(_){extra=" | "+String(data);}
- const line="["+time+"] "+message+extra;
- console.log("[Mon Pointage Google]",line);
- if(box){box.textContent+=(box.textContent==="BOOT…"?"": "\n")+line;box.scrollTop=box.scrollHeight;}
-}
-window.addEventListener("error",e=>googleHardLog("WINDOW ERROR",e.message+" @ "+e.filename+":"+e.lineno+":"+e.colno));
-window.addEventListener("unhandledrejection",e=>googleHardLog("UNHANDLED REJECTION",e.reason?.message||String(e.reason)));
-googleHardLog("PAGE CHARGÉE",{origin:location.origin,path:location.pathname});
 
 document.addEventListener("DOMContentLoaded",()=>{
  googleHardLog("DOM PRÊT",{gis:!!window.google?.accounts?.id});
