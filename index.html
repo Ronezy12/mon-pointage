@@ -28,6 +28,10 @@
       <div id="googleStatus" class="google-status">Chargement de Google…</div>
     </div>
     <div id="loginError" class="login-error hidden"></div>
+    <details id="googleDebug" style="margin-top:14px;text-align:left;font-size:12px;max-width:420px">
+      <summary style="cursor:pointer">Diagnostic Google</summary>
+      <pre id="googleDebugText" style="white-space:pre-wrap;margin-top:8px"></pre>
+    </details>
     <div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div>
   </div>
 </section>
@@ -83,6 +87,7 @@ function afficherLogin(){
 }
 
 function chargerBibliothequeGoogle(){
+ googleDebug("chargement de la bibliothèque");
  const status=document.getElementById("googleStatus");
  if(window.google?.accounts?.id){initialiserGoogle();return;}
  if(googleLoadStarted){if(status)status.textContent="Chargement de Google…";return;}
@@ -91,7 +96,7 @@ function chargerBibliothequeGoogle(){
  const script=document.createElement("script");
  script.src=CONFIG.googleScript;
  script.async=true;
- script.onload=()=>{initialiserGoogle()};
+ script.onload=()=>{googleDebug("bibliothèque chargée");initialiserGoogle()};
  script.onerror=(event)=>{
    googleLoadStarted=false;
    afficherErreurGoogleDetaillee("chargement",event||"Impossible de charger https://accounts.google.com/gsi/client");
@@ -102,18 +107,32 @@ function chargerBibliothequeGoogle(){
  },10000);
 }
 
+function googleDebug(etape,detail=""){
+ const el=document.getElementById("googleDebugText");
+ const lines=[
+   "=== DIAGNOSTIC GOOGLE ===",
+   "Origine : "+window.location.origin,
+   "URL : "+window.location.href,
+   "Client ID : "+CONFIG.googleClientId,
+   "Google GIS : "+(window.google?.accounts?.id?"CHARGÉ":"NON CHARGÉ"),
+   "Étape : "+etape
+ ];
+ if(detail)lines.push("Détail : "+detail);
+ if(el)el.textContent=lines.join("\n");
+ console.log("[Google Debug]",...lines);
+}
 function afficherErreurGoogleDetaillee(type,error){
- const status=document.getElementById("googleStatus");
- const box=document.getElementById("loginError");
  let detail="";
  try{
-   if(error instanceof Error) detail=error.message;
+   if(error instanceof Error) detail=error.name+": "+error.message;
    else if(typeof error==="string") detail=error;
    else if(error) detail=JSON.stringify(error);
  }catch(_){detail=String(error||"Erreur inconnue");}
  detail=detail||"Erreur Google inconnue.";
- console.error("Google Identity Services:",type,error);
- if(status)status.textContent="Erreur Google : "+detail;
+ googleDebug("ERREUR — "+type,detail);
+ const status=document.getElementById("googleStatus");
+ const box=document.getElementById("loginError");
+ if(status)status.textContent="Google : "+detail;
  if(box){
    box.classList.remove("hidden");
    box.textContent="Google ("+type+") : "+detail;
@@ -121,6 +140,7 @@ function afficherErreurGoogleDetaillee(type,error){
 }
 
 function initialiserGoogle(){
+ googleDebug("initialisation");
  const mount=document.getElementById("googleButtonRender"),status=document.getElementById("googleStatus");
  if(!mount)return;
  if(!window.google?.accounts?.id){afficherErreurGoogleDetaillee("bibliothèque","Google Identity Services n'est pas disponible.");return;}
@@ -133,11 +153,13 @@ function initialiserGoogle(){
      cancel_on_tap_outside:true,
      context:"signin"
    });
+   googleDebug("initialize OK");
    mount.innerHTML="";
    google.accounts.id.renderButton(mount,{
      type:"standard",theme:"filled_black",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:320
    });
    googleRendered=true;
+   googleDebug("bouton Google rendu");
    if(status)status.textContent="Connexion sécurisée avec Google";
  }catch(error){
    googleRendered=false;
@@ -169,10 +191,12 @@ function restaurerSession(token){
 }
 
 async function connexionGoogle(response){
+ googleDebug("callback Google reçu", response ? Object.keys(response).join(", ") : "Aucune réponse");
  const errorBox=document.getElementById("loginError");
  if(errorBox)errorBox.classList.add("hidden");
  try{
    const token=response?.credential;
+   googleDebug("credential", token ? "REÇU" : "ABSENT");
    if(!token)throw new Error("Google n'a pas fourni de jeton.");
    const p=decoderJwt(token);
    if(!p?.email)throw new Error("Réponse Google invalide.");
