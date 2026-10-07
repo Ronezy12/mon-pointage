@@ -149,6 +149,7 @@ function initialiserGoogle(){
    google.accounts.id.initialize({
      client_id:CONFIG.googleClientId,
      callback:connexionGoogle,
+     error_callback:(error)=>afficherErreurGoogleDetaillee("error_callback",error),
      auto_select:false,
      cancel_on_tap_outside:true,
      context:"signin"
@@ -161,6 +162,7 @@ function initialiserGoogle(){
    googleRendered=true;
    googleDebug("bouton Google rendu");
    if(status)status.textContent="Connexion sécurisée avec Google";
+   setTimeout(()=>googleDebug("attente du clic Google"),0);
  }catch(error){
    googleRendered=false;
    afficherErreurGoogleDetaillee("initialisation",error);
