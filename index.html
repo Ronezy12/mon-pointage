@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08090c">
 <meta name="description" content="Mon Pointage — suivi des heures et absences">
+<meta name="app-version" content="2026.10.07-navfix">
 <link rel="icon" type="image/png" href="favicon12.png">
 <link rel="apple-touch-icon" href="favicon12.png">
 <meta name="apple-mobile-web-app-title" content="À L’HEURE">
@@ -916,31 +917,51 @@ button{
 .nav-item{
   min-width:0;
   min-height:54px;
-  padding:7px 3px;
+  padding:7px 6px;
   border-radius:20px;
   background:transparent;
   color:#686f7a;
-  font-size:9px;
+  font-size:0;
   font-weight:800;
   letter-spacing:-.1px;
-  transition:background .2s,transform .2s,color .2s;
+  transition:background .22s,transform .2s,color .2s,width .22s;
 }
 
 .nav-item .nav-icon{
-  width:21px;
-  height:21px;
-  margin:0 auto 4px;
+  width:24px;
+  height:24px;
+  margin:0 auto;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:18px;
+  font-size:20px;
   line-height:1;
 }
 
 .nav-item.active{
+  min-width:92px;
   background:#f1f3f5;
   color:#0a0c0e;
   box-shadow:0 7px 25px rgba(255,255,255,.08);
+  font-size:9px;
+}
+
+.nav-item.active .nav-icon{
+  margin:0 auto 3px;
+}
+
+@media (max-width:560px){
+  .bottom-nav{
+    width:min(430px,calc(100% - 18px));
+    padding:6px;
+    gap:2px;
+  }
+  .nav-item{
+    min-height:52px;
+  }
+  .nav-item.active{
+    min-width:0;
+  }
 }
 
 .nav-item:active{
@@ -4921,10 +4942,15 @@ function minutesEnTexte(min){
 function rendrePlanning(){
   const cal=document.getElementById("planningCalendar");
   if(!cal)return;
+  const safeSet=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=value;
+  };
   const y=moisCourant.getFullYear(), m=moisCourant.getMonth();
   const titre=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-  document.getElementById("planningMonthTitle").innerHTML=esc(titre.charAt(0).toUpperCase()+titre.slice(1))+"<small>Calendrier</small>";
-  document.getElementById("planningMonthLabel").textContent=titre;
+  const titleEl=document.getElementById("planningMonthTitle");
+  if(titleEl) titleEl.innerHTML=esc(titre.charAt(0).toUpperCase()+titre.slice(1))+"<small>Calendrier</small>";
+  safeSet("planningMonthLabel",titre);
   const map={};
   historiqueCourant.forEach(r=>{
     const d=r.date?new Date(r.date):null;
@@ -4946,8 +4972,8 @@ function rendrePlanning(){
       (r?'<span class="cal-hours">'+esc(r.travaille||r.heures||r.statut||"—")+'</span>':"")+
       '</div>';
   }
-  document.getElementById("planningWorked").textContent=historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length;
-  document.getElementById("planningAbsent").textContent=historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length;
+  safeSet("planningWorked",historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length);
+  safeSet("planningAbsent",historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length);
 }
 
 function rendreStats(){
