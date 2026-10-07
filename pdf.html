@@ -50,7 +50,47 @@ th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:
   th{background:#15191e!important}
   .hero{background:#11171a!important}
 }
-</style>
+
+/* ===== Calendrier mensuel A4 ===== */
+.sheet{width:210mm;min-height:297mm;max-width:calc(100% - 28px);margin:22px auto 50px;padding:12mm;background:#0b0d10;border:1px solid rgba(255,255,255,.09);border-radius:26px;box-shadow:0 30px 100px rgba(0,0,0,.38);overflow:hidden}
+.pdf-head{padding-bottom:14px}
+.hero{margin:14px 0 10px;padding:16px 18px}
+.total{font-size:34px}
+.metrics{gap:7px;margin-bottom:14px}
+.metric{padding:10px 12px}
+.calendar-wrap{margin-top:2px}
+.calendar-title{font-size:10px;font-weight:900;margin:0 0 8px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:7px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#111419,#0d0f12);width:100%;table-layout:fixed}
+.cal-head{padding:4px 2px 6px;text-align:center;color:var(--muted);font-size:6.5px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+.cal-empty{min-height:38mm}
+.cal-day{min-height:30mm;padding:7px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;overflow:hidden;break-inside:avoid}
+.cal-day b{font-size:11px;line-height:1;font-weight:950}
+.cal-status{margin-top:7px;font-size:6.5px;line-height:1.2;color:var(--muted);overflow-wrap:anywhere}
+.cal-hours{margin-top:auto;padding-top:6px;font-size:8px;font-weight:950;color:var(--green)}
+.cal-day.worked{border-color:rgba(69,230,160,.22);background:linear-gradient(145deg,rgba(69,230,160,.09),rgba(255,255,255,.025))}
+.cal-day.absent{border-color:rgba(255,89,104,.25);background:linear-gradient(145deg,rgba(255,89,104,.08),rgba(255,255,255,.025))}
+.cal-day.holiday{border-color:rgba(230,200,121,.24);background:linear-gradient(145deg,rgba(230,200,121,.08),rgba(255,255,255,.025))}
+.cal-day.weekend{background:rgba(255,255,255,.018)}
+.cal-day.today{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:6.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:6px;height:6px;border-radius:50%;display:inline-block;background:#626873}
+.legend .lg-worked{background:var(--green)} .legend .lg-absent{background:var(--red)} .legend .lg-holiday{background:var(--gold)}
+.footer{margin-top:10px}
+@media(max-width:700px){
+ .sheet{min-height:auto;padding:20px;margin-top:12px}
+ .calendar{gap:4px;padding:6px}
+ .cal-day{min-height:74px;padding:6px 5px;border-radius:10px}
+ .cal-status{font-size:6px}.cal-hours{font-size:7px}
+}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ .sheet{width:210mm;min-height:297mm;max-width:none;margin:0;padding:9mm;border:0;border-radius:0;box-shadow:none;background:#0b0d10!important}
+ .calendar{break-inside:avoid;page-break-inside:avoid}
+ .cal-day{break-inside:avoid;page-break-inside:avoid}
+ .cal-empty{min-height:30mm}
+}
+\n</style>
 </head>
 <body>
 <div class="toolbar">
@@ -71,10 +111,28 @@ function fmt(n){n=Math.max(0,Math.round(n||0));const h=Math.floor(n/60),m=n%60;r
 function api(action,params){return new Promise((resolve,reject)=>{const token=sessionStorage.getItem("monPointageGoogleToken");if(!token){reject(new Error("Session Google introuvable. Retournez dans À L’HEURE et reconnectez-vous."));return}const cb="pdf_"+Date.now()+"_"+(++seq),s=document.createElement("script"),q=new URLSearchParams({action,id_token:token,callback:cb});Object.entries(params||{}).forEach(([k,v])=>q.set(k,String(v)));let done=false;const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(v)},timer=setTimeout(()=>finish(reject,new Error("Le serveur ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur API"));s.onerror=()=>finish(reject,new Error("Impossible de contacter le serveur."));s.src=API+"?"+q.toString();document.head.appendChild(s)})}
 function monthInfo(){const p=new URLSearchParams(location.search).get("mois")||new Date().toISOString().slice(0,7);const m=p.match(/^(\d{4})-(\d{2})$/);if(!m)throw new Error("Mois invalide.");const y=Number(m[1]),mo=Number(m[2]);if(mo<1||mo>12)throw new Error("Mois invalide.");const d=new Date(y,mo-1,1);return {y,mo,d,label:d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}}
 async function load(){const info=monthInfo(),cap=info.label.charAt(0).toUpperCase()+info.label.slice(1);document.title="À L’HEURE — "+cap;document.getElementById("toolbarSub").textContent="Récapitulatif de "+cap;const response=await api("obtenirTableauDeBord",{annee:info.y,mois:info.mo}),data=response.data||{},rows=Array.isArray(data.historique)?data.historique:[],worked=rows.filter(r=>r&&(r.travaille||r.heures)),total=worked.reduce((s,r)=>s+mins(r.travaille||r.heures),0),abs=rows.filter(r=>/absent/i.test(String(r?.statut||""))).length;
-const body=rows.map(r=>{const d=r.date?new Date(r.date):null;const date=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"}):"—";return "<tr><td>"+esc(date)+"</td><td>"+esc(r.debut||"—")+"</td><td>"+esc(r.fin||"—")+"</td><td>"+esc(r.pause||"—")+"</td><td class='hours'>"+esc(r.travaille||r.heures||"—")+"</td><td class='status-cell'>"+esc(r.statut||"—")+"</td></tr>"}).join("");
-document.getElementById("sheet").innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><h2 class='section-title'>Détail des journées</h2><div class='table-wrap'><table><thead><tr><th>Date</th><th>Arrivée</th><th>Départ</th><th>Pause</th><th>Heures</th><th>Statut</th></tr></thead><tbody>"+(body||"<tr><td class='empty' colspan='6'>Aucune donnée pour ce mois.</td></tr>")+"</tbody></table></div><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
-document.getElementById("status").hidden=true;document.getElementById("sheet").hidden=false}
-load().catch(e=>{document.getElementById("status").textContent=e.message||"Impossible de générer le PDF.";document.getElementById("toolbarSub").textContent="Erreur de chargement"});
-</script>
-</body>
-</html>
+const labels=["L","M","M","J","V","S","D"];
+const map={};
+rows.forEach(r=>{
+ const d=r?.date?new Date(r.date):null;
+ if(d&&!isNaN(d)) map[d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()]=r;
+});
+const first=new Date(info.y,info.mo-1,1).getDay();
+const offset=(first+6)%7;
+const totalDays=new Date(info.y,info.mo,0).getDate();
+let cal=labels.map(x=>"<div class='cal-head'>"+x+"</div>").join("");
+for(let i=0;i<offset;i++) cal+="<div class='cal-empty'></div>";
+for(let day=1;day<=totalDays;day++){
+ const d=new Date(info.y,info.mo-1,day),key=info.y+"-"+info.mo+"-"+day,r=map[key]||{};
+ const weekend=d.getDay()===0||d.getDay()===6;
+ const raw=String(r.statut||"").trim(),low=raw.toLowerCase();
+ let status=weekend?"Repos":"À pointer",cls=weekend?" weekend":"";
+ if(/fête|chabbat/.test(low)){status=raw||"Fête";cls+=" holiday"}
+ else if(/absent/.test(low)){status="Absent";cls+=" absent"}
+ else if(r.travaille||r.heures||r.debut){status=r.travaille||r.heures||"Travaillé";cls+=" worked"}
+ else if(raw) status=raw;
+ const today=new Date().toDateString()===d.toDateString(); if(today) cls+=" today";
+ const hours=(r.travaille||r.heures)?esc(r.travaille||r.heures):"";
+ cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(status)+"</span>"+(hours?"<span class='cal-hours'>"+hours+"</span>":"")+"</div>";
+}
+document.getElementById("sheet").innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";>
