@@ -1,0 +1,18 @@
+/* À L’HEURE — styles modules pointage */
+.sync-badge{display:inline-flex;align-items:center;gap:7px;margin-top:6px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);font-size:9px;font-weight:800;color:var(--muted)}
+.sync-badge i{width:6px;height:6px;border-radius:50%;background:#858b96}
+.sync-badge.ok{color:#67efb1}.sync-badge.ok i{background:var(--green);box-shadow:0 0 10px rgba(69,230,160,.7)}
+.sync-badge.loading{color:#e6c879}.sync-badge.loading i{background:var(--gold);animation:aLHpulse 1s infinite}
+.sync-badge.error{color:#ff8994}.sync-badge.error i{background:var(--red)}
+@keyframes aLHpulse{50%{opacity:.3;transform:scale(.7)}}
+#pointageAlerts{display:none;margin-top:10px}
+#pointageAlerts.show{display:block}
+.alert-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:13px 15px;border-radius:18px;background:rgba(230,200,121,.07);border:1px solid rgba(230,200,121,.14);color:#d8c47e;font-size:10px}
+.alert-card strong{font-size:11px;color:#f1da8a}.alert-card span{color:var(--muted);line-height:1.4}.alert-card button{padding:8px 11px;border-radius:11px;background:#e6c879;color:#111;font-size:9px;font-weight:900}
+@media(max-width:600px){.alert-card{grid-template-columns:1fr}.alert-card button{width:100%}}
+#aLHConfirmModal,#aLHCorrectionModal{z-index:120}
+#aLHConfirmModal .modal-card,#aLHCorrectionModal .modal-card{box-shadow:0 30px 100px rgba(0,0,0,.55)}
+#aLHCorrectionModal input,#aLHCorrectionModal textarea{width:100%;border:1px solid var(--line);background:#0e1115;color:var(--ink);border-radius:12px;padding:11px 12px;outline:none}
+#aLHCorrectionModal input:focus,#aLHCorrectionModal textarea:focus{border-color:rgba(69,230,160,.45);box-shadow:0 0 0 3px rgba(69,230,160,.07)}
+.history-row{position:relative}
+.history-edit{margin-top:8px;display:inline-flex;align-items:center;padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.055);border:1px solid var(--line);color:var(--ink);font-size:9px;font-weight:800}
