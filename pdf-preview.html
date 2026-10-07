@@ -103,7 +103,7 @@ async function load(){
  var first=new Date(info.y,info.mo-1,1).getDay(),offset=(first+6)%7,totalDays=new Date(info.y,info.mo,0).getDate(),cal=labels.map(function(x){return "<div class='cal-head'>"+x+"</div>"}).join("");
  for(var i=0;i<offset;i++)cal+="<div class='cal-empty'></div>";
  for(var day=1;day<=totalDays;day++){var d=new Date(info.y,info.mo-1,day),r=map[info.y+"-"+info.mo+"-"+day]||{},weekend=d.getDay()===0||d.getDay()===6,raw=String(r.statut||"").trim(),low=raw.toLowerCase(),label=weekend?"Repos":"À pointer",cls=weekend?" weekend":"";
-  if(/fête|chabbat/.test(low)){label=raw||"Fête";cls+=" holiday"}else if(/absent/.test(low)){label="Absent";cls+=" absent"}else if(r.travaille||r.heures||r.debut){label=r.travaille||r.heures||"Travaillé";cls+=" worked"}else if(raw)label=raw;
+  if(weekend){label="Repos"}else if(/fête|chabbat/.test(low)){label=raw||"Fête";cls+=" holiday"}else if(/absent/.test(low)){label="Absent";cls+=" absent"}else if(r.travaille||r.heures||r.debut){label=r.travaille||r.heures||"Travaillé";cls+=" worked"}else{label="À pointer"}
   if(new Date().toDateString()===d.toDateString())cls+=" today";
   cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(label)+"</span>"+((r.travaille||r.heures)?"<span class='cal-hours'>"+esc(r.travaille||r.heures)+"</span>":"")+"</div>";
  }
