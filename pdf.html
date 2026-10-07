@@ -38,17 +38,17 @@ th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:
 @media(max-width:430px){.toolbar-title{font-size:12px}.toolbar-sub{max-width:130px}.sheet{max-width:calc(100% - 16px);padding:15px;border-radius:20px}.brand-name{font-size:14px}.brand-sub{font-size:7px}.logo{width:34px;height:34px}.total{font-size:27px}table{font-size:6.5px}th{font-size:5.9px}}
 @media print{
   @page{size:A4 portrait;margin:9mm}
-  html,body{background:#0b0d10!important;color:#f5f7fa!important}
+  html,body{background:#fff!important;color:#111!important}
   body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   .toolbar,.status{display:none!important}
-  .sheet{width:100%;max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;overflow:visible;background:#0b0d10!important}
+  .sheet{width:100%;max-width:none;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;overflow:visible;background:#fff!important;color:#111!important}
   .pdf-head,.hero,.metrics,.section-title,.table-wrap,.footer{break-inside:avoid}
   .table-wrap{overflow:visible}
   table{break-inside:auto}
   thead{display:table-header-group}
   tr{break-inside:avoid;page-break-inside:avoid}
   th{background:#15191e!important}
-  .hero{background:#11171a!important}
+  .hero{background:#f2f5f3!important;color:#111!important}.metric,.calendar,.cal-day{background:#fff!important;color:#111!important}.pdf-head{border-color:#d9dde2!important}.footer{border-color:#d9dde2!important}.cal-status,.cal-head,.brand-sub,.period-label,.hero-label,.hero-note,.metric span{color:#66707a!important}.cal-day{border-color:#d9dde2!important}.cal-day.worked{background:#f0fbf5!important;border-color:#b9ead0!important}.cal-day.absent{background:#fff1f2!important;border-color:#f2c0c5!important}.cal-day.holiday{background:#fff9e8!important;border-color:#ead99c!important}.cal-hours{color:#138a5b!important}.total{color:#138a5b!important}
 }
 
 /* ===== Calendrier mensuel A4 ===== */
@@ -128,7 +128,7 @@ async function load(){
   if(new Date().toDateString()===d.toDateString())cls+=" today";
   cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(label)+"</span>"+((r.travaille||r.heures)?"<span class='cal-hours'>"+esc(r.travaille||r.heures)+"</span>":"")+"</div>";
  }
- document.getElementById("sheet").innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
+ var sheet=document.getElementById("sheet");sheet.hidden=false;sheet.innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
  status.textContent="3/3 — PDF prêt. Vous pouvez l’enregistrer.";
  status.style.color="var(--green)";
 }
