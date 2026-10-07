@@ -29,7 +29,7 @@
 </style>
 </head>
 <body>
-<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton"><div id="g_id_onload" data-client_id="390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com" data-callback="connexionGoogle" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard" data-theme="filled_black" data-size="large" data-text="signin_with" data-shape="pill" data-logo_alignment="left" data-width="320"></div><div id="googleStatus" class="google-status">Connexion sécurisée avec Google</div></div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
+<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton"><div id="googleButtonRender"></div><div id="googleStatus" class="google-status">Connexion sécurisée avec Google</div></div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
 <main id="app"><div class="shell"><header class="topbar"><div class="brand"><div class="brandmark">MP</div><div><div class="brandname">Mon Pointage</div><div id="welcome" class="brandsub">Votre espace personnel</div></div></div><div class="account"><img id="avatar" alt=""><button class="ghost" onclick="deconnexion()">Déconnexion</button></div></header>
 <section id="homeView" class="view active"><div class="hero"><div class="hero-content"><div class="eyebrow">AUJOURD'HUI · <span id="heroTime">--:--:--</span></div><div id="heroDate" class="hero-date">Chargement…</div><div id="clock" class="hero-clock">--:--:--</div><div class="hero-bottom"><div id="status" class="pill gray"><i></i>Chargement</div><span id="heroHint" class="eyebrow">Synchronisation</span></div></div></div>
 <div class="section-head"><h2>Votre journée</h2><span id="daySummary">En attente</span></div><div class="metrics"><div class="metric accent"><div class="metric-label">Arrivée</div><div id="arrival" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Départ</div><div id="departure" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Pause</div><div id="break" class="metric-value">—</div></div><div class="metric accent"><div class="metric-label">Travaillé</div><div id="worked" class="metric-value">—</div></div></div>
@@ -53,15 +53,41 @@ let googleInitialise=false;
 let googleTimer=null;
 function initialiserGoogle(){
   const status=document.getElementById("googleStatus");
-  if(window.google?.accounts?.id){
-    if(status)status.textContent="Connexion sécurisée avec Google";
+  const container=document.getElementById("googleButtonRender");
+  if(!container)return;
+  if(!window.google?.accounts?.id){
+    if(status)status.textContent="Chargement de Google…";
+    clearTimeout(googleTimer);
+    googleTimer=setTimeout(initialiserGoogle,500);
     return;
   }
-  if(status)status.textContent="Chargement de Google…";
-  clearTimeout(googleTimer);
-  googleTimer=setTimeout(initialiserGoogle,500);
+  if(googleInitialise)return;
+  googleInitialise=true;
+  try{
+    window.google.accounts.id.initialize({
+      client_id:GOOGLE_CLIENT_ID,
+      callback:connexionGoogle,
+      auto_select:false,
+      cancel_on_tap_outside:true
+    });
+    container.innerHTML="";
+    const width=Math.max(200,Math.min(320,Math.floor(container.getBoundingClientRect().width||320)));
+    window.google.accounts.id.renderButton(container,{
+      type:"standard",
+      theme:"filled_black",
+      size:"large",
+      text:"signin_with",
+      shape:"pill",
+      logo_alignment:"left",
+      width
+    });
+    if(status)status.textContent="Connexion sécurisée avec Google";
+  }catch(e){
+    console.error("Initialisation Google:",e);
+    googleInitialise=false;
+    if(status)status.textContent="Impossible de charger Google";
+  }
 }
-
 function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
 async function restaurerSession(){const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;const p=decoderJwt(t);if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}
 async function connexionGoogle(r){
@@ -88,6 +114,7 @@ async function connexionGoogle(r){
   }
   demarrerSynchronisationTempsReel();
 }
+window.connexionGoogle=connexionGoogle;
 function afficherApp(){const login=document.getElementById("loginScreen");const app=document.getElementById("app");if(login)login.style.display="none";if(app){app.style.display="block";app.classList.add("app-ready");}const prenom=(utilisateur.nom||"").trim().split(" ")[0];document.getElementById("welcome").textContent=prenom?"Bonjour "+prenom:"Votre espace personnel";document.getElementById("avatar").src=utilisateur.picture||"";document.getElementById("profileBig").src=utilisateur.picture||"";document.getElementById("profileName").textContent=utilisateur.nom||"Utilisateur";document.getElementById("profileEmail").textContent=utilisateur.email}
 function appelerAPI(action,params={}){return new Promise((resolve,reject)=>{if(!idToken)return reject(new Error("Connexion Google requise."));const cb="mp_"+Date.now()+"_"+(++callbackCounter),s=document.createElement("script"),q=new URLSearchParams({action,id_token:idToken,callback:cb});Object.entries(params).forEach(([k,v])=>q.set(k,v));let done=false;const finish=(fn,val)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(val)};const timer=setTimeout(()=>finish(reject,new Error("Le serveur Mon Pointage ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur inconnue."));s.onerror=()=>finish(reject,new Error("Impossible de contacter Mon Pointage."));s.src=API_URL+"?"+q;s.async=true;document.head.appendChild(s)})}
 async function chargerTout(){await synchroniserTout()}async function synchroniserTout(){await Promise.all([chargerEtat(),chargerRecapEtHistorique()])}let synchronisationTimer=null;function demarrerSynchronisationTempsReel(){if(synchronisationTimer)clearInterval(synchronisationTimer);synchronisationTimer=setInterval(async()=>{if(!idToken)return;try{await synchroniserTout()}catch(e){console.warn("Synchronisation:",e)}},5000)}
