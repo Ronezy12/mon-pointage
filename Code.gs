@@ -34,7 +34,7 @@ function doGet(e) {
 }
 
 function route_(action, p) {
-  if (action === "ping") return { success:true, data:{ status:"ok", version:"3.1" } };
+  if (action === "ping") return { success:true, data:{ status:"ok", version:"3.2" } };
 
   const user = verifierGoogle_(p.id_token);
   if (!user.ok) throw new Error(user.error);
@@ -413,7 +413,8 @@ function actualiserTypeJour_(sheet, row, date) {
 }
 
 function getEtatDuJour() {
-  creerPlanning_();
+  // Le planning est initialisé une fois pour toutes. Inutile de rescanner 2026-2027 à chaque requête.
+
 
   const date = dateDuJour_();
   const sheet = getPlanning_();
@@ -530,7 +531,8 @@ function formatDuree_(minutes) {
 }
 
 function commencerJour_(heure) {
-  creerPlanning_();
+  // Vérification/création uniquement de la ligne du jour.
+
 
   const date = dateDuJour_();
   const sheet = getPlanning_();
@@ -560,7 +562,8 @@ function commencerJour_(heure) {
 }
 
 function terminerJour_(heure,pauseMinutes,observation) {
-  creerPlanning_();
+  // Vérification/création uniquement de la ligne du jour.
+
   const date = dateDuJour_();
   const sheet = getPlanning_();
   const row = ensurePlanningDate_(date);
@@ -593,7 +596,8 @@ function terminerJour_(heure,pauseMinutes,observation) {
 }
 
 function signalerAbsence_(motif) {
-  creerPlanning_();
+  // Vérification/création uniquement de la ligne du jour.
+
   const date = dateDuJour_();
   const sheet = getPlanning_();
   const row = ensurePlanningDate_(date);
