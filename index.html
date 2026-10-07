@@ -939,6 +939,138 @@ button{
   }
 }
 
+.settings-panel{
+  display:grid;
+  gap:8px;
+}
+
+.settings-export{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:6px;
+  padding:14px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.055);
+}
+
+.settings-export b{
+  display:block;
+  font-size:12px;
+}
+
+.settings-export small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.export-button{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 13px;
+  border-radius:12px;
+  background:#f1f3f5;
+  color:#0a0c0e;
+  font-size:10px;
+  font-weight:900;
+}
+
+.export-button span{
+  font-size:15px;
+  line-height:1;
+}
+
+@media(max-width:380px){
+  .settings-export{
+    align-items:flex-start;
+  }
+  .export-button{
+    padding:9px 11px;
+  }
+}
+
+@media print{
+  body *{
+    visibility:hidden !important;
+  }
+
+  #pdfExportArea,
+  #pdfExportArea *{
+    visibility:visible !important;
+  }
+
+  #pdfExportArea{
+    position:absolute;
+    inset:0;
+    width:100%;
+    padding:28px;
+    box-sizing:border-box;
+    background:#fff !important;
+    color:#111 !important;
+    font-family:Arial,sans-serif;
+  }
+
+  #pdfExportArea h1{
+    margin:0 0 4px;
+    font-size:24px;
+  }
+
+  #pdfExportArea .pdf-subtitle{
+    margin-bottom:22px;
+    color:#666 !important;
+    font-size:12px;
+  }
+
+  #pdfExportArea .pdf-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:22px;
+  }
+
+  #pdfExportArea .pdf-box{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+  }
+
+  #pdfExportArea .pdf-box span{
+    display:block;
+    color:#666 !important;
+    font-size:9px;
+  }
+
+  #pdfExportArea .pdf-box strong{
+    display:block;
+    margin-top:5px;
+    font-size:16px;
+  }
+
+  #pdfExportArea table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:10px;
+  }
+
+  #pdfExportArea th,
+  #pdfExportArea td{
+    padding:7px 6px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+  }
+
+  #pdfExportArea th{
+    background:#f2f2f2 !important;
+    font-weight:700;
+  }
+}
+
 /* =========================================================
    NAVIGATION
 ========================================================= */
@@ -2212,9 +2344,28 @@ button{
         <h2>Réglages</h2>
         <span>Application</span>
       </div>
-      <div class="profile-panel">
-        <div class="setting"><span>Compte</span><strong id="settingsEmail">—</strong></div>
-        <div class="setting"><span>Synchronisation</span><strong>Automatique</strong></div>
+
+      <div class="profile-panel settings-panel">
+        <div class="setting">
+          <span>Compte</span>
+          <strong id="settingsEmail">—</strong>
+        </div>
+
+        <div class="setting">
+          <span>Synchronisation</span>
+          <strong>Automatique</strong>
+        </div>
+
+        <div class="settings-export">
+          <div>
+            <b>Exporter le mois</b>
+            <small id="exportMonthLabel">Récapitulatif du mois sélectionné</small>
+          </div>
+          <button class="export-button" type="button" onclick="exporterMoisPDF()">
+            <span aria-hidden="true">↓</span>
+            PDF
+          </button>
+        </div>
       </div>
     </section>
 
@@ -2368,6 +2519,8 @@ button{
 
 </main>
 
+
+<div id="pdfExportArea" aria-hidden="true"></div>
 
 <!-- =====================================================
      MODALE DÉPART
@@ -4900,6 +5053,54 @@ function changerMois(
 
 }
 
+
+function exporterMoisPDF(){
+  const y=moisCourant.getFullYear();
+  const m=moisCourant.getMonth();
+  const titre=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  const rows=Array.isArray(historiqueCourant)?historiqueCourant:[];
+  const worked=rows.filter(r=>r&&(r.travaille||r.heures));
+  const total=worked.reduce((sum,r)=>sum+heuresEnMinutes(r.travaille||r.heures),0);
+  const absences=rows.filter(r=>/absent/i.test(String(r?.statut||""))).length;
+
+  const area=document.getElementById("pdfExportArea");
+  if(!area)return;
+
+  const safe=typeof esc==="function"?esc:(v)=>String(v??"");
+  const moisLabel=titre.charAt(0).toUpperCase()+titre.slice(1);
+
+  const body=rows.map(r=>{
+    const d=r.date?new Date(r.date):null;
+    const date=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}):"—";
+    return "<tr>"+
+      "<td>"+safe(date)+"</td>"+
+      "<td>"+safe(r.debut||"—")+"</td>"+
+      "<td>"+safe(r.fin||"—")+"</td>"+
+      "<td>"+safe(r.pause||"—")+"</td>"+
+      "<td>"+safe(r.travaille||r.heures||"—")+"</td>"+
+      "<td>"+safe(r.statut||"—")+"</td>"+
+    "</tr>";
+  }).join("");
+
+  area.innerHTML=
+    "<h1>À L’HEURE</h1>"+
+    "<div class='pdf-subtitle'>Récapitulatif — "+safe(moisLabel)+"</div>"+
+    "<div class='pdf-summary'>"+
+      "<div class='pdf-box'><span>Heures travaillées</span><strong>"+safe(minutesEnTexte(total))+"</strong></div>"+
+      "<div class='pdf-box'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div>"+
+      "<div class='pdf-box'><span>Absences</span><strong>"+absences+"</strong></div>"+
+    "</div>"+
+    "<table><thead><tr><th>Date</th><th>Arrivée</th><th>Départ</th><th>Pause</th><th>Heures</th><th>Statut</th></tr></thead>"+
+    "<tbody>"+(body||"<tr><td colspan='6'>Aucune donnée pour ce mois.</td></tr>")+"</tbody></table>";
+
+  const label=document.getElementById("exportMonthLabel");
+  if(label)label.textContent="Récapitulatif du "+moisLabel;
+
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{area.innerHTML="";},500);
+  },50);
+}
 
 /* =========================================================
    TITRE MOIS
