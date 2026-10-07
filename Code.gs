@@ -34,7 +34,7 @@ function doGet(e) {
 }
 
 function route_(action, p) {
-  if (action === "ping") return { success:true, data:{ status:"ok", version:"2.0" } };
+  if (action === "ping") return { success:true, data:{ status:"ok", version:"3.1" } };
 
   const user = verifierGoogle_(p.id_token);
   if (!user.ok) throw new Error(user.error);
@@ -393,20 +393,39 @@ function dateDuJour_() {
   );
 }
 
+function actualiserTypeJour_(sheet, row, date) {
+  const current =
+    String(sheet.getRange(row,7).getValue() || "").toUpperCase();
+
+  const calendarType = chercherTypeCalendrier_(date);
+
+  if (calendarType === "CHABBAT" || calendarType === "FETE") {
+    sheet.getRange(row,7).setValue(calendarType);
+    return calendarType;
+  }
+
+  if (current === "ABSENT" || current === "TRAVAIL") {
+    return current;
+  }
+
+  sheet.getRange(row,7).clearContent();
+  return "";
+}
+
 function getEtatDuJour() {
   creerPlanning_();
+
   const date = dateDuJour_();
   const sheet = getPlanning_();
   const row = ensurePlanningDate_(date);
 
-  mettreAJourTypesJours_();
+  const type = actualiserTypeJour_(sheet, row, date);
 
   const values = sheet.getRange(row,1,1,7).getValues()[0];
-  const type = String(values[6] || "").toUpperCase();
   const debut = valeurHeure_(values[1]);
   const fin = valeurHeure_(values[2]);
   const pause = valeurPause_(values[3]);
-  const travaille = valeurHeure_(values[4]);
+  const travaille = String(values[4] || "").trim();
 
   let statut = "Prêt à pointer";
   if (type === "FETE") statut = "Fête";
@@ -512,21 +531,28 @@ function formatDuree_(minutes) {
 
 function commencerJour_(heure) {
   creerPlanning_();
+
   const date = dateDuJour_();
   const sheet = getPlanning_();
   const row = ensurePlanningDate_(date);
 
-  mettreAJourTypesJours_();
+  const type = actualiserTypeJour_(sheet, row, date);
 
   const current = sheet.getRange(row,1,1,7).getValues()[0];
-  const type = String(current[6] || "").toUpperCase();
 
   if (["FETE","CHABBAT","ABSENT"].includes(type)) {
     throw new Error("Le pointage est désactivé pour cette journée.");
   }
-  if (current[1]) throw new Error("L'arrivée est déjà enregistrée.");
 
-  const h = String(heure || "").match(/^\d{1,2}:\d{2}$/) ? String(heure) : Utilities.formatDate(new Date(),CONFIG.TZ,"HH:mm");
+  if (current[1]) {
+    throw new Error("L'arrivée est déjà enregistrée.");
+  }
+
+  const h =
+    String(heure || "").match(/^\d{1,2}:\d{2}$/)
+      ? String(heure)
+      : Utilities.formatDate(new Date(),CONFIG.TZ,"HH:mm");
+
   sheet.getRange(row,2).setValue(h);
   sheet.getRange(row,7).setValue("TRAVAIL");
 
