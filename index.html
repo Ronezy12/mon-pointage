@@ -3799,6 +3799,103 @@ function demarrerSynchronisationTempsReel() {
 }
 
 /* =========================================================
+   FORMATAGE PAUSE / HEURES
+========================================================= */
+
+function formaterPauseAffichage(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    String(value).trim() === "" ||
+    String(value).trim() === "—"
+  ) {
+    return "—";
+  }
+
+  const s = String(value).trim().toLowerCase();
+
+  if (
+    s === "0" ||
+    s === "0 minute" ||
+    s === "0 minutes" ||
+    s === "0:00" ||
+    s === "00:00"
+  ) {
+    return "0 minute";
+  }
+
+  let match = s.match(/^(\d+)\s*h(?:eure?s?)?\s*(?:(\d+)\s*(?:min|minute?s?))?$/);
+
+  if (match) {
+    const hours = Number(match[1]);
+    const minutes = Number(match[2] || 0);
+
+    if (!hours && !minutes) return "0 minute";
+
+    let result = "";
+    if (hours) {
+      result += hours + " heure" + (hours > 1 ? "s" : "");
+    }
+
+    if (minutes) {
+      if (result) result += " ";
+      result += minutes + " minute" + (minutes > 1 ? "s" : "");
+    }
+
+    return result;
+  }
+
+  match = s.match(/^(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?$/);
+
+  if (match) {
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+
+    if (!hours && !minutes) return "0 minute";
+
+    let result = "";
+    if (hours) {
+      result += hours + " heure" + (hours > 1 ? "s" : "");
+    }
+
+    if (minutes) {
+      if (result) result += " ";
+      result += minutes + " minute" + (minutes > 1 ? "s" : "");
+    }
+
+    return result;
+  }
+
+  return String(value);
+}
+
+function formaterHeuresAffichage(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    String(value).trim() === ""
+  ) {
+    return "—";
+  }
+
+  const s = String(value).trim();
+
+  if (/^\d+h(?:\s*\d{2})?$/.test(s)) {
+    const match = s.match(/^(\d+)h(?:\s*(\d{2}))?$/);
+    if (match) {
+      return match[2]
+        ? match[1] + "h " + match[2]
+        : match[1] + "h";
+    }
+  }
+
+  return s;
+}
+
+
+/* =========================================================
    APPLIQUER ÉTAT JOUR
 ========================================================= */
 
@@ -3847,12 +3944,12 @@ function appliquerEtat(e) {
 
   set(
     "break",
-    e.pause || "—"
+    formaterPauseAffichage(e.pause)
   );
 
   set(
     "worked",
-    e.travaille || "—"
+    formaterHeuresAffichage(e.travaille)
   );
 
   set(
