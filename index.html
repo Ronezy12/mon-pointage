@@ -1,352 +1,5119 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#08090c"><meta name="description" content="Mon Pointage — suivi des heures et absences"><style>
-:root{--bg:#070809;--bg2:#0b0d10;--surface:rgba(18,21,25,.78);--surface2:#111419;--surface3:#171a20;--ink:#f5f7fa;--muted:#858b96;--muted2:#5d636d;--line:rgba(255,255,255,.075);--green:#45e6a0;--green2:#20bd7d;--red:#ff5968;--gold:#e6c879;--blue:#7f8cff;--shadow:0 30px 90px rgba(0,0,0,.32);--radius:28px}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 12% 0%,rgba(69,230,160,.08),transparent 30%),radial-gradient(circle at 92% 18%,rgba(127,140,255,.07),transparent 28%),var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(rgba(255,255,255,.16) .5px,transparent .5px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
-#loginScreen{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 20%,rgba(69,230,160,.11),transparent 24%),radial-gradient(circle at 20% 90%,rgba(127,140,255,.08),transparent 30%),#060708}.login{width:min(460px,100%);padding:48px 30px 28px;border:1px solid rgba(255,255,255,.09);border-radius:38px;background:linear-gradient(145deg,rgba(25,29,34,.86),rgba(12,14,17,.9));backdrop-filter:blur(35px);box-shadow:0 40px 120px rgba(0,0,0,.45);text-align:center;animation:up .7s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}.login:before{content:"";position:absolute;width:260px;height:260px;right:-120px;top:-150px;border-radius:50%;background:radial-gradient(circle,rgba(69,230,160,.2),transparent 68%)}.logo{width:76px;height:76px;margin:0 auto 24px;border-radius:25px;display:grid;place-items:center;color:#07100c;font-weight:950;letter-spacing:-1px;background:linear-gradient(145deg,#8affc5,#2fd28e);box-shadow:0 0 0 7px rgba(69,230,160,.07),0 20px 50px rgba(69,230,160,.18);position:relative}.login h1{font-size:36px;letter-spacing:-2px;margin:0;position:relative}.login p{color:var(--muted);font-size:14px;line-height:1.6;margin:11px auto 30px;max-width:340px;position:relative}.login-foot{margin-top:18px;color:var(--muted2);font-size:10px;letter-spacing:.2px}.google-status{margin-top:9px;color:var(--muted2);font-size:10px}#googleButton{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px}#googleButtonRender{width:100%;max-width:320px;min-height:44px;display:flex;align-items:center;justify-content:center}.g_id_signin iframe{max-width:100%!important}.login-error{margin-top:15px;padding:12px;border-radius:15px;background:rgba(255,89,104,.1);color:#ff8994;font-size:12px}
-#app{display:none;min-height:100vh;padding:0 0 100px}.shell{width:min(1160px,calc(100% - 28px));margin:auto}.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,#f3f5f7,#7c838d);color:#08090a;display:grid;place-items:center;font-size:10px;font-weight:950;box-shadow:0 8px 25px #0005}.brandname{font-weight:900;font-size:17px;letter-spacing:-.5px}.brandsub{font-size:10px;color:var(--muted);margin-top:3px}.account{display:flex;align-items:center;gap:9px}.account img{width:39px;height:39px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.2);box-shadow:0 5px 20px #0006}.ghost{background:transparent;color:var(--muted);padding:9px;font-size:11px}.ghost:hover{color:var(--ink)}
-.view{display:none;animation:fade .35s ease}.view.active{display:block}.hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:34px;padding:30px;background:linear-gradient(145deg,rgba(25,29,34,.95),rgba(12,14,17,.96));box-shadow:var(--shadow);min-height:270px}.hero:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-230px;top:-300px;background:radial-gradient(circle,rgba(69,230,160,.22),transparent 63%);animation:float 9s ease-in-out infinite alternate}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 18%,rgba(255,255,255,.045) 45%,transparent 72%);transform:translateX(-120%);animation:shine 8s ease-in-out infinite}.hero-content{position:relative;z-index:1}.eyebrow{font-size:9px;letter-spacing:2px;font-weight:850;color:#777e89}.hero-date{font-size:clamp(28px,5vw,45px);font-weight:900;letter-spacing:-2px;text-transform:capitalize;margin-top:11px}.hero-clock{font-size:clamp(56px,10vw,88px);line-height:.9;letter-spacing:-6px;font-weight:230;margin-top:17px;font-variant-numeric:tabular-nums}.hero-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:25px;gap:10px}.pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);font-size:9px;font-weight:850}.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}.pill.green{color:#67efb1}.pill.red{color:#ff8994}.pill.yellow{color:#e9cf7d}.pill.gray{color:#a1a7b0}
-.section-head{display:flex;align-items:end;justify-content:space-between;margin:29px 2px 12px}.section-head h2{margin:0;font-size:20px;letter-spacing:-.8px}.section-head span{color:var(--muted2);font-size:10px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:19px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,rgba(22,25,30,.84),rgba(13,15,18,.84));backdrop-filter:blur(20px);box-shadow:0 14px 45px rgba(0,0,0,.16);min-height:112px}.metric-label{font-size:10px;color:var(--muted)}.metric-value{margin-top:12px;font-size:25px;font-weight:900;letter-spacing:-1px;font-variant-numeric:tabular-nums}.metric.accent .metric-value{color:var(--green)}
-.day-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}.timeline,.action-card,.panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(19,22,27,.86),rgba(11,13,16,.86));backdrop-filter:blur(20px);box-shadow:0 18px 60px rgba(0,0,0,.18);border-radius:27px}.timeline{padding:22px}.event{display:flex;gap:15px;position:relative;padding-bottom:25px}.event:last-child{padding-bottom:0}.event:not(:last-child):after{content:"";position:absolute;left:9px;top:23px;bottom:0;width:1px;background:var(--line)}.event-dot{width:19px;height:19px;flex:0 0 19px;border-radius:50%;background:#292e35;border:5px solid #101216;box-shadow:0 0 0 1px var(--line);z-index:1}.event.done .event-dot{background:var(--green);box-shadow:0 0 18px rgba(69,230,160,.3)}.event.stop .event-dot{background:var(--red);box-shadow:0 0 18px rgba(255,89,104,.22)}.event-title{font-size:11px;color:var(--muted)}.event-time{font-size:25px;font-weight:900;margin-top:3px;font-variant-numeric:tabular-nums}.event-note{font-size:10px;color:var(--muted2);margin-top:3px;line-height:1.45}
-.action-card{padding:21px}.action-main{width:100%;padding:19px;border-radius:21px;color:#06100b;text-align:left;background:linear-gradient(145deg,#67efb1,#1dbb7b);box-shadow:0 14px 35px rgba(69,230,160,.12);transition:transform .2s,filter .2s}.action-main:hover{filter:brightness(1.05)}.action-main:active{transform:scale(.975)}.action-main.red{color:#fff;background:linear-gradient(145deg,#ff6d7a,#d63b4b);box-shadow:0 14px 35px rgba(255,89,104,.12)}.action-main.disabled{opacity:.3;pointer-events:none}.action-icon{font-size:18px}.action-title{font-size:17px;font-weight:900;margin-top:17px}.action-sub{font-size:10px;opacity:.68;margin-top:4px}.link-button{width:100%;margin-top:10px;padding:14px;border-radius:17px;background:#191c21;color:#a9afb8;border:1px solid var(--line);font-size:11px;font-weight:750}.link-button:hover{color:#fff;background:#20242a}.link-button:active{transform:scale(.98)}.dashboard-note{margin-top:11px;padding:16px 18px;border-radius:20px;background:rgba(230,200,121,.08);border:1px solid rgba(230,200,121,.12);color:#cdbb7e;font-size:11px;line-height:1.5}
-.month-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-bottom:12px;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:0 15px 45px rgba(0,0,0,.16)}.month-name{text-align:center;font-weight:900}.month-name small{display:block;color:var(--muted2);font-size:9px;font-weight:500;margin-top:3px}.round{width:36px;height:36px;border-radius:50%;background:#1b1e23;color:#dfe2e6;font-size:16px;border:1px solid var(--line)}.round:hover{background:#252930}.month-total{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.mini{padding:16px;border-radius:20px;background:var(--surface);border:1px solid var(--line)}.mini span{display:block;color:var(--muted);font-size:10px}.mini b{display:block;margin-top:7px;font-size:20px}.history{display:grid;gap:8px}.history-row{display:grid;grid-template-columns:65px 1fr auto;align-items:center;gap:12px;padding:16px;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 25px rgba(0,0,0,.12)}.hdate{font-weight:900;font-size:12px}.hdate small{display:block;color:var(--muted2);font-weight:500;font-size:9px;margin-top:3px}.hinfo{font-size:10px;color:var(--muted)}.hinfo b{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}.hhours{font-weight:900;font-size:15px;color:var(--green)}.empty{padding:35px;text-align:center;color:var(--muted);font-size:12px;background:var(--surface);border:1px solid var(--line);border-radius:24px}
-.profile-panel{padding:27px;border-radius:30px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}.profile-main{display:flex;align-items:center;gap:16px}.profile-main img{width:72px;height:72px;border-radius:24px;object-fit:cover;border:1px solid var(--line)}.profile-main h2{margin:0;font-size:22px}.profile-main p{margin:5px 0 0;color:var(--muted);font-size:12px}.settings-list{margin-top:22px;display:grid;gap:8px}.setting{display:flex;justify-content:space-between;align-items:center;padding:16px;border-radius:18px;background:#171a1f;border:1px solid var(--line);font-size:12px}.setting span{color:var(--muted)}.primary{width:100%;padding:15px;border-radius:17px;background:#f2f4f6;color:#0a0c0e;font-weight:800;margin-top:9px}
-.bottom-nav{position:fixed;z-index:50;bottom:12px;left:50%;transform:translateX(-50%);width:min(540px,calc(100% - 24px));display:grid;grid-template-columns:repeat(4,1fr);padding:7px;border:1px solid rgba(255,255,255,.1);background:rgba(16,18,22,.86);backdrop-filter:blur(25px);border-radius:25px;box-shadow:0 20px 70px rgba(0,0,0,.45)}.nav-item{padding:10px 5px;border-radius:18px;background:transparent;color:#666d77;font-size:9px;font-weight:800}.nav-item .nav-icon{font-size:17px;display:block;margin-bottom:4px}.nav-item.active{background:#f1f3f5;color:#0a0c0e;box-shadow:0 7px 25px rgba(255,255,255,.08)}
-.modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px;background:rgba(0,0,0,.62);backdrop-filter:blur(18px)}.modal.show{display:flex}.sheet{width:min(520px,100%);padding:25px;border:1px solid rgba(255,255,255,.1);border-radius:31px;background:#111419;box-shadow:0 -20px 80px rgba(0,0,0,.55);animation:sheet .3s cubic-bezier(.2,.8,.2,1)}.sheet h2{margin:0;font-size:23px;letter-spacing:-.7px}.sheet p{color:var(--muted);font-size:12px;line-height:1.5;margin:7px 0 18px}.choices{display:grid;gap:8px}.choice{padding:17px;border-radius:18px;background:#1a1d22;color:#f4f5f6;text-align:left;font-weight:750;border:1px solid var(--line)}.choice:hover{background:#22262c}.choice strong{display:block;font-size:13px}.choice small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.cancel{width:100%;padding:14px;background:transparent;color:var(--muted);font-size:12px}.field{width:100%;min-height:105px;padding:14px;border:1px solid var(--line);border-radius:18px;background:#0c0f12;color:#f5f7fa;outline:none;resize:none;font-size:13px}.field::placeholder{color:#5f6670}.field:focus{border-color:rgba(69,230,160,.4);box-shadow:0 0 0 4px rgba(69,230,160,.06)}
-.loading{position:fixed;inset:0;z-index:200;display:none;place-items:center;background:rgba(4,5,6,.58);backdrop-filter:blur(20px)}.loading.show{display:grid}.loader{width:155px;padding:20px 16px;border-radius:28px;background:#121519;border:1px solid var(--line);box-shadow:0 25px 80px #0008;text-align:center}.clock-face{width:62px;height:62px;margin:auto;border:2px solid #30353d;border-radius:50%;position:relative;background:#0c0f12;box-shadow:0 0 0 7px rgba(69,230,160,.05)}.hand{position:absolute;left:50%;bottom:50%;width:2px;height:19px;background:#f5f7fa;border-radius:2px;transform-origin:50% 100%;animation:hand 2.4s linear infinite}.hand.m{height:25px;background:var(--green);animation-duration:1.2s}.pin{position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;background:var(--green);transform:translate(-50%,-50%)}.load-title{margin-top:12px;font-size:10px;font-weight:850;letter-spacing:1.3px;text-transform:uppercase}.load-sub{margin-top:4px;font-size:9px;color:var(--muted)}
-.toast{position:fixed;z-index:300;left:50%;bottom:93px;transform:translate(-50%,15px);opacity:0;pointer-events:none;width:min(calc(100% - 28px),430px);padding:14px 16px;border-radius:18px;background:#f2f4f6;color:#0a0c0e;box-shadow:0 15px 45px #0007;font-size:12px;font-weight:800;transition:.22s}.toast.show{opacity:1;transform:translate(-50%,0)}.observation-inline{margin-top:10px;padding:12px 14px;border-radius:15px;background:rgba(69,230,160,.07);color:#79d9b0;font-size:11px;line-height:1.45;border:1px solid rgba(69,230,160,.1)}
-@keyframes up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}@keyframes float{to{transform:translate(-20px,25px) scale(1.1)}}@keyframes shine{35%,100%{transform:translateX(120%)}}@keyframes sheet{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}@keyframes hand{to{transform:translateX(-50%) rotate(385deg)}}
-@media(min-width:900px){#app{padding:0 0 40px 112px}.shell{width:min(1160px,calc(100% - 44px));margin:0 auto}.topbar{height:94px}.bottom-nav{left:18px;top:18px;bottom:18px;transform:none;width:78px;height:auto;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);align-content:center;padding:10px;border-radius:27px}.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}.hero{padding:38px;min-height:320px}.day-grid{grid-template-columns:1.5fr .5fr}.modal{align-items:center}}
-@media(min-width:1300px){.shell{width:min(1240px,calc(100% - 60px))}.hero{min-height:350px;padding:44px}.hero-clock{font-size:92px}}
-@media(max-width:700px){#googleButton{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px}.login{padding-left:20px;padding-right:20px}.metrics{grid-template-columns:repeat(2,1fr)}.day-grid{grid-template-columns:1fr}.hero-bottom{align-items:flex-start;flex-direction:column}.account .ghost{display:none}.history-row{grid-template-columns:58px 1fr auto}.hhours{font-size:14px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
-</style></head><body><section id="loginScreen">
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090c">
+<meta name="description" content="Mon Pointage — suivi des heures et absences">
+
+<style>
+:root{
+  --bg:#070809;
+  --bg2:#0b0d10;
+  --surface:rgba(18,21,25,.78);
+  --surface2:#111419;
+  --surface3:#171a20;
+  --ink:#f5f7fa;
+  --muted:#858b96;
+  --muted2:#5d636d;
+  --line:rgba(255,255,255,.075);
+  --green:#45e6a0;
+  --green2:#20bd7d;
+  --red:#ff5968;
+  --gold:#e6c879;
+  --blue:#7f8cff;
+  --purple:#b28cff;
+  --shadow:0 30px 90px rgba(0,0,0,.32);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(69,230,160,.08),transparent 30%),
+    radial-gradient(circle at 92% 18%,rgba(127,140,255,.07),transparent 28%),
+    var(--bg);
+  color:var(--ink);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Inter,
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.24;
+  background-image:
+    radial-gradient(rgba(255,255,255,.16) .5px,transparent .5px);
+  background-size:5px 5px;
+  mask-image:linear-gradient(to bottom,black,transparent 70%);
+  z-index:-1;
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(69,230,160,.11),transparent 24%),
+    radial-gradient(circle at 20% 90%,rgba(127,140,255,.08),transparent 30%),
+    #060708;
+}
+
+.login{
+  width:min(460px,100%);
+  padding:48px 30px 28px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:38px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,29,34,.86),
+      rgba(12,14,17,.9)
+    );
+  backdrop-filter:blur(35px);
+  box-shadow:0 40px 120px rgba(0,0,0,.45);
+  text-align:center;
+  animation:up .7s cubic-bezier(.2,.8,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+
+.login:before{
+  content:"";
+  position:absolute;
+  width:260px;
+  height:260px;
+  right:-120px;
+  top:-150px;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(69,230,160,.2),
+      transparent 68%
+    );
+}
+
+.logo{
+  width:76px;
+  height:76px;
+  margin:0 auto 24px;
+  border-radius:25px;
+  display:grid;
+  place-items:center;
+  color:#07100c;
+  font-weight:950;
+  letter-spacing:-1px;
+  background:linear-gradient(145deg,#8affc5,#2fd28e);
+  box-shadow:
+    0 0 0 7px rgba(69,230,160,.07),
+    0 20px 50px rgba(69,230,160,.18);
+  position:relative;
+}
+
+.login h1{
+  font-size:36px;
+  letter-spacing:-2px;
+  margin:0;
+  position:relative;
+}
+
+.login p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+  margin:11px auto 30px;
+  max-width:340px;
+  position:relative;
+}
+
+.login-foot{
+  margin-top:18px;
+  color:var(--muted2);
+  font-size:10px;
+}
+
+.google-status{
+  margin-top:10px;
+  color:var(--muted2);
+  font-size:10px;
+}
+
+#googleButton{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+}
+
+#googleButtonRender{
+  width:100%;
+  max-width:320px;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#googleButtonRender > div{
+  max-width:100%;
+}
+
+.g_id_signin iframe{
+  max-width:100%!important;
+}
+
+.login-error{
+  margin-top:15px;
+  padding:12px;
+  border-radius:15px;
+  background:rgba(255,89,104,.1);
+  border:1px solid rgba(255,89,104,.15);
+  color:#ff8994;
+  font-size:12px;
+  line-height:1.5;
+  text-align:left;
+}
+
+/* =========================================================
+   APPLICATION
+========================================================= */
+
+#app{
+  display:none;
+  min-height:100vh;
+  padding:0 0 100px;
+}
+
+.shell{
+  width:min(1160px,calc(100% - 28px));
+  margin:auto;
+}
+
+.topbar{
+  height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brandmark{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#f3f5f7,#7c838d);
+  color:#08090a;
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:950;
+  box-shadow:0 8px 25px #0005;
+}
+
+.brandname{
+  font-weight:900;
+  font-size:17px;
+  letter-spacing:-.5px;
+}
+
+.brandsub{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.account{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.account img{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 5px 20px #0006;
+  background:#171a20;
+}
+
+.ghost{
+  background:transparent;
+  color:var(--muted);
+  padding:9px;
+  font-size:11px;
+}
+
+.ghost:hover{
+  color:var(--ink);
+}
+
+/* =========================================================
+   VIEWS
+========================================================= */
+
+.view{
+  display:none;
+  animation:fade .35s ease;
+}
+
+.view.active{
+  display:block;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:34px;
+  padding:30px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,29,34,.95),
+      rgba(12,14,17,.96)
+    );
+  box-shadow:var(--shadow);
+  min-height:270px;
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  width:520px;
+  height:520px;
+  border-radius:50%;
+  right:-230px;
+  top:-300px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(69,230,160,.22),
+      transparent 63%
+    );
+  animation:float 9s ease-in-out infinite alternate;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 18%,
+      rgba(255,255,255,.045) 45%,
+      transparent 72%
+    );
+  transform:translateX(-120%);
+  animation:shine 8s ease-in-out infinite;
+}
+
+.hero-content{
+  position:relative;
+  z-index:1;
+}
+
+.eyebrow{
+  font-size:9px;
+  letter-spacing:2px;
+  font-weight:850;
+  color:#777e89;
+}
+
+.hero-date{
+  font-size:clamp(28px,5vw,45px);
+  font-weight:900;
+  letter-spacing:-2px;
+  text-transform:capitalize;
+  margin-top:11px;
+}
+
+.hero-clock{
+  font-size:clamp(56px,10vw,88px);
+  line-height:.9;
+  letter-spacing:-6px;
+  font-weight:300;
+  margin-top:17px;
+  font-variant-numeric:tabular-nums;
+}
+
+.hero-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:25px;
+  gap:10px;
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  border-radius:999px;
+  padding:8px 12px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.06);
+  font-size:9px;
+  font-weight:850;
+}
+
+.pill i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor;
+  box-shadow:0 0 12px currentColor;
+}
+
+.pill.green{
+  color:#67efb1;
+}
+
+.pill.red{
+  color:#ff8994;
+}
+
+.pill.yellow{
+  color:#e9cf7d;
+}
+
+.pill.blue{
+  color:#9ca5ff;
+}
+
+.pill.purple{
+  color:#c2a6ff;
+}
+
+.pill.gray{
+  color:#a1a7b0;
+}
+
+/* =========================================================
+   SECTIONS / METRICS
+========================================================= */
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  margin:29px 2px 12px;
+}
+
+.section-head h2{
+  margin:0;
+  font-size:20px;
+  letter-spacing:-.8px;
+}
+
+.section-head span{
+  color:var(--muted2);
+  font-size:10px;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.metric{
+  padding:19px;
+  border:1px solid var(--line);
+  border-radius:23px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(22,25,30,.84),
+      rgba(13,15,18,.84)
+    );
+  backdrop-filter:blur(20px);
+  box-shadow:0 14px 45px rgba(0,0,0,.16);
+  min-height:112px;
+}
+
+.metric-label{
+  font-size:10px;
+  color:var(--muted);
+}
+
+.metric-value{
+  margin-top:12px;
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;
+}
+
+.metric.accent .metric-value{
+  color:var(--green);
+}
+
+/* =========================================================
+   DAY
+========================================================= */
+
+.day-grid{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:10px;
+}
+
+.timeline,
+.action-card,
+.panel{
+  border:1px solid var(--line);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(19,22,27,.86),
+      rgba(11,13,16,.86)
+    );
+  backdrop-filter:blur(20px);
+  box-shadow:0 18px 60px rgba(0,0,0,.18);
+  border-radius:27px;
+}
+
+.timeline{
+  padding:22px;
+}
+
+.event{
+  display:flex;
+  gap:15px;
+  position:relative;
+  padding-bottom:25px;
+}
+
+.event:last-child{
+  padding-bottom:0;
+}
+
+.event:not(:last-child):after{
+  content:"";
+  position:absolute;
+  left:9px;
+  top:23px;
+  bottom:0;
+  width:1px;
+  background:var(--line);
+}
+
+.event-dot{
+  width:19px;
+  height:19px;
+  flex:0 0 19px;
+  border-radius:50%;
+  background:#292e35;
+  border:5px solid #101216;
+  box-shadow:0 0 0 1px var(--line);
+  z-index:1;
+}
+
+.event.done .event-dot{
+  background:var(--green);
+  box-shadow:0 0 18px rgba(69,230,160,.3);
+}
+
+.event.stop .event-dot{
+  background:var(--red);
+  box-shadow:0 0 18px rgba(255,89,104,.22);
+}
+
+.event-title{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.event-time{
+  font-size:25px;
+  font-weight:900;
+  margin-top:3px;
+  font-variant-numeric:tabular-nums;
+}
+
+.event-note{
+  font-size:10px;
+  color:var(--muted2);
+  margin-top:3px;
+  line-height:1.45;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.action-card{
+  padding:21px;
+}
+
+.action-main{
+  width:100%;
+  padding:19px;
+  border-radius:21px;
+  color:#06100b;
+  text-align:left;
+  background:linear-gradient(145deg,#67efb1,#1dbb7b);
+  box-shadow:0 14px 35px rgba(69,230,160,.12);
+  transition:transform .2s,filter .2s,opacity .2s;
+}
+
+.action-main:hover{
+  filter:brightness(1.05);
+}
+
+.action-main:active{
+  transform:scale(.975);
+}
+
+.action-main.red{
+  color:#fff;
+  background:linear-gradient(145deg,#ff6d7a,#d63b4b);
+  box-shadow:0 14px 35px rgba(255,89,104,.12);
+}
+
+.action-main.disabled{
+  opacity:.3;
+  pointer-events:none;
+}
+
+.action-icon{
+  font-size:18px;
+}
+
+.action-title{
+  font-size:17px;
+  font-weight:900;
+  margin-top:17px;
+}
+
+.action-sub{
+  font-size:10px;
+  opacity:.68;
+  margin-top:4px;
+}
+
+.link-button{
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  border-radius:17px;
+  background:#191c21;
+  color:#a9afb8;
+  border:1px solid var(--line);
+  font-size:11px;
+  font-weight:750;
+}
+
+.link-button:hover{
+  color:#fff;
+  background:#20242a;
+}
+
+.link-button:active{
+  transform:scale(.98);
+}
+
+.dashboard-note{
+  margin-top:11px;
+  padding:16px 18px;
+  border-radius:20px;
+  background:rgba(230,200,121,.08);
+  border:1px solid rgba(230,200,121,.12);
+  color:#cdbb7e;
+  font-size:11px;
+  line-height:1.5;
+}
+
+/* =========================================================
+   MONTH
+========================================================= */
+
+.month-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px;
+  margin-bottom:12px;
+  border-radius:22px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:0 15px 45px rgba(0,0,0,.16);
+}
+
+.month-name{
+  text-align:center;
+  font-weight:900;
+}
+
+.month-name small{
+  display:block;
+  color:var(--muted2);
+  font-size:9px;
+  font-weight:500;
+  margin-top:3px;
+}
+
+.round{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#1b1e23;
+  color:#dfe2e6;
+  font-size:16px;
+  border:1px solid var(--line);
+}
+
+.round:hover{
+  background:#252930;
+}
+
+.month-total{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.mini{
+  padding:16px;
+  border-radius:20px;
+  background:var(--surface);
+  border:1px solid var(--line);
+}
+
+.mini span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.mini b{
+  display:block;
+  margin-top:7px;
+  font-size:20px;
+}
+
+.history{
+  display:grid;
+  gap:8px;
+}
+
+.history-row{
+  display:grid;
+  grid-template-columns:65px 1fr auto;
+  align-items:center;
+  gap:12px;
+  padding:16px;
+  border-radius:20px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.hdate{
+  font-weight:900;
+  font-size:12px;
+}
+
+.hdate small{
+  display:block;
+  color:var(--muted2);
+  font-weight:500;
+  font-size:9px;
+  margin-top:3px;
+}
+
+.hinfo{
+  font-size:10px;
+  color:var(--muted);
+  min-width:0;
+}
+
+.hinfo b{
+  display:block;
+  color:var(--ink);
+  font-size:13px;
+  margin-bottom:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.hinfo span{
+  display:block;
+  line-height:1.4;
+}
+
+.hhours{
+  font-weight:900;
+  font-size:15px;
+  color:var(--green);
+  white-space:nowrap;
+}
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:24px;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-panel{
+  padding:27px;
+  border-radius:30px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+
+.profile-main{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.profile-main img{
+  width:72px;
+  height:72px;
+  border-radius:24px;
+  object-fit:cover;
+  border:1px solid var(--line);
+  background:#171a20;
+}
+
+.profile-main h2{
+  margin:0;
+  font-size:22px;
+}
+
+.profile-main p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.settings-list{
+  margin-top:22px;
+  display:grid;
+  gap:8px;
+}
+
+.setting{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  border-radius:18px;
+  background:#171a1f;
+  border:1px solid var(--line);
+  font-size:12px;
+}
+
+.setting span{
+  color:var(--muted);
+}
+
+.primary{
+  width:100%;
+  padding:15px;
+  border-radius:17px;
+  background:#f2f4f6;
+  color:#0a0c0e;
+  font-weight:800;
+  margin-top:9px;
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.bottom-nav{
+  position:fixed;
+  z-index:50;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(540px,calc(100% - 24px));
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:7px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(16,18,22,.86);
+  backdrop-filter:blur(25px);
+  border-radius:25px;
+  box-shadow:0 20px 70px rgba(0,0,0,.45);
+}
+
+.nav-item{
+  padding:10px 5px;
+  border-radius:18px;
+  background:transparent;
+  color:#666d77;
+  font-size:9px;
+  font-weight:800;
+}
+
+.nav-item .nav-icon{
+  font-size:17px;
+  display:block;
+  margin-bottom:4px;
+}
+
+.nav-item.active{
+  background:#f1f3f5;
+  color:#0a0c0e;
+  box-shadow:0 7px 25px rgba(255,255,255,.08);
+}
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:14px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(18px);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+  width:min(520px,100%);
+  padding:25px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:31px;
+  background:#111419;
+  box-shadow:0 -20px 80px rgba(0,0,0,.55);
+  animation:sheet .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.sheet h2{
+  margin:0;
+  font-size:23px;
+  letter-spacing:-.7px;
+}
+
+.sheet p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin:7px 0 18px;
+}
+
+.choices{
+  display:grid;
+  gap:8px;
+}
+
+.choice{
+  padding:17px;
+  border-radius:18px;
+  background:#1a1d22;
+  color:#f4f5f6;
+  text-align:left;
+  font-weight:750;
+  border:1px solid var(--line);
+}
+
+.choice:hover{
+  background:#22262c;
+}
+
+.choice strong{
+  display:block;
+  font-size:13px;
+}
+
+.choice small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
+}
+
+.cancel{
+  width:100%;
+  padding:14px;
+  background:transparent;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.field{
+  width:100%;
+  min-height:105px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#0c0f12;
+  color:#f5f7fa;
+  outline:none;
+  resize:none;
+  font-size:13px;
+}
+
+.field::placeholder{
+  color:#5f6670;
+}
+
+.field:focus{
+  border-color:rgba(69,230,160,.4);
+  box-shadow:0 0 0 4px rgba(69,230,160,.06);
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:none;
+  place-items:center;
+  background:rgba(4,5,6,.58);
+  backdrop-filter:blur(20px);
+}
+
+.loading.show{
+  display:grid;
+}
+
+.loader{
+  width:155px;
+  padding:20px 16px;
+  border-radius:28px;
+  background:#121519;
+  border:1px solid var(--line);
+  box-shadow:0 25px 80px #0008;
+  text-align:center;
+}
+
+.clock-face{
+  width:62px;
+  height:62px;
+  margin:auto;
+  border:2px solid #30353d;
+  border-radius:50%;
+  position:relative;
+  background:#0c0f12;
+  box-shadow:0 0 0 7px rgba(69,230,160,.05);
+}
+
+.hand{
+  position:absolute;
+  left:50%;
+  bottom:50%;
+  width:2px;
+  height:19px;
+  background:#f5f7fa;
+  border-radius:2px;
+  transform-origin:50% 100%;
+  animation:hand 2.4s linear infinite;
+}
+
+.hand.m{
+  height:25px;
+  background:var(--green);
+  animation-duration:1.2s;
+}
+
+.pin{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--green);
+  transform:translate(-50%,-50%);
+}
+
+.load-title{
+  margin-top:12px;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:1.3px;
+  text-transform:uppercase;
+}
+
+.load-sub{
+  margin-top:4px;
+  font-size:9px;
+  color:var(--muted);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+  position:fixed;
+  z-index:300;
+  left:50%;
+  bottom:93px;
+  transform:translate(-50%,15px);
+  opacity:0;
+  pointer-events:none;
+  width:min(calc(100% - 28px),430px);
+  padding:14px 16px;
+  border-radius:18px;
+  background:#f2f4f6;
+  color:#0a0c0e;
+  box-shadow:0 15px 45px #0007;
+  font-size:12px;
+  font-weight:800;
+  transition:.22s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes up{
+  from{
+    opacity:0;
+    transform:translateY(18px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(7px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes float{
+  to{
+    transform:translate(-20px,25px) scale(1.1);
+  }
+}
+
+@keyframes shine{
+  35%,100%{
+    transform:translateX(120%);
+  }
+}
+
+@keyframes sheet{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes hand{
+  to{
+    transform:translateX(-50%) rotate(385deg);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(min-width:900px){
+
+  #app{
+    padding:0 0 40px 112px;
+  }
+
+  .shell{
+    width:min(1160px,calc(100% - 44px));
+    margin:0 auto;
+  }
+
+  .topbar{
+    height:94px;
+  }
+
+  .bottom-nav{
+    left:18px;
+    top:18px;
+    bottom:18px;
+    transform:none;
+    width:78px;
+    height:auto;
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:repeat(4,1fr);
+    align-content:center;
+    padding:10px;
+    border-radius:27px;
+  }
+
+  .nav-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+  }
+
+  .hero{
+    padding:38px;
+    min-height:320px;
+  }
+
+  .day-grid{
+    grid-template-columns:1.5fr .5fr;
+  }
+
+  .modal{
+    align-items:center;
+  }
+}
+
+@media(min-width:1300px){
+
+  .shell{
+    width:min(1240px,calc(100% - 60px));
+  }
+
+  .hero{
+    min-height:350px;
+    padding:44px;
+  }
+
+  .hero-clock{
+    font-size:92px;
+  }
+}
+
+@media(max-width:700px){
+
+  #loginScreen{
+    padding:14px;
+  }
+
+  .login{
+    padding:40px 20px 24px;
+    border-radius:30px;
+  }
+
+  .login h1{
+    font-size:32px;
+  }
+
+  .metrics{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .day-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-bottom{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .account .ghost{
+    display:none;
+  }
+
+  .history-row{
+    grid-template-columns:58px 1fr auto;
+    gap:8px;
+    padding:13px;
+  }
+
+  .hhours{
+    font-size:14px;
+  }
+
+  .hinfo b{
+    font-size:11px;
+  }
+
+  .hero{
+    padding:24px;
+    border-radius:27px;
+  }
+
+  .hero-clock{
+    letter-spacing:-4px;
+  }
+
+  .month-total{
+    gap:7px;
+  }
+
+  .mini{
+    padding:13px;
+  }
+
+  .mini b{
+    font-size:17px;
+  }
+}
+
+@media(max-width:420px){
+
+  .metrics{
+    gap:7px;
+  }
+
+  .metric{
+    padding:14px;
+    min-height:100px;
+  }
+
+  .metric-value{
+    font-size:21px;
+  }
+
+  .hero-date{
+    font-size:27px;
+  }
+
+  .hero-clock{
+    font-size:51px;
+  }
+
+  .history-row{
+    grid-template-columns:52px 1fr;
+  }
+
+  .hhours{
+    grid-column:2;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *:before,
+  *:after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     CONNEXION
+====================================================== -->
+
+<section id="loginScreen">
+
   <div class="login">
+
     <div class="logo">MP</div>
+
     <h1>Mon Pointage</h1>
-    <p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p>
+
+    <p>
+      Votre espace personnel pour pointer,
+      suivre vos heures et gérer vos absences.
+    </p>
+
     <div id="googleButton">
+
       <div id="googleButtonRender"></div>
-      <div id="googleStatus" class="google-status">Chargement de Google…</div>
+
+      <div id="googleStatus" class="google-status">
+        Chargement de Google…
+      </div>
+
     </div>
+
     <div id="loginError" class="login-error hidden"></div>
-    <details id="googleDebug" style="margin-top:14px;text-align:left;font-size:12px;max-width:420px">
-      <summary style="cursor:pointer">Diagnostic Google</summary>
-      <pre id="googleDebugText" style="white-space:pre-wrap;margin-top:8px"></pre>
-    </details>
-    <div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div>
+
+    <div class="login-foot">
+      Accès sécurisé avec Google · Compte autorisé uniquement
+    </div>
+
   </div>
+
 </section>
-<main id="app"><div class="shell"><header class="topbar"><div class="brand"><div class="brandmark">MP</div><div><div class="brandname">Mon Pointage</div><div id="welcome" class="brandsub">Votre espace personnel</div></div></div><div class="account"><img id="avatar" alt=""><button class="ghost" onclick="deconnexion()">Déconnexion</button></div></header>
-<section id="homeView" class="view active"><div class="hero"><div class="hero-content"><div class="eyebrow">AUJOURD'HUI · <span id="heroTime">--:--:--</span></div><div id="heroDate" class="hero-date">Chargement…</div><div id="clock" class="hero-clock">--:--:--</div><div class="hero-bottom"><div id="status" class="pill gray"><i></i>Chargement</div><span id="heroHint" class="eyebrow">Synchronisation</span></div></div></div>
-<div class="section-head"><h2>Votre journée</h2><span id="daySummary">En attente</span></div><div class="metrics"><div class="metric accent"><div class="metric-label">Arrivée</div><div id="arrival" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Départ</div><div id="departure" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Pause</div><div id="break" class="metric-value">—</div></div><div class="metric accent"><div class="metric-label">Travaillé</div><div id="worked" class="metric-value">—</div></div></div>
-<div class="day-grid"><div class="timeline"><div class="section-head" style="margin-top:0"><h2>Chronologie</h2><span>Temps réel</span></div><div class="event done"><div id="arrivalDot" class="event-dot"></div><div><div class="event-title">Arrivée</div><div id="timelineArrival" class="event-time">—</div><div class="event-note">Début de votre journée</div></div></div><div class="event stop"><div id="departureDot" class="event-dot"></div><div><div class="event-title">Départ</div><div id="timelineDeparture" class="event-time">—</div><div id="timelineObservation" class="event-note">Fin de votre journée</div></div></div></div>
-<div class="action-card"><button id="startButton" class="action-main" onclick="commencer()"><div class="action-icon">↗</div><div class="action-title">Pointer mon arrivée</div><div class="action-sub">Enregistrer l'heure maintenant</div></button><button id="finishButton" class="action-main red" style="margin-top:10px" onclick="ouvrirModalPause()"><div class="action-icon">↘</div><div class="action-title">Pointer mon départ</div><div class="action-sub">Choisir votre pause puis terminer</div></button><button class="link-button" onclick="ouvrirAbsence()">Signaler une absence</button></div></div><div id="homeNote" class="dashboard-note hidden"></div></section>
-<section id="hoursView" class="view"><div class="section-head"><h2>Mes heures</h2><span>Historique mensuel</span></div><div class="month-toolbar"><button class="round" onclick="changerMois(-1)">‹</button><div id="monthTitle" class="month-name">Octobre 2026<small>Récapitulatif</small></div><button class="round" onclick="changerMois(1)">›</button></div><div class="month-total"><div class="mini"><span>Heures</span><b id="monthHours">—</b></div><div class="mini"><span>Jours</span><b id="monthDays">—</b></div><div class="mini"><span>Absences</span><b id="monthAbsences">—</b></div></div><div id="history" class="history"><div class="empty">Chargement de votre historique…</div></div></section>
-<section id="profileView" class="view"><div class="section-head"><h2>Mon profil</h2><span>Compte sécurisé</span></div><div class="profile-panel"><div class="profile-main"><img id="profileBig" alt=""><div><h2 id="profileName">—</h2><p id="profileEmail">—</p></div></div><div class="settings-list"><div class="setting"><span>Compte autorisé</span><b>Oui</b></div><div class="setting"><span>Connexion</span><b>Google</b></div><button class="primary" onclick="deconnexion()">Se déconnecter</button></div></div></section></div>
-<nav class="bottom-nav"><button class="nav-item active" data-view="homeView" onclick="ouvrirVue('homeView',this)"><span class="nav-icon">⌂</span>Accueil</button><button class="nav-item" data-view="hoursView" onclick="ouvrirVue('hoursView',this)"><span class="nav-icon">◷</span>Mes heures</button><button class="nav-item" data-view="profileView" onclick="ouvrirVue('profileView',this)"><span class="nav-icon">◎</span>Profil</button><button class="nav-item" onclick="ouvrirAbsence()"><span class="nav-icon">+</span>Absence</button></nav></main>
-<div id="pauseModal" class="modal"><div class="sheet"><h2>Terminer la journée</h2><p>Indique la durée de votre pause. L'heure de départ sera enregistrée à l'instant de validation.</p><textarea id="departureObservation" class="field" placeholder="Observation de la journée (facultatif)…"></textarea><div class="choices" style="margin-top:10px"><button class="choice" onclick="terminer(0)"><strong>0 minute</strong><small>Aucune pause à déduire</small></button><button class="choice" onclick="terminer(30)"><strong>30 minutes</strong><small>Pause standard</small></button><button class="choice" onclick="terminer(60)"><strong>1 heure</strong><small>Une heure de pause</small></button></div><button class="cancel" onclick="fermerModal('pauseModal')">Annuler</button></div></div>
-<div id="absenceModal" class="modal"><div class="sheet"><h2>Signaler une absence</h2><p>Le motif sera enregistré dans votre planning. Vous pourrez ensuite voir la journée comme absente.</p><textarea id="absenceMotif" class="field" placeholder="Motif de l'absence…"></textarea><button class="primary" onclick="confirmerAbsence()">Confirmer l'absence</button><button class="cancel" onclick="fermerModal('absenceModal')">Annuler</button></div></div>
-<div id="loading" class="loading"><div class="loader"><div class="clock-face"><div class="hand"></div><div class="hand m"></div><div class="pin"></div></div><div class="load-title">Synchronisation</div><div class="load-sub">Mon Pointage</div></div></div><div id="toast" class="toast"></div>
+
+
+<!-- =====================================================
+     APPLICATION
+====================================================== -->
+
+<main id="app">
+
+  <div class="shell">
+
+    <header class="topbar">
+
+      <div class="brand">
+
+        <div class="brandmark">
+          MP
+        </div>
+
+        <div>
+
+          <div class="brandname">
+            Mon Pointage
+          </div>
+
+          <div id="welcome" class="brandsub">
+            Votre espace personnel
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="account">
+
+        <img
+          id="avatar"
+          alt="Photo de profil"
+        >
+
+        <button
+          class="ghost"
+          onclick="deconnexion()"
+        >
+          Déconnexion
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =================================================
+         ACCUEIL
+    ================================================== -->
+
+    <section
+      id="homeView"
+      class="view active"
+    >
+
+      <div class="hero">
+
+        <div class="hero-content">
+
+          <div class="eyebrow">
+            AUJOURD'HUI ·
+            <span id="heroTime">--:--:--</span>
+          </div>
+
+          <div
+            id="heroDate"
+            class="hero-date"
+          >
+            Chargement…
+          </div>
+
+          <div
+            id="clock"
+            class="hero-clock"
+          >
+            --:--:--
+          </div>
+
+          <div class="hero-bottom">
+
+            <div
+              id="status"
+              class="pill gray"
+            >
+              <i></i>
+              Chargement
+            </div>
+
+            <span
+              id="heroHint"
+              class="eyebrow"
+            >
+              Synchronisation
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="section-head">
+
+        <h2>
+          Votre journée
+        </h2>
+
+        <span id="daySummary">
+          En attente
+        </span>
+
+      </div>
+
+
+      <div class="metrics">
+
+        <div class="metric accent">
+
+          <div class="metric-label">
+            Arrivée
+          </div>
+
+          <div
+            id="arrival"
+            class="metric-value"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="metric">
+
+          <div class="metric-label">
+            Départ
+          </div>
+
+          <div
+            id="departure"
+            class="metric-value"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="metric">
+
+          <div class="metric-label">
+            Pause
+          </div>
+
+          <div
+            id="break"
+            class="metric-value"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="metric accent">
+
+          <div class="metric-label">
+            Travaillé
+          </div>
+
+          <div
+            id="worked"
+            class="metric-value"
+          >
+            —
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="day-grid">
+
+        <div class="timeline">
+
+          <div
+            class="section-head"
+            style="margin-top:0"
+          >
+
+            <h2>
+              Chronologie
+            </h2>
+
+            <span>
+              Temps réel
+            </span>
+
+          </div>
+
+
+          <div class="event done">
+
+            <div
+              id="arrivalDot"
+              class="event-dot"
+            ></div>
+
+            <div>
+
+              <div class="event-title">
+                Arrivée
+              </div>
+
+              <div
+                id="timelineArrival"
+                class="event-time"
+              >
+                —
+              </div>
+
+              <div class="event-note">
+                Début de votre journée
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="event stop">
+
+            <div
+              id="departureDot"
+              class="event-dot"
+            ></div>
+
+            <div>
+
+              <div class="event-title">
+                Départ
+              </div>
+
+              <div
+                id="timelineDeparture"
+                class="event-time"
+              >
+                —
+              </div>
+
+              <div
+                id="timelineObservation"
+                class="event-note"
+              >
+                Fin de votre journée
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="action-card">
+
+          <button
+            id="startButton"
+            class="action-main"
+            onclick="commencer()"
+          >
+
+            <div class="action-icon">
+              ↗
+            </div>
+
+            <div class="action-title">
+              Pointer mon arrivée
+            </div>
+
+            <div class="action-sub">
+              Enregistrer l'heure maintenant
+            </div>
+
+          </button>
+
+
+          <button
+            id="finishButton"
+            class="action-main red"
+            style="margin-top:10px"
+            onclick="ouvrirModalPause()"
+          >
+
+            <div class="action-icon">
+              ↘
+            </div>
+
+            <div class="action-title">
+              Pointer mon départ
+            </div>
+
+            <div class="action-sub">
+              Choisir votre pause puis terminer
+            </div>
+
+          </button>
+
+
+          <button
+            class="link-button"
+            onclick="ouvrirAbsence()"
+          >
+            Signaler une absence
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="homeNote"
+        class="dashboard-note hidden"
+      ></div>
+
+    </section>
+
+
+    <!-- =================================================
+         MES HEURES
+    ================================================== -->
+
+    <section
+      id="hoursView"
+      class="view"
+    >
+
+      <div class="section-head">
+
+        <h2>
+          Mes heures
+        </h2>
+
+        <span>
+          Historique mensuel
+        </span>
+
+      </div>
+
+
+      <div class="month-toolbar">
+
+        <button
+          class="round"
+          onclick="changerMois(-1)"
+        >
+          ‹
+        </button>
+
+        <div
+          id="monthTitle"
+          class="month-name"
+        >
+          Octobre 2026
+          <small>
+            Récapitulatif
+          </small>
+        </div>
+
+        <button
+          class="round"
+          onclick="changerMois(1)"
+        >
+          ›
+        </button>
+
+      </div>
+
+
+      <div class="month-total">
+
+        <div class="mini">
+
+          <span>
+            Heures
+          </span>
+
+          <b id="monthHours">
+            —
+          </b>
+
+        </div>
+
+        <div class="mini">
+
+          <span>
+            Jours
+          </span>
+
+          <b id="monthDays">
+            —
+          </b>
+
+        </div>
+
+        <div class="mini">
+
+          <span>
+            Absences
+          </span>
+
+          <b id="monthAbsences">
+            —
+          </b>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="history"
+        class="history"
+      >
+
+        <div class="empty">
+          Chargement de l'historique…
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PROFIL
+    ================================================== -->
+
+    <section
+      id="profileView"
+      class="view"
+    >
+
+      <div class="section-head">
+
+        <h2>
+          Mon profil
+        </h2>
+
+        <span>
+          Compte sécurisé
+        </span>
+
+      </div>
+
+
+      <div class="profile-panel">
+
+        <div class="profile-main">
+
+          <img
+            id="profileBig"
+            alt="Photo de profil"
+          >
+
+          <div>
+
+            <h2 id="profileName">
+              Utilisateur
+            </h2>
+
+            <p id="profileEmail">
+              —
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="settings-list">
+
+          <div class="setting">
+
+            <span>
+              Authentification
+            </span>
+
+            <strong>
+              Google
+            </strong>
+
+          </div>
+
+
+          <div class="setting">
+
+            <span>
+              Compte autorisé
+            </span>
+
+            <strong>
+              Oui
+            </strong>
+
+          </div>
+
+
+          <div class="setting">
+
+            <span>
+              Synchronisation
+            </span>
+
+            <strong>
+              Automatique
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="primary"
+          onclick="deconnexion()"
+        >
+          Se déconnecter
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- =================================================
+       NAVIGATION
+  ================================================== -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-item active"
+      onclick="ouvrirVue('homeView',this)"
+    >
+      <span class="nav-icon">
+        ⌂
+      </span>
+      Accueil
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="ouvrirVue('hoursView',this)"
+    >
+      <span class="nav-icon">
+        ◷
+      </span>
+      Mes heures
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="ouvrirVue('profileView',this)"
+    >
+      <span class="nav-icon">
+        ◎
+      </span>
+      Profil
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="ouvrirAbsence()"
+    >
+      <span class="nav-icon">
+        +
+      </span>
+      Absence
+    </button>
+
+  </nav>
+
+</main>
+
+
+<!-- =====================================================
+     MODALE DÉPART
+====================================================== -->
+
+<div
+  id="pauseModal"
+  class="modal"
+>
+
+  <div class="sheet">
+
+    <h2>
+      Terminer la journée
+    </h2>
+
+    <p>
+      Indique la durée de votre pause.
+      L'heure de départ sera enregistrée
+      au moment de la validation.
+    </p>
+
+
+    <textarea
+      id="departureObservation"
+      class="field"
+      placeholder="Observation de la journée (facultatif)…"
+    ></textarea>
+
+
+    <div
+      class="choices"
+      style="margin-top:10px"
+    >
+
+      <button
+        class="choice"
+        onclick="terminer(0)"
+      >
+
+        <strong>
+          0 minute
+        </strong>
+
+        <small>
+          Aucune pause à déduire
+        </small>
+
+      </button>
+
+
+      <button
+        class="choice"
+        onclick="terminer(30)"
+      >
+
+        <strong>
+          30 minutes
+        </strong>
+
+        <small>
+          Pause standard
+        </small>
+
+      </button>
+
+
+      <button
+        class="choice"
+        onclick="terminer(60)"
+      >
+
+        <strong>
+          1 heure
+        </strong>
+
+        <small>
+          Une heure de pause
+        </small>
+
+      </button>
+
+    </div>
+
+
+    <button
+      class="cancel"
+      onclick="fermerModal('pauseModal')"
+    >
+      Annuler
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODALE ABSENCE
+====================================================== -->
+
+<div
+  id="absenceModal"
+  class="modal"
+>
+
+  <div class="sheet">
+
+    <h2>
+      Signaler une absence
+    </h2>
+
+    <p>
+      Le motif sera enregistré dans votre planning.
+    </p>
+
+
+    <textarea
+      id="absenceMotif"
+      class="field"
+      placeholder="Motif de l'absence…"
+    ></textarea>
+
+
+    <button
+      class="primary"
+      onclick="confirmerAbsence()"
+    >
+      Confirmer l'absence
+    </button>
+
+
+    <button
+      class="cancel"
+      onclick="fermerModal('absenceModal')"
+    >
+      Annuler
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     LOADING
+====================================================== -->
+
+<div
+  id="loading"
+  class="loading"
+>
+
+  <div class="loader">
+
+    <div class="clock-face">
+
+      <div class="hand"></div>
+      <div class="hand m"></div>
+      <div class="pin"></div>
+
+    </div>
+
+    <div class="load-title">
+      Synchronisation
+    </div>
+
+    <div class="load-sub">
+      Mon Pointage
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
 <script>
 "use strict";
-const CONFIG={
- apiUrl:"https://script.google.com/macros/s/AKfycbz85SD7D98IEhIInFX-DLI2P9_rer1U_6U2ctYo7bo8s2UgiANmqFVwy2EGPnPfGxpXfQ/exec",
- googleClientId:"390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com",
- allowedEmail:"aharonelbaz6@gmail.com",
- googleScript:"https://accounts.google.com/gsi/client"
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const CONFIG = {
+
+  apiUrl:
+    "https://script.google.com/macros/s/AKfycbz85SD7D98IEhIInFX-DLI2P9_rer1U_6U2ctYo7bo8s2UgiANmqFVwy2EGPnPfGxpXfQ/exec",
+
+  googleClientId:
+    "390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com",
+
+  allowedEmail:
+    "aharonelbaz6@gmail.com",
+
+  googleScript:
+    "https://accounts.google.com/gsi/client"
+
 };
-let idToken=null,utilisateur=null,callbackCounter=0,synchronisationTimer=null;
-let googleRendered=false,googleLoadStarted=false;
-let moisCourant=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
-window.addEventListener("error",e=>console.error("Mon Pointage:",e.error||e.message));
-window.addEventListener("unhandledrejection",e=>console.error("Mon Pointage promise:",e.reason));
 
-document.addEventListener("DOMContentLoaded",()=>{
- googleHardLog("DOM PRÊT",{gis:!!window.google?.accounts?.id});
- horloge();
- setInterval(horloge,1000);
- afficherTitreMois();
- initialiserApplication();
-});
+/* =========================================================
+   ÉTAT GLOBAL
+========================================================= */
 
-async function initialiserApplication(){
- const token=sessionStorage.getItem("monPointageGoogleToken");
- if(token&&restaurerSession(token)){
-   afficherApp();
-   await chargerTout();
-   demarrerSynchronisationTempsReel();
-   return;
- }
- afficherLogin();
- chargerBibliothequeGoogle();
-}
+let idToken = null;
+let utilisateur = null;
 
-function afficherLogin(){
- const login=document.getElementById("loginScreen"),app=document.getElementById("app");
- if(login)login.style.display="grid";
- if(app)app.style.display="none";
-}
+let callbackCounter = 0;
+let synchronisationTimer = null;
 
-function chargerBibliothequeGoogle(){
- googleHardLog("CHARGEMENT GIS",CONFIG.googleScript);
- googleDebug("chargement de la bibliothèque");
- const status=document.getElementById("googleStatus");
- if(window.google?.accounts?.id){initialiserGoogle();return;}
- if(googleLoadStarted){if(status)status.textContent="Chargement de Google…";return;}
- googleLoadStarted=true;
- if(status)status.textContent="Chargement de Google…";
- const script=document.createElement("script");
- script.src=CONFIG.googleScript;
- script.async=true;
- script.onload=()=>{googleHardLog("GIS SCRIPT CHARGÉ",!!window.google?.accounts?.id);googleDebug("bibliothèque chargée");initialiserGoogle()};
- script.onerror=(event)=>{ googleHardLog("GIS SCRIPT ERROR",event?.type||"script.onerror");
-   googleLoadStarted=false;
-   afficherErreurGoogleDetaillee("chargement",event||"Impossible de charger https://accounts.google.com/gsi/client");
- };
- document.head.appendChild(script);
- setTimeout(()=>{
-   if(!window.google?.accounts?.id&&status)status.textContent="Google met trop de temps à répondre. Actualisez la page.";
- },10000);
-}
+let googleRendered = false;
+let googleLoadStarted = false;
 
-function googleDebug(etape,detail=""){
- const el=document.getElementById("googleDebugText");
- const lines=[
-   "=== DIAGNOSTIC GOOGLE ===",
-   "Origine : "+window.location.origin,
-   "URL : "+window.location.href,
-   "Client ID : "+CONFIG.googleClientId,
-   "Google GIS : "+(window.google?.accounts?.id?"CHARGÉ":"NON CHARGÉ"),
-   "Étape : "+etape
- ];
- if(detail)lines.push("Détail : "+detail);
- if(el)el.textContent=lines.join("\n");
- console.log("[Google Debug]",...lines);
-}
-function afficherErreurGoogleDetaillee(type,error){
- googleHardLog("ERREUR GOOGLE "+type,error);
- let detail="";
- try{
-   if(error instanceof Error) detail=error.name+": "+error.message;
-   else if(typeof error==="string") detail=error;
-   else if(error) detail=JSON.stringify(error);
- }catch(_){detail=String(error||"Erreur inconnue");}
- detail=detail||"Erreur Google inconnue.";
- googleDebug("ERREUR — "+type,detail);
- const status=document.getElementById("googleStatus");
- const box=document.getElementById("loginError");
- if(status)status.textContent="Google : "+detail;
- if(box){
-   box.classList.remove("hidden");
-   box.textContent="Google ("+type+") : "+detail;
- }
+let moisCourant =
+  new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  );
+
+
+/* =========================================================
+   LOG GOOGLE
+========================================================= */
+
+function googleHardLog(etape, detail = "") {
+
+  const now =
+    new Date().toLocaleTimeString("fr-FR");
+
+  let texte =
+    "[" + now + "] " + etape;
+
+  if (
+    detail !== "" &&
+    detail !== undefined &&
+    detail !== null
+  ) {
+
+    try {
+
+      texte +=
+        " | " +
+        (
+          typeof detail === "string"
+            ? detail
+            : JSON.stringify(detail)
+        );
+
+    } catch (_) {
+
+      texte +=
+        " | " +
+        String(detail);
+
+    }
+
+  }
+
+  console.log(
+    "[Google]",
+    texte
+  );
+
 }
 
-function initialiserGoogle(){
- googleHardLog("INITIALISATION GIS",{available:!!window.google?.accounts?.id,client:CONFIG.googleClientId});
- googleDebug("initialisation");
- const mount=document.getElementById("googleButtonRender"),status=document.getElementById("googleStatus");
- if(!mount)return;
- if(!window.google?.accounts?.id){afficherErreurGoogleDetaillee("bibliothèque","Google Identity Services n'est pas disponible.");return;}
- if(googleRendered)return;
- try{
-   google.accounts.id.initialize({
-     client_id:CONFIG.googleClientId,
-     callback:connexionGoogle,
-     error_callback:(error)=>{googleHardLog("GOOGLE ERROR CALLBACK",error);afficherErreurGoogleDetaillee("error_callback",error)},
-     auto_select:false,
-     cancel_on_tap_outside:true,
-     context:"signin"
-   });
-   googleHardLog("GOOGLE INITIALIZE OK");
-   googleDebug("initialize OK");
-   mount.innerHTML="";
-   google.accounts.id.renderButton(mount,{
-     type:"standard",theme:"filled_black",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:320
-   });
-   googleRendered=true;
-   googleHardLog("BOUTON GOOGLE RENDU");
-   googleDebug("bouton Google rendu");
-   if(status)status.textContent="Connexion sécurisée avec Google";
-   setTimeout(()=>googleDebug("attente du clic Google"),0);
- }catch(error){
-   googleRendered=false;
-   afficherErreurGoogleDetaillee("initialisation",error);
- }
-}
-window.initialiserGoogle=initialiserGoogle;
 
-function decoderJwt(token){
- try{
-   const parts=String(token||"").split(".");
-   if(parts.length!==3)return null;
-   let b64=parts[1].replace(/-/g,"+").replace(/_/g,"/");
-   while(b64.length%4)b64+="=";
-   const raw=atob(b64);
-   const json=decodeURIComponent(Array.from(raw,ch=>"%"+("00"+ch.charCodeAt(0).toString(16)).slice(-2)).join(""));
-   return JSON.parse(json);
- }catch(error){return null}
-}
-function compteAutorise(email){return String(email||"").trim().toLowerCase()===CONFIG.allowedEmail}
-function construireUtilisateur(p){return{email:String(p?.email||"").toLowerCase(),nom:p?.name||p?.given_name||"Utilisateur",picture:p?.picture||""}}
+/* =========================================================
+   DEBUG GOOGLE
+========================================================= */
 
-function restaurerSession(token){
- const p=decoderJwt(token);
- if(!p?.email||!compteAutorise(p.email)||Number(p.exp||0)<=Date.now()/1000){
-   sessionStorage.removeItem("monPointageGoogleToken");return false;
- }
- idToken=token;utilisateur=construireUtilisateur(p);return true;
+function googleDebug(etape, detail = "") {
+
+  console.log(
+    "[Google Debug]",
+    etape,
+    detail
+  );
+
 }
 
-async function connexionGoogle(response){
- googleHardLog("GOOGLE CALLBACK REÇU",response?{keys:Object.keys(response),hasCredential:!!response.credential}:"NO RESPONSE");
- googleDebug("callback Google reçu", response ? Object.keys(response).join(", ") : "Aucune réponse");
- const errorBox=document.getElementById("loginError");
- if(errorBox)errorBox.classList.add("hidden");
- try{
-   const token=response?.credential;
-   googleDebug("credential", token ? "REÇU" : "ABSENT");
-   if(!token)throw new Error("Google n'a pas fourni de jeton.");
-   const p=decoderJwt(token);
-   if(!p?.email)throw new Error("Réponse Google invalide.");
-   if(!compteAutorise(p.email))throw new Error("Ce compte Google n'est pas autorisé.");
-   if(Number(p.exp||0)<=Date.now()/1000)throw new Error("La session Google a expiré.");
-   idToken=token;utilisateur=construireUtilisateur(p);
-   sessionStorage.setItem("monPointageGoogleToken",token);
-   afficherApp();
-   const hint=document.getElementById("heroHint");
-   if(hint)hint.textContent="Compte vérifié · synchronisation…";
-   setLoading(true);
-   try{await chargerTout();if(hint)hint.textContent="Synchronisé"}
-   finally{setLoading(false)}
-   demarrerSynchronisationTempsReel();
- }catch(error){
-   idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");
-   afficherLogin();
-   afficherErreurGoogleDetaillee("connexion",error);
- }
-}
-window.connexionGoogle=connexionGoogle;
 
-function afficherApp(){
- const login=document.getElementById("loginScreen"),app=document.getElementById("app");
- if(login)login.style.display="none";
- if(app)app.style.display="block";
- const u=utilisateur||{},prenom=String(u.nom||"").trim().split(/\s+/)[0];
- const welcome=document.getElementById("welcome"),avatar=document.getElementById("avatar"),big=document.getElementById("profileBig"),name=document.getElementById("profileName"),email=document.getElementById("profileEmail");
- if(welcome)welcome.textContent=prenom?"Bonjour "+prenom:"Votre espace personnel";
- if(avatar)avatar.src=u.picture||"";
- if(big)big.src=u.picture||"";
- if(name)name.textContent=u.nom||"Utilisateur";
- if(email)email.textContent=u.email||"";
+/* =========================================================
+   ERREURS
+========================================================= */
+
+window.addEventListener(
+  "error",
+  event => {
+
+    console.error(
+      "Mon Pointage :",
+      event.error || event.message
+    );
+
+  }
+);
+
+
+window.addEventListener(
+  "unhandledrejection",
+  event => {
+
+    console.error(
+      "Mon Pointage promise :",
+      event.reason
+    );
+
+  }
+);
+
+
+/* =========================================================
+   DOM READY
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    googleHardLog(
+      "DOM PRÊT",
+      {
+        gis:
+          !!window.google?.accounts?.id
+      }
+    );
+
+    horloge();
+
+    setInterval(
+      horloge,
+      1000
+    );
+
+    afficherTitreMois();
+
+    initialiserApplication();
+
+  }
+);
+
+
+/* =========================================================
+   INITIALISATION APPLICATION
+========================================================= */
+
+async function initialiserApplication() {
+
+  const token =
+    sessionStorage.getItem(
+      "monPointageGoogleToken"
+    );
+
+  if (
+    token &&
+    restaurerSession(token)
+  ) {
+
+    afficherApp();
+
+    await chargerTout();
+
+    demarrerSynchronisationTempsReel();
+
+    return;
+  }
+
+  afficherLogin();
+
+  chargerBibliothequeGoogle();
+
 }
 
-function appelerAPI(action,params={}){
- return new Promise((resolve,reject)=>{
-   if(!idToken)return reject(new Error("Connexion Google requise."));
-   const cb="mp_"+Date.now()+"_"+(++callbackCounter);
-   const script=document.createElement("script");
-   const query=new URLSearchParams({action,id_token:idToken,callback:cb});
-   Object.entries(params).forEach(([k,v])=>{if(v!==undefined&&v!==null)query.set(k,String(v))});
-   let done=false;
-   const finish=(fn,value)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];script.remove();fn(value)};
-   const timer=setTimeout(()=>finish(reject,new Error("Le serveur Mon Pointage ne répond pas.")),15000);
-   window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur serveur."));
-   script.onerror=()=>finish(reject,new Error("Impossible de contacter Mon Pointage."));
-   script.src=CONFIG.apiUrl+"?"+query.toString();
-   script.async=true;
-   document.head.appendChild(script);
- });
+
+/* =========================================================
+   AFFICHER LOGIN
+========================================================= */
+
+function afficherLogin() {
+
+  const login =
+    document.getElementById(
+      "loginScreen"
+    );
+
+  const app =
+    document.getElementById(
+      "app"
+    );
+
+  if (login) {
+
+    login.style.display =
+      "grid";
+
+  }
+
+  if (app) {
+
+    app.style.display =
+      "none";
+
+  }
+
 }
 
-async function chargerTout(){return Promise.allSettled([chargerEtat(),chargerRecapEtHistorique()])}
-async function chargerEtat(){try{const r=await appelerAPI("getEtatDuJour");appliquerEtat(r.data)}catch(e){console.warn("Etat:",e)}}
-async function chargerRecapEtHistorique(){
- const annee=moisCourant.getFullYear(),mois=moisCourant.getMonth()+1;
- try{
-   const r=await appelerAPI("obtenirTableauDeBord",{annee,mois});
-   const d=r.data||{};
-   afficherRecap(d.recap||{});
-   afficherHistorique(Array.isArray(d.historique)?d.historique:[]);
-   return;
- }catch(e){}
- try{
-   const [r,h]=await Promise.all([appelerAPI("obtenirRecapMois",{annee,mois}),appelerAPI("obtenirHistoriqueMois",{annee,mois})]);
-   afficherRecap(r.data||{});
-   const rows=h.data?.historique||h.data?.rows||h.data||[];
-   afficherHistorique(Array.isArray(rows)?rows:[]);
- }catch(e){console.warn("Recap:",e);afficherHistorique([])}
-}
-function demarrerSynchronisationTempsReel(){
- if(synchronisationTimer)clearInterval(synchronisationTimer);
- if(!idToken)return;
- synchronisationTimer=setInterval(()=>{if(idToken)chargerTout()},5000);
+
+/* =========================================================
+   CHARGER GOOGLE GIS
+========================================================= */
+
+function chargerBibliothequeGoogle() {
+
+  googleHardLog(
+    "CHARGEMENT GIS",
+    CONFIG.googleScript
+  );
+
+  const status =
+    document.getElementById(
+      "googleStatus"
+    );
+
+  if (
+    window.google?.accounts?.id
+  ) {
+
+    initialiserGoogle();
+
+    return;
+  }
+
+  if (googleLoadStarted) {
+
+    if (status) {
+
+      status.textContent =
+        "Chargement de Google…";
+
+    }
+
+    return;
+  }
+
+  googleLoadStarted = true;
+
+  if (status) {
+
+    status.textContent =
+      "Chargement de Google…";
+
+  }
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+  script.src =
+    CONFIG.googleScript;
+
+  script.async = true;
+
+  script.onload = () => {
+
+    googleHardLog(
+      "GIS SCRIPT CHARGÉ",
+      !!window.google?.accounts?.id
+    );
+
+    initialiserGoogle();
+
+  };
+
+  script.onerror = () => {
+
+    googleLoadStarted = false;
+
+    afficherErreurGoogle(
+      "Impossible de charger Google. Vérifie ta connexion internet puis actualise la page."
+    );
+
+  };
+
+  document.head.appendChild(
+    script
+  );
+
+  setTimeout(
+    () => {
+
+      if (
+        !window.google?.accounts?.id &&
+        status
+      ) {
+
+        status.textContent =
+          "Google met du temps à répondre. Actualisez la page.";
+
+      }
+
+    },
+    10000
+  );
+
 }
 
-function appliquerEtat(e){
- if(!e)return;
- const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v??"—"};
- set("heroDate",formaterDate(e.date));set("arrival",e.debut||"—");set("departure",e.fin||"—");set("break",e.pause||"—");set("worked",e.travaille||"—");set("timelineArrival",e.debut||"—");set("timelineDeparture",e.fin||"—");
- const status=document.getElementById("status");
- if(status){status.className="pill "+classeStatut(e.statut);status.innerHTML="<i></i>"+esc(e.statut||"—")}
- const start=typeof e.peutCommencer==="boolean"?e.peutCommencer:(!e.debut&&!["Fête","Chabbat","Absent","ABSENT"].includes(e.statut));
- const finish=!e.fin;
- document.getElementById("startButton")?.classList.toggle("disabled",!start);
- document.getElementById("finishButton")?.classList.toggle("disabled",!finish);
- set("daySummary",e.statut||"—");
- set("heroHint",e.statut==="En cours"?"Journée en cours":e.statut==="Terminé"?"Journée terminée":e.statut==="Absent"?"Absence enregistrée":e.statut||"Prêt à pointer");
- const note=document.getElementById("homeNote");
- if(note&&(e.statut==="Fête"||e.statut==="Chabbat")){note.textContent="Cette journée n'est pas une journée de travail : le pointage est désactivé.";note.classList.remove("hidden")}
- else note?.classList.add("hidden");
- const obs=document.getElementById("timelineObservation");if(obs)obs.textContent=e.observation?"📝 "+e.observation:"Fin de votre journée";
-}
-function classeStatut(s){switch(String(s||"").toLowerCase()){case"en cours":return"green";case"terminé":return"blue";case"fête":case"chabbat":return"purple";case"absent":return"red";default:return"gray"}}
 
-async function commencer(){
- if(document.getElementById("startButton")?.classList.contains("disabled"))return;
- setLoading(true);try{const heure=heureActuelle(),r=await appelerAPI("commencerJour",{heure});appliquerEtat(r.data);toast("Arrivée enregistrée à "+heure);await chargerTout()}catch(e){afficherErreur(e)}finally{setLoading(false)}
+/* =========================================================
+   INITIALISER GOOGLE
+========================================================= */
+
+function initialiserGoogle() {
+
+  googleHardLog(
+    "INITIALISATION GIS",
+    {
+      available:
+        !!window.google?.accounts?.id,
+
+      client:
+        CONFIG.googleClientId
+    }
+  );
+
+  const mount =
+    document.getElementById(
+      "googleButtonRender"
+    );
+
+  const status =
+    document.getElementById(
+      "googleStatus"
+    );
+
+  if (!mount) {
+
+    return;
+  }
+
+  if (
+    !window.google?.accounts?.id
+  ) {
+
+    afficherErreurGoogle(
+      "Google Identity Services n'est pas disponible."
+    );
+
+    return;
+  }
+
+  try {
+
+    google.accounts.id.initialize({
+
+      client_id:
+        CONFIG.googleClientId,
+
+      callback:
+        connexionGoogle,
+
+      error_callback:
+        error => {
+
+          googleHardLog(
+            "GOOGLE ERROR",
+            error
+          );
+
+          afficherErreurGoogle(
+            "Google n'a pas pu ouvrir la connexion."
+          );
+
+        },
+
+      auto_select:
+        false,
+
+      cancel_on_tap_outside:
+        true,
+
+      context:
+        "signin"
+
+    });
+
+
+    mount.innerHTML = "";
+
+
+    google.accounts.id.renderButton(
+      mount,
+      {
+        type:
+          "standard",
+
+        theme:
+          "filled_black",
+
+        size:
+          "large",
+
+        text:
+          "signin_with",
+
+        shape:
+          "pill",
+
+        logo_alignment:
+          "left",
+
+        width:
+          320
+      }
+    );
+
+
+    googleRendered = true;
+
+
+    googleHardLog(
+      "BOUTON GOOGLE RENDU"
+    );
+
+
+    if (status) {
+
+      status.textContent =
+        "Connexion sécurisée avec Google";
+
+    }
+
+  } catch (error) {
+
+    googleRendered = false;
+
+    googleHardLog(
+      "ERREUR INITIALISATION GOOGLE",
+      error
+    );
+
+    afficherErreurGoogle(
+      "Impossible d'afficher le bouton Google."
+    );
+
+  }
+
 }
-function ouvrirModalPause(){if(document.getElementById("finishButton")?.classList.contains("disabled"))return;const f=document.getElementById("departureObservation");if(f)f.value="";ouvrirModal("pauseModal")}
-async function terminer(pauseMinutes){
- const observation=(document.getElementById("departureObservation")?.value||"").trim();fermerModal("pauseModal");setLoading(true);
- try{const heure=heureActuelle(),r=await appelerAPI("terminerJour",{heure,pauseMinutes,observation});appliquerEtat(r.data);toast("Départ enregistré à "+heure);await chargerTout()}catch(e){afficherErreur(e)}finally{setLoading(false)}
+
+
+window.initialiserGoogle =
+  initialiserGoogle;
+
+
+/* =========================================================
+   ERREUR GOOGLE
+========================================================= */
+
+function afficherErreurGoogle(message) {
+
+  const box =
+    document.getElementById(
+      "loginError"
+    );
+
+  const status =
+    document.getElementById(
+      "googleStatus"
+    );
+
+  if (status) {
+
+    status.textContent =
+      message;
+
+  }
+
+  if (box) {
+
+    box.textContent =
+      message;
+
+    box.classList.remove(
+      "hidden"
+    );
+
+  }
+
 }
-function ouvrirAbsence(){const f=document.getElementById("absenceMotif");if(f)f.value="";ouvrirModal("absenceModal")}
-async function confirmerAbsence(){
- const motif=(document.getElementById("absenceMotif")?.value||"").trim()||"Non précisé";fermerModal("absenceModal");setLoading(true);
- try{const r=await appelerAPI("signalerAbsence",{motif});appliquerEtat(r.data);toast("Absence enregistrée");await chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}
+
+
+/* =========================================================
+   DÉCODER JWT GOOGLE
+========================================================= */
+
+function decoderJwt(token) {
+
+  try {
+
+    const parts =
+      String(token || "")
+        .split(".");
+
+    if (
+      parts.length !== 3
+    ) {
+
+      return null;
+
+    }
+
+    let b64 =
+      parts[1]
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
+    while (
+      b64.length % 4
+    ) {
+
+      b64 += "=";
+
+    }
+
+    const raw =
+      atob(b64);
+
+    const json =
+      decodeURIComponent(
+        Array.from(
+          raw,
+          ch =>
+            "%" +
+            (
+              "00" +
+              ch.charCodeAt(0)
+                .toString(16)
+            ).slice(-2)
+        ).join("")
+      );
+
+    return JSON.parse(json);
+
+  } catch (_) {
+
+    return null;
+
+  }
+
 }
-function ouvrirVue(id,button){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.querySelectorAll(".nav-item").forEach(v=>v.classList.remove("active"));document.getElementById(id)?.classList.add("active");button?.classList.add("active")}
-function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}
-function afficherTitreMois(){const el=document.getElementById("monthTitle");if(!el)return;const s=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});el.innerHTML=s.charAt(0).toUpperCase()+s.slice(1)+"<small>Récapitulatif</small>"}
-function afficherRecap(r){const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v??"—"};set("monthHours",r.heuresTravaillees||r.heures||"—");set("monthDays",r.joursTravailles??"—");set("monthAbsences",r.absences??"—");afficherTitreMois()}
-function afficherHistorique(rows){
- const el=document.getElementById("history");if(!el)return;
- if(!Array.isArray(rows)||!rows.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}
- el.innerHTML=rows.map(x=>{
-   const d=x.date?new Date(x.date):null;
-   const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):(x.libelle||"—");
-   return '<div class="history-row"><div class="hdate">'+esc(label)+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+" → "+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+(x.observation?" · 📝 "+esc(x.observation):"")+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+"</div></div>";
- }).join("");
+
+
+/* =========================================================
+   COMPTE AUTORISÉ
+========================================================= */
+
+function compteAutorise(email) {
+
+  return (
+    String(email || "")
+      .trim()
+      .toLowerCase()
+    ===
+    CONFIG.allowedEmail
+  );
+
 }
-function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function horloge(){const n=new Date(),t=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("clock")&&(document.getElementById("clock").textContent=t);document.getElementById("heroTime")&&(document.getElementById("heroTime").textContent=t)}
-function heureActuelle(){const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")}
-function formaterDate(v){if(!v)return"Date indisponible";if(typeof v==="string"){let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});m=v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}const d=new Date(v);return isNaN(d)?"Date indisponible":d.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}
-function ouvrirModal(id){document.getElementById(id)?.classList.add("show")}
-function fermerModal(id){document.getElementById(id)?.classList.remove("show")}
-document.addEventListener("click",e=>{const m=e.target.closest?.(".modal");if(m&&e.target===m)m.classList.remove("show")});
-function setLoading(v){document.getElementById("loading")?.classList.toggle("show",Boolean(v))}
-function toast(message){const el=document.getElementById("toast");if(!el)return;el.textContent=message;el.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.remove("show"),2800)}
-function afficherErreur(error){console.error(error);toast(error?.message||"Une erreur est survenue.")}
-function erreurConnexion(message){const el=document.getElementById("loginError");if(!el)return;el.textContent=message;el.classList.remove("hidden")}
-function deconnexion(){
- if(synchronisationTimer)clearInterval(synchronisationTimer);synchronisationTimer=null;
- idToken=null;utilisateur=null;googleRendered=false;sessionStorage.removeItem("monPointageGoogleToken");
- try{if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect()}catch(_){}
- afficherLogin();
- const error=document.getElementById("loginError");if(error)error.classList.add("hidden");
- const mount=document.getElementById("googleButtonRender");if(mount)mount.innerHTML="";
- if(window.google?.accounts?.id)initialiserGoogle();else{googleLoadStarted=false;chargerBibliothequeGoogle()}
+
+
+/* =========================================================
+   UTILISATEUR
+========================================================= */
+
+function construireUtilisateur(payload) {
+
+  return {
+
+    email:
+      String(
+        payload?.email || ""
+      ).toLowerCase(),
+
+    nom:
+      payload?.name ||
+      payload?.given_name ||
+      "Utilisateur",
+
+    picture:
+      payload?.picture ||
+      ""
+
+  };
+
 }
-</script></body></html>
+
+
+/* =========================================================
+   RESTAURER SESSION
+========================================================= */
+
+function restaurerSession(token) {
+
+  const payload =
+    decoderJwt(token);
+
+  if (
+    !payload?.email ||
+    !compteAutorise(
+      payload.email
+    )
+  ) {
+
+    sessionStorage.removeItem(
+      "monPointageGoogleToken"
+    );
+
+    return false;
+  }
+
+  if (
+    payload.exp &&
+    Number(payload.exp) <=
+      Date.now() / 1000
+  ) {
+
+    sessionStorage.removeItem(
+      "monPointageGoogleToken"
+    );
+
+    return false;
+  }
+
+  idToken =
+    token;
+
+  utilisateur =
+    construireUtilisateur(
+      payload
+    );
+
+  return true;
+
+}
+
+
+/* =========================================================
+   CALLBACK GOOGLE
+========================================================= */
+
+async function connexionGoogle(response) {
+
+  googleHardLog(
+    "CALLBACK GOOGLE REÇU",
+    {
+      hasCredential:
+        !!response?.credential
+    }
+  );
+
+  const errorBox =
+    document.getElementById(
+      "loginError"
+    );
+
+  if (errorBox) {
+
+    errorBox.classList.add(
+      "hidden"
+    );
+
+  }
+
+  try {
+
+    const token =
+      response?.credential;
+
+    if (!token) {
+
+      throw new Error(
+        "Google n'a pas fourni de jeton."
+      );
+
+    }
+
+    const payload =
+      decoderJwt(token);
+
+    if (!payload?.email) {
+
+      throw new Error(
+        "Réponse Google invalide."
+      );
+
+    }
+
+    if (
+      !compteAutorise(
+        payload.email
+      )
+    ) {
+
+      throw new Error(
+        "Ce compte Google n'est pas autorisé."
+      );
+
+    }
+
+    if (
+      payload.exp &&
+      Number(payload.exp) <=
+        Date.now() / 1000
+    ) {
+
+      throw new Error(
+        "La session Google a expiré."
+      );
+
+    }
+
+
+    /*
+      IMPORTANT :
+      On conserve immédiatement le token.
+    */
+
+    idToken =
+      token;
+
+    utilisateur =
+      construireUtilisateur(
+        payload
+      );
+
+    sessionStorage.setItem(
+      "monPointageGoogleToken",
+      token
+    );
+
+
+    afficherApp();
+
+
+    const hint =
+      document.getElementById(
+        "heroHint"
+      );
+
+    if (hint) {
+
+      hint.textContent =
+        "Compte vérifié · synchronisation…";
+
+    }
+
+
+    setLoading(true);
+
+    try {
+
+      await chargerTout();
+
+      if (hint) {
+
+        hint.textContent =
+          "Synchronisé";
+
+      }
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+
+    demarrerSynchronisationTempsReel();
+
+  } catch (error) {
+
+    console.error(
+      "Connexion Google :",
+      error
+    );
+
+    idToken = null;
+
+    utilisateur = null;
+
+    sessionStorage.removeItem(
+      "monPointageGoogleToken"
+    );
+
+    afficherLogin();
+
+    afficherErreurGoogle(
+      error?.message ||
+      "Impossible de vérifier la connexion Google."
+    );
+
+  }
+
+}
+
+
+window.connexionGoogle =
+  connexionGoogle;
+
+
+/* =========================================================
+   AFFICHER APPLICATION
+========================================================= */
+
+function afficherApp() {
+
+  const login =
+    document.getElementById(
+      "loginScreen"
+    );
+
+  const app =
+    document.getElementById(
+      "app"
+    );
+
+  if (login) {
+
+    login.style.display =
+      "none";
+
+  }
+
+  if (app) {
+
+    app.style.display =
+      "block";
+
+  }
+
+
+  const u =
+    utilisateur || {};
+
+  const prenom =
+    String(
+      u.nom || ""
+    )
+      .trim()
+      .split(/\s+/)[0];
+
+
+  const welcome =
+    document.getElementById(
+      "welcome"
+    );
+
+  const avatar =
+    document.getElementById(
+      "avatar"
+    );
+
+  const big =
+    document.getElementById(
+      "profileBig"
+    );
+
+  const name =
+    document.getElementById(
+      "profileName"
+    );
+
+  const email =
+    document.getElementById(
+      "profileEmail"
+    );
+
+
+  if (welcome) {
+
+    welcome.textContent =
+      prenom
+        ? "Bonjour " + prenom
+        : "Votre espace personnel";
+
+  }
+
+
+  if (avatar) {
+
+    avatar.src =
+      u.picture || "";
+
+  }
+
+
+  if (big) {
+
+    big.src =
+      u.picture || "";
+
+  }
+
+
+  if (name) {
+
+    name.textContent =
+      u.nom ||
+      "Utilisateur";
+
+  }
+
+
+  if (email) {
+
+    email.textContent =
+      u.email ||
+      "";
+
+  }
+
+}
+
+
+/* =========================================================
+   APPEL API JSONP
+========================================================= */
+
+function appelerAPI(
+  action,
+  params = {}
+) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      /*
+        Vérification locale du token.
+      */
+
+      if (!idToken) {
+
+        const error =
+          new Error(
+            "Aucun jeton Google disponible. Reconnectez-vous avec Google."
+          );
+
+        error.code =
+          "NO_GOOGLE_TOKEN";
+
+        reject(error);
+
+        return;
+      }
+
+
+      /*
+        Vérification rapide de l'expiration.
+      */
+
+      const payload =
+        decoderJwt(idToken);
+
+      if (
+        payload?.exp &&
+        Number(payload.exp) <=
+          Date.now() / 1000
+      ) {
+
+        const error =
+          new Error(
+            "Votre session Google a expiré. Reconnectez-vous."
+          );
+
+        error.code =
+          "GOOGLE_TOKEN_EXPIRED";
+
+        reject(error);
+
+        return;
+      }
+
+
+      const callbackName =
+        "mp_" +
+        Date.now() +
+        "_" +
+        (++callbackCounter);
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      const query =
+        new URLSearchParams({
+
+          action:
+            action,
+
+          id_token:
+            idToken,
+
+          callback:
+            callbackName
+
+        });
+
+
+      Object.entries(
+        params
+      ).forEach(
+        ([key,value]) => {
+
+          if (
+            value !== undefined &&
+            value !== null
+          ) {
+
+            query.set(
+              key,
+              String(value)
+            );
+
+          }
+
+        }
+      );
+
+
+      const url =
+        CONFIG.apiUrl +
+        "?" +
+        query.toString();
+
+
+      let done = false;
+
+
+      const finish =
+        (fn,value) => {
+
+          if (done) {
+
+            return;
+
+          }
+
+          done = true;
+
+          clearTimeout(
+            timer
+          );
+
+          try {
+
+            delete window[
+              callbackName
+            ];
+
+          } catch (_) {}
+
+          try {
+
+            script.remove();
+
+          } catch (_) {}
+
+          fn(value);
+
+        };
+
+
+      const timer =
+        setTimeout(
+          () => {
+
+            const error =
+              new Error(
+                "Le serveur Mon Pointage ne répond pas après 15 secondes."
+              );
+
+            error.code =
+              "API_TIMEOUT";
+
+            error.action =
+              action;
+
+            finish(
+              reject,
+              error
+            );
+
+          },
+          15000
+        );
+
+
+      window[
+        callbackName
+      ] =
+        response => {
+
+          if (
+            response?.success
+          ) {
+
+            finish(
+              resolve,
+              response
+            );
+
+            return;
+          }
+
+
+          const message =
+            response?.error ||
+            response?.message ||
+            "Erreur renvoyée par le serveur.";
+
+
+          const error =
+            new Error(
+              message
+            );
+
+          error.code =
+            "API_ERROR";
+
+          error.action =
+            action;
+
+          error.response =
+            response;
+
+
+          finish(
+            reject,
+            error
+          );
+
+        };
+
+
+      script.onerror =
+        () => {
+
+          const error =
+            new Error(
+              "Impossible de contacter Mon Pointage."
+            );
+
+          error.code =
+            "API_NETWORK_ERROR";
+
+          error.action =
+            action;
+
+          finish(
+            reject,
+            error
+          );
+
+        };
+
+
+      script.src =
+        url;
+
+      script.async =
+        true;
+
+
+      document.head.appendChild(
+        script
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CHARGEMENT GLOBAL
+========================================================= */
+
+async function chargerTout() {
+
+  const resultats =
+    await Promise.allSettled([
+
+      chargerEtat(),
+
+      chargerRecapEtHistorique()
+
+    ]);
+
+
+  resultats.forEach(
+    resultat => {
+
+      if (
+        resultat.status ===
+        "rejected"
+      ) {
+
+        console.error(
+          "Erreur synchronisation :",
+          resultat.reason
+        );
+
+      }
+
+    }
+  );
+
+
+  return resultats;
+
+}
+
+
+/* =========================================================
+   ÉTAT DU JOUR
+========================================================= */
+
+async function chargerEtat() {
+
+  try {
+
+    const response =
+      await appelerAPI(
+        "getEtatDuJour"
+      );
+
+    appliquerEtat(
+      response.data
+    );
+
+    return response;
+
+  } catch (error) {
+
+    console.error(
+      "État du jour :",
+      error
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* =========================================================
+   RÉCAP / HISTORIQUE
+========================================================= */
+
+async function chargerRecapEtHistorique() {
+
+  const annee =
+    moisCourant.getFullYear();
+
+  const mois =
+    moisCourant.getMonth() + 1;
+
+
+  try {
+
+    const response =
+      await appelerAPI(
+        "obtenirTableauDeBord",
+        {
+          annee,
+          mois
+        }
+      );
+
+
+    const data =
+      response.data || {};
+
+
+    afficherRecap(
+      data.recap || {}
+    );
+
+
+    afficherHistorique(
+      Array.isArray(
+        data.historique
+      )
+        ? data.historique
+        : []
+    );
+
+
+    return response;
+
+  } catch (error) {
+
+    console.warn(
+      "Tableau de bord indisponible, utilisation du fallback.",
+      error
+    );
+
+  }
+
+
+  try {
+
+    const resultats =
+      await Promise.all([
+
+        appelerAPI(
+          "obtenirRecapMois",
+          {
+            annee,
+            mois
+          }
+        ),
+
+        appelerAPI(
+          "obtenirHistoriqueMois",
+          {
+            annee,
+            mois
+          }
+        )
+
+      ]);
+
+
+    afficherRecap(
+      resultats[0].data || {}
+    );
+
+
+    const rows =
+      resultats[1].data?.historique ||
+      resultats[1].data?.rows ||
+      resultats[1].data ||
+      [];
+
+
+    afficherHistorique(
+      Array.isArray(rows)
+        ? rows
+        : []
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Récapitulatif :",
+      error
+    );
+
+    afficherHistorique([]);
+
+    throw error;
+
+  }
+
+}
+
+
+/* =========================================================
+   SYNCHRONISATION 5 SECONDES
+========================================================= */
+
+function demarrerSynchronisationTempsReel() {
+
+  if (
+    synchronisationTimer
+  ) {
+
+    clearInterval(
+      synchronisationTimer
+    );
+
+  }
+
+  if (!idToken) {
+
+    return;
+
+  }
+
+
+  synchronisationTimer =
+    setInterval(
+      async () => {
+
+        if (!idToken) {
+
+          return;
+
+        }
+
+        try {
+
+          await chargerTout();
+
+        } catch (error) {
+
+          /*
+            On ne déconnecte pas immédiatement
+            pour une simple erreur réseau.
+          */
+
+          console.warn(
+            "Synchronisation automatique :",
+            error
+          );
+
+        }
+
+      },
+      5000
+    );
+
+}
+
+
+/* =========================================================
+   APPLIQUER ÉTAT JOUR
+========================================================= */
+
+function appliquerEtat(e) {
+
+  if (!e) {
+
+    return;
+
+  }
+
+
+  const set =
+    (id,value) => {
+
+      const element =
+        document.getElementById(
+          id
+        );
+
+      if (element) {
+
+        element.textContent =
+          value ??
+          "—";
+
+      }
+
+    };
+
+
+  set(
+    "heroDate",
+    formaterDate(e.date)
+  );
+
+  set(
+    "arrival",
+    e.debut || "—"
+  );
+
+  set(
+    "departure",
+    e.fin || "—"
+  );
+
+  set(
+    "break",
+    e.pause || "—"
+  );
+
+  set(
+    "worked",
+    e.travaille || "—"
+  );
+
+  set(
+    "timelineArrival",
+    e.debut || "—"
+  );
+
+  set(
+    "timelineDeparture",
+    e.fin || "—"
+  );
+
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  if (status) {
+
+    status.className =
+      "pill " +
+      classeStatut(
+        e.statut
+      );
+
+    status.innerHTML =
+      "<i></i>" +
+      esc(
+        e.statut || "—"
+      );
+
+  }
+
+
+  const statut =
+    String(
+      e.statut || ""
+    ).toLowerCase();
+
+
+  const estJourNonTravaille =
+    [
+      "fête",
+      "chabbat",
+      "absent"
+    ].includes(
+      statut
+    );
+
+
+  const start =
+    typeof e.peutCommencer ===
+    "boolean"
+
+      ? e.peutCommencer
+
+      : (
+          !e.debut &&
+          !estJourNonTravaille
+        );
+
+
+  const finish =
+    !!e.debut &&
+    !e.fin &&
+    !estJourNonTravaille;
+
+
+  const startButton =
+    document.getElementById(
+      "startButton"
+    );
+
+  const finishButton =
+    document.getElementById(
+      "finishButton"
+    );
+
+
+  startButton?.classList.toggle(
+    "disabled",
+    !start
+  );
+
+
+  finishButton?.classList.toggle(
+    "disabled",
+    !finish
+  );
+
+
+  set(
+    "daySummary",
+    e.statut || "—"
+  );
+
+
+  let hint =
+    "Prêt à pointer";
+
+
+  if (
+    statut === "en cours"
+  ) {
+
+    hint =
+      "Journée en cours";
+
+  } else if (
+    statut === "terminé"
+  ) {
+
+    hint =
+      "Journée terminée";
+
+  } else if (
+    statut === "absent"
+  ) {
+
+    hint =
+      "Absence enregistrée";
+
+  } else if (
+    statut === "fête"
+  ) {
+
+    hint =
+      "Jour férié";
+
+  } else if (
+    statut === "chabbat"
+  ) {
+
+    hint =
+      "Chabbat";
+
+  }
+
+
+  set(
+    "heroHint",
+    hint
+  );
+
+
+  const note =
+    document.getElementById(
+      "homeNote"
+    );
+
+
+  if (
+    note &&
+    (
+      statut === "fête" ||
+      statut === "chabbat"
+    )
+  ) {
+
+    note.textContent =
+      "Cette journée n'est pas une journée de travail : le pointage est désactivé.";
+
+    note.classList.remove(
+      "hidden"
+    );
+
+  } else if (note) {
+
+    note.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const observation =
+    document.getElementById(
+      "timelineObservation"
+    );
+
+
+  if (observation) {
+
+    observation.textContent =
+      e.observation
+        ? "📝 " +
+          e.observation
+        : "Fin de votre journée";
+
+  }
+
+}
+
+
+/* =========================================================
+   COULEUR STATUT
+========================================================= */
+
+function classeStatut(statut) {
+
+  switch (
+    String(
+      statut || ""
+    ).toLowerCase()
+  ) {
+
+    case "en cours":
+      return "green";
+
+    case "terminé":
+      return "blue";
+
+    case "fête":
+      return "purple";
+
+    case "chabbat":
+      return "purple";
+
+    case "absent":
+      return "red";
+
+    default:
+      return "gray";
+
+  }
+
+}
+
+
+/* =========================================================
+   COMMENCER
+========================================================= */
+
+async function commencer() {
+
+  const button =
+    document.getElementById(
+      "startButton"
+    );
+
+
+  if (
+    button?.classList.contains(
+      "disabled"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  if (!idToken) {
+
+    afficherErreur(
+      new Error(
+        "Votre connexion Google n'est plus disponible. Reconnectez-vous."
+      )
+    );
+
+    return;
+
+  }
+
+
+  setLoading(true);
+
+
+  try {
+
+    const heure =
+      heureActuelle();
+
+
+    const response =
+      await appelerAPI(
+        "commencerJour",
+        {
+          heure
+        }
+      );
+
+
+    appliquerEtat(
+      response.data
+    );
+
+
+    toast(
+      "Arrivée enregistrée à " +
+      heure
+    );
+
+
+    await chargerTout();
+
+
+  } catch (error) {
+
+    afficherErreur(
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+   MODALE DÉPART
+========================================================= */
+
+function ouvrirModalPause() {
+
+  const button =
+    document.getElementById(
+      "finishButton"
+    );
+
+
+  if (
+    button?.classList.contains(
+      "disabled"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const field =
+    document.getElementById(
+      "departureObservation"
+    );
+
+
+  if (field) {
+
+    field.value = "";
+
+  }
+
+
+  ouvrirModal(
+    "pauseModal"
+  );
+
+}
+
+
+/* =========================================================
+   TERMINER
+========================================================= */
+
+async function terminer(
+  pauseMinutes
+) {
+
+  const observation =
+    (
+      document.getElementById(
+        "departureObservation"
+      )?.value || ""
+    ).trim();
+
+
+  fermerModal(
+    "pauseModal"
+  );
+
+
+  setLoading(true);
+
+
+  try {
+
+    const heure =
+      heureActuelle();
+
+
+    const response =
+      await appelerAPI(
+        "terminerJour",
+        {
+          heure,
+          pauseMinutes,
+          observation
+        }
+      );
+
+
+    appliquerEtat(
+      response.data
+    );
+
+
+    toast(
+      "Départ enregistré à " +
+      heure
+    );
+
+
+    await chargerTout();
+
+
+  } catch (error) {
+
+    afficherErreur(
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+   ABSENCE
+========================================================= */
+
+function ouvrirAbsence() {
+
+  const field =
+    document.getElementById(
+      "absenceMotif"
+    );
+
+
+  if (field) {
+
+    field.value = "";
+
+  }
+
+
+  ouvrirModal(
+    "absenceModal"
+  );
+
+}
+
+
+/* =========================================================
+   CONFIRMER ABSENCE
+========================================================= */
+
+async function confirmerAbsence() {
+
+  const motif =
+    (
+      document.getElementById(
+        "absenceMotif"
+      )?.value || ""
+    ).trim() ||
+    "Non précisé";
+
+
+  fermerModal(
+    "absenceModal"
+  );
+
+
+  setLoading(true);
+
+
+  try {
+
+    const response =
+      await appelerAPI(
+        "signalerAbsence",
+        {
+          motif
+        }
+      );
+
+
+    appliquerEtat(
+      response.data
+    );
+
+
+    toast(
+      "Absence enregistrée"
+    );
+
+
+    await chargerRecapEtHistorique();
+
+
+  } catch (error) {
+
+    afficherErreur(
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function ouvrirVue(
+  id,
+  button
+) {
+
+  document
+    .querySelectorAll(
+      ".view"
+    )
+    .forEach(
+      view =>
+        view.classList.remove(
+          "active"
+        )
+    );
+
+
+  document
+    .querySelectorAll(
+      ".nav-item"
+    )
+    .forEach(
+      nav =>
+        nav.classList.remove(
+          "active"
+        )
+    );
+
+
+  const target =
+    document.getElementById(
+      id
+    );
+
+
+  if (target) {
+
+    target.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CHANGER MOIS
+========================================================= */
+
+function changerMois(
+  delta
+) {
+
+  moisCourant =
+    new Date(
+      moisCourant.getFullYear(),
+      moisCourant.getMonth() +
+        delta,
+      1
+    );
+
+
+  afficherTitreMois();
+
+  chargerRecapEtHistorique();
+
+}
+
+
+/* =========================================================
+   TITRE MOIS
+========================================================= */
+
+function afficherTitreMois() {
+
+  const element =
+    document.getElementById(
+      "monthTitle"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  const texte =
+    moisCourant.toLocaleDateString(
+      "fr-FR",
+      {
+        month:
+          "long",
+
+        year:
+          "numeric"
+      }
+    );
+
+
+  const titre =
+    texte.charAt(0).toUpperCase() +
+    texte.slice(1);
+
+
+  element.innerHTML =
+    esc(titre) +
+    "<small>Récapitulatif</small>";
+
+}
+
+
+/* =========================================================
+   RÉCAP MOIS
+========================================================= */
+
+function afficherRecap(
+  recap
+) {
+
+  const set =
+    (id,value) => {
+
+      const element =
+        document.getElementById(
+          id
+        );
+
+      if (element) {
+
+        element.textContent =
+          value ??
+          "—";
+
+      }
+
+    };
+
+
+  set(
+    "monthHours",
+    recap.heuresTravaillees ||
+    recap.heures ||
+    "—"
+  );
+
+
+  set(
+    "monthDays",
+    recap.joursTravailles ??
+    "—"
+  );
+
+
+  set(
+    "monthAbsences",
+    recap.absences ??
+    "—"
+  );
+
+
+  afficherTitreMois();
+
+}
+
+
+/* =========================================================
+   HISTORIQUE
+========================================================= */
+
+function afficherHistorique(
+  rows
+) {
+
+  const element =
+    document.getElementById(
+      "history"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  if (
+    !Array.isArray(rows) ||
+    !rows.length
+  ) {
+
+    element.innerHTML =
+      '<div class="empty">' +
+      "Aucune journée détaillée disponible pour ce mois." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  element.innerHTML =
+    rows
+      .map(
+        row => {
+
+          const date =
+            row.date
+              ? new Date(
+                  row.date
+                )
+              : null;
+
+
+          const label =
+            date &&
+            !isNaN(date)
+
+              ? date.toLocaleDateString(
+                  "fr-FR",
+                  {
+                    day:
+                      "2-digit",
+
+                    month:
+                      "short"
+                  }
+                )
+
+              : (
+                  row.libelle ||
+                  "—"
+                );
+
+
+          return (
+
+            '<div class="history-row">' +
+
+              '<div class="hdate">' +
+
+                esc(label) +
+
+                '<small>' +
+                esc(
+                  row.statut ||
+                  ""
+                ) +
+                "</small>" +
+
+              "</div>" +
+
+
+              '<div class="hinfo">' +
+
+                "<b>" +
+
+                  esc(
+                    row.debut ||
+                    "—"
+                  ) +
+
+                  " → " +
+
+                  esc(
+                    row.fin ||
+                    "—"
+                  ) +
+
+                "</b>" +
+
+                "<span>" +
+
+                  "Pause : " +
+
+                  esc(
+                    row.pause ||
+                    "—"
+                  ) +
+
+                  (
+                    row.observation
+                      ? " · 📝 " +
+                        esc(
+                          row.observation
+                        )
+                      : ""
+                  ) +
+
+                "</span>" +
+
+              "</div>" +
+
+
+              '<div class="hhours">' +
+
+                esc(
+                  row.travaille ||
+                  row.heures ||
+                  "—"
+                ) +
+
+              "</div>" +
+
+            "</div>"
+
+          );
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function esc(value) {
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    character =>
+      ({
+        "&":
+          "&amp;",
+
+        "<":
+          "&lt;",
+
+        ">":
+          "&gt;",
+
+        '"':
+          "&quot;",
+
+        "'":
+          "&#039;"
+
+      }[character])
+  );
+
+}
+
+
+/* =========================================================
+   HORLOGE
+========================================================= */
+
+function horloge() {
+
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "fr-FR",
+      {
+        hour:
+          "2-digit",
+
+        minute:
+          "2-digit",
+
+        second:
+          "2-digit"
+      }
+    );
+
+
+  const clock =
+    document.getElementById(
+      "clock"
+    );
+
+  const heroTime =
+    document.getElementById(
+      "heroTime"
+    );
+
+
+  if (clock) {
+
+    clock.textContent =
+      time;
+
+  }
+
+
+  if (heroTime) {
+
+    heroTime.textContent =
+      time;
+
+  }
+
+}
+
+
+/* =========================================================
+   HEURE ACTUELLE
+========================================================= */
+
+function heureActuelle() {
+
+  const now =
+    new Date();
+
+
+  return (
+    String(
+      now.getHours()
+    ).padStart(2,"0")
+    +
+    ":" +
+    String(
+      now.getMinutes()
+    ).padStart(2,"0")
+  );
+
+}
+
+
+/* =========================================================
+   DATE FRANÇAISE
+========================================================= */
+
+function formaterDate(
+  value
+) {
+
+  if (!value) {
+
+    return "Date indisponible";
+
+  }
+
+
+  if (
+    typeof value ===
+    "string"
+  ) {
+
+    let match =
+      value.match(
+        /^(\d{4})-(\d{2})-(\d{2})/
+      );
+
+
+    if (match) {
+
+      return new Date(
+        Number(match[1]),
+        Number(match[2]) - 1,
+        Number(match[3]),
+        12
+      ).toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:
+            "long",
+
+          day:
+            "2-digit",
+
+          month:
+            "long",
+
+          year:
+            "numeric"
+        }
+      );
+
+    }
+
+
+    match =
+      value.match(
+        /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/
+      );
+
+
+    if (match) {
+
+      return new Date(
+        Number(match[3]),
+        Number(match[2]) - 1,
+        Number(match[1]),
+        12
+      ).toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:
+            "long",
+
+          day:
+            "2-digit",
+
+          month:
+            "long",
+
+          year:
+            "numeric"
+        }
+      );
+
+    }
+
+  }
+
+
+  const date =
+    new Date(
+      value
+    );
+
+
+  if (
+    isNaN(date)
+  ) {
+
+    return "Date indisponible";
+
+  }
+
+
+  return date.toLocaleDateString(
+    "fr-FR",
+    {
+      weekday:
+        "long",
+
+      day:
+        "2-digit",
+
+      month:
+        "long",
+
+      year:
+        "numeric"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+function ouvrirModal(id) {
+
+  document
+    .getElementById(id)
+    ?.classList.add(
+      "show"
+    );
+
+}
+
+
+function fermerModal(id) {
+
+  document
+    .getElementById(id)
+    ?.classList.remove(
+      "show"
+    );
+
+}
+
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const modal =
+      event.target.closest?.(
+        ".modal"
+      );
+
+
+    if (
+      modal &&
+      event.target === modal
+    ) {
+
+      modal.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setLoading(
+  value
+) {
+
+  document
+    .getElementById(
+      "loading"
+    )
+    ?.classList.toggle(
+      "show",
+      Boolean(value)
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(
+  message
+) {
+
+  const element =
+    document.getElementById(
+      "toast"
+    );
+
+
+  if (!element) {
+
+    return;
+
+  }
+
+
+  element.textContent =
+    message;
+
+
+  element.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    window.__toast
+  );
+
+
+  window.__toast =
+    setTimeout(
+      () => {
+
+        element.classList.remove(
+          "show"
+        );
+
+      },
+      2800
+    );
+
+}
+
+
+/* =========================================================
+   ERREUR APPLICATION
+========================================================= */
+
+function afficherErreur(
+  error
+) {
+
+  console.error(
+    "Mon Pointage :",
+    error
+  );
+
+
+  const code =
+    error?.code;
+
+
+  if (
+    code ===
+      "NO_GOOGLE_TOKEN" ||
+    code ===
+      "GOOGLE_TOKEN_EXPIRED"
+  ) {
+
+    /*
+      On ne laisse pas l'application
+      continuer avec un token invalide.
+    */
+
+    idToken = null;
+
+    utilisateur = null;
+
+    sessionStorage.removeItem(
+      "monPointageGoogleToken"
+    );
+
+
+    if (
+      synchronisationTimer
+    ) {
+
+      clearInterval(
+        synchronisationTimer
+      );
+
+    }
+
+
+    synchronisationTimer =
+      null;
+
+
+    afficherLogin();
+
+
+    googleRendered =
+      false;
+
+
+    if (
+      window.google?.accounts?.id
+    ) {
+
+      initialiserGoogle();
+
+    } else {
+
+      chargerBibliothequeGoogle();
+
+    }
+
+
+    afficherErreurGoogle(
+      "Votre connexion Google a expiré. Reconnectez-vous."
+    );
+
+
+    return;
+
+  }
+
+
+  toast(
+    error?.message ||
+    "Une erreur est survenue."
+  );
+
+}
+
+
+/* =========================================================
+   DÉCONNEXION
+========================================================= */
+
+function deconnexion() {
+
+  if (
+    synchronisationTimer
+  ) {
+
+    clearInterval(
+      synchronisationTimer
+    );
+
+  }
+
+
+  synchronisationTimer =
+    null;
+
+
+  idToken =
+    null;
+
+  utilisateur =
+    null;
+
+
+  sessionStorage.removeItem(
+    "monPointageGoogleToken"
+  );
+
+
+  try {
+
+    if (
+      window.google?.accounts?.id
+    ) {
+
+      google.accounts.id.disableAutoSelect();
+
+    }
+
+  } catch (_) {}
+
+
+  afficherLogin();
+
+
+  const error =
+    document.getElementById(
+      "loginError"
+    );
+
+
+  if (error) {
+
+    error.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const status =
+    document.getElementById(
+      "googleStatus"
+    );
+
+
+  if (status) {
+
+    status.textContent =
+      "Connexion sécurisée avec Google";
+
+  }
+
+
+  const mount =
+    document.getElementById(
+      "googleButtonRender"
+    );
+
+
+  if (mount) {
+
+    mount.innerHTML =
+      "";
+
+  }
+
+
+  googleRendered =
+    false;
+
+
+  if (
+    window.google?.accounts?.id
+  ) {
+
+    initialiserGoogle();
+
+  } else {
+
+    googleLoadStarted =
+      false;
+
+    chargerBibliothequeGoogle();
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
