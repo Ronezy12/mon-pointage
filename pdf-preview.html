@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090c">
+<title>À L’HEURE — Aperçu du récapitulatif PDF</title>
+<link rel="icon" type="image/png" href="favicon12.png">
+<style>
+:root{
+  --bg:#070809;--panel:#111419;--panel2:#171a20;--ink:#f5f7fa;--muted:#858b96;
+  --line:rgba(255,255,255,.09);--green:#45e6a0;--red:#ff5968;--gold:#e6c879;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+.toolbar{position:sticky;top:0;z-index:10;padding:14px;background:rgba(7,8,9,.82);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.toolbar-inner{width:min(1120px,calc(100% - 28px));margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.toolbar-title{font-size:13px;font-weight:900}.toolbar-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.actions{display:flex;gap:8px}.btn{border:0;border-radius:13px;padding:11px 15px;font-weight:850;font-size:11px;cursor:pointer}.back{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line)}.print{background:#f3f5f7;color:#08090c}
+.status{width:min(1120px,calc(100% - 28px));margin:18px auto;padding:16px;border:1px solid var(--line);border-radius:17px;background:var(--panel);color:var(--muted);font-size:11px}
+.sheet{width:210mm;max-width:calc(100% - 28px);margin:22px auto 50px;background:#0b0d10;border:1px solid rgba(255,255,255,.09);border-radius:26px;padding:13mm;box-shadow:0 30px 100px rgba(0,0,0,.38);overflow:hidden}
+.pdf-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.logo{width:38px;height:38px;border-radius:11px;object-fit:cover}.brand-name{font-size:16px;font-weight:950;letter-spacing:-.5px}.brand-sub{font-size:8px;color:var(--muted);margin-top:3px}
+.period{text-align:right}.period-label{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px}.period-name{font-size:15px;font-weight:900;margin-top:4px;text-transform:capitalize}
+.hero{margin:16px 0 12px;padding:19px 20px;border-radius:20px;background:linear-gradient(145deg,#171c20,#0f1215);border:1px solid rgba(69,230,160,.14);position:relative;overflow:hidden;break-inside:avoid}.hero:after{content:"";position:absolute;width:210px;height:210px;right:-100px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(69,230,160,.2),transparent 68%)}.hero-label{position:relative;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:#858b96}.total{position:relative;margin-top:5px;font-size:30px;font-weight:950;letter-spacing:-1.5px;color:var(--green)}.hero-note{position:relative;margin-top:6px;font-size:8px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;break-inside:avoid}.metric{padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025)}.metric span{display:block;font-size:7px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}.metric strong{display:block;margin-top:5px;font-size:14px;font-variant-numeric:tabular-nums}
+.section-title{font-size:10px;font-weight:900;margin:0 0 8px}
+.table-wrap{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:14px}
+table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:7.4px}
+th,td{padding:7px 6px;text-align:left;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,.065);overflow-wrap:anywhere}
+th{background:#15191e;color:#858b96;font-size:6.7px;text-transform:uppercase;letter-spacing:.45px;font-weight:850}
+td{color:#dfe3e8}tr:last-child td{border-bottom:0}.hours{font-weight:900;color:var(--green);white-space:nowrap}.status-cell{color:#aeb4bd}
+th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:13%}th:nth-child(3),td:nth-child(3){width:13%}th:nth-child(4),td:nth-child(4){width:14%}th:nth-child(5),td:nth-child(5){width:14%}th:nth-child(6),td:nth-child(6){width:29%}
+.empty{text-align:center!important;color:var(--muted)!important;padding:20px!important}
+.footer{display:flex;justify-content:space-between;gap:12px;margin-top:13px;padding-top:9px;border-top:1px solid var(--line);font-size:6.8px;color:#656b74;break-inside:avoid}
+@media(max-width:700px){.toolbar-inner{align-items:flex-start}.actions{flex-shrink:0}.btn{padding:10px 11px}.sheet{padding:20px;margin-top:12px}.pdf-head{gap:10px}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}.period-name{font-size:13px}table{font-size:7px}th,td{padding:6px 4px}}
+@media(max-width:430px){.toolbar-title{font-size:12px}.toolbar-sub{max-width:130px}.sheet{max-width:calc(100% - 16px);padding:15px;border-radius:20px}.brand-name{font-size:14px}.brand-sub{font-size:7px}.logo{width:34px;height:34px}.total{font-size:27px}table{font-size:6.5px}th{font-size:5.9px}}
+@media print{
+  @page{size:A4 portrait;margin:9mm}
+  html,body{background:#fff!important;color:#111!important}
+  body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .toolbar,.status{display:none!important}
+  .sheet{width:100%;max-width:none;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;overflow:visible;background:#fff!important;color:#111!important}
+  .pdf-head,.hero,.metrics,.section-title,.table-wrap,.footer{break-inside:avoid}
+  .table-wrap{overflow:visible}
+  table{break-inside:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid;page-break-inside:avoid}
+  th{background:#15191e!important}
+  .hero{background:#f2f5f3!important;color:#111!important}.metric,.calendar,.cal-day{background:#fff!important;color:#111!important}.pdf-head{border-color:#d9dde2!important}.footer{border-color:#d9dde2!important}.cal-status,.cal-head,.brand-sub,.period-label,.hero-label,.hero-note,.metric span{color:#66707a!important}.cal-day{border-color:#d9dde2!important}.cal-day.worked{background:#f0fbf5!important;border-color:#b9ead0!important}.cal-day.absent{background:#fff1f2!important;border-color:#f2c0c5!important}.cal-day.holiday{background:#fff9e8!important;border-color:#ead99c!important}.cal-hours{color:#138a5b!important}.total{color:#138a5b!important}
+}
+
+/* ===== Calendrier mensuel A4 ===== */
+.sheet{width:210mm;min-height:297mm;max-width:calc(100% - 28px);margin:22px auto 50px;padding:12mm;background:#0b0d10;border:1px solid rgba(255,255,255,.09);border-radius:26px;box-shadow:0 30px 100px rgba(0,0,0,.38);overflow:hidden}
+.pdf-head{padding-bottom:14px}
+.hero{margin:14px 0 10px;padding:16px 18px}
+.total{font-size:34px}
+.metrics{gap:7px;margin-bottom:14px}
+.metric{padding:10px 12px}
+.calendar-wrap{margin-top:2px}
+.calendar-title{font-size:10px;font-weight:900;margin:0 0 8px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:7px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#111419,#0d0f12);width:100%;table-layout:fixed}
+.cal-head{padding:4px 2px 6px;text-align:center;color:var(--muted);font-size:6.5px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+.cal-empty{min-height:38mm}
+.cal-day{min-height:30mm;padding:7px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;overflow:hidden;break-inside:avoid}
+.cal-day b{font-size:11px;line-height:1;font-weight:950}
+.cal-status{margin-top:7px;font-size:6.5px;line-height:1.2;color:var(--muted);overflow-wrap:anywhere}
+.cal-hours{margin-top:auto;padding-top:6px;font-size:8px;font-weight:950;color:var(--green)}
+.cal-day.worked{border-color:rgba(69,230,160,.22);background:linear-gradient(145deg,rgba(69,230,160,.09),rgba(255,255,255,.025))}
+.cal-day.absent{border-color:rgba(255,89,104,.25);background:linear-gradient(145deg,rgba(255,89,104,.08),rgba(255,255,255,.025))}
+.cal-day.holiday{border-color:rgba(230,200,121,.24);background:linear-gradient(145deg,rgba(230,200,121,.08),rgba(255,255,255,.025))}
+.cal-day.weekend{background:rgba(255,255,255,.018)}
+.cal-day.today{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:6.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:6px;height:6px;border-radius:50%;display:inline-block;background:#626873}
+.legend .lg-worked{background:var(--green)} .legend .lg-absent{background:var(--red)} .legend .lg-holiday{background:var(--gold)}
+.footer{margin-top:10px}
+@media(max-width:700px){
+ .sheet{min-height:auto;padding:20px;margin-top:12px}
+ .calendar{gap:4px;padding:6px}
+ .cal-day{min-height:74px;padding:6px 5px;border-radius:10px}
+ .cal-status{font-size:6px}.cal-hours{font-size:7px}
+}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ .sheet{width:210mm;min-height:297mm;max-width:none;margin:0;padding:9mm;border:0;border-radius:0;box-shadow:none;background:#0b0d10!important}
+ .calendar{break-inside:avoid;page-break-inside:avoid}
+ .cal-day{break-inside:avoid;page-break-inside:avoid}
+ .cal-empty{min-height:30mm}
+}
+
+/* Aperçu A4 */
+.status{position:relative}
+.sheet{display:block}
+@media print{.sheet{display:block!important}}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div><div class="toolbar-title">Aperçu du récapitulatif PDF</div><div class="toolbar-sub" id="toolbarSub">Votre document A4</div></div>
+    <div class="actions"><button class="btn back" onclick="window.close()">Fermer</button><button class="btn print" onclick="window.print()">Enregistrer en PDF</button></div>
+  </div>
+</div>
+<div id="status" class="status">Préparation de votre aperçu A4…</div>
+<main id="sheet" class="sheet"></main>
+<script>
+"use strict";
+const API="https://script.google.com/macros/s/AKfycbz85SD7D98IEhIInFX-DLI2P9_rer1U_6U2ctYo7bo8s2UgiANmqFVwy2EGPnPfGxpXfQ/exec";
+let seq=0;
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]})}
+function mins(v){var s=String(v==null?"":v).toLowerCase().trim(),m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);if(m)return Number(m[1])*60+Number(m[2]||0);m=s.match(/^(\d+):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):0}
+function fmt(n){n=Math.max(0,Math.round(n||0));var h=Math.floor(n/60),m=n%60;return h+"h"+(m?" "+String(m).padStart(2,"0"):"")}
+function getToken(){return sessionStorage.getItem("monPointageGoogleToken")||localStorage.getItem("monPointageGoogleToken")||""}
+function api(action,params){return new Promise(function(resolve,reject){var token=getToken();if(!token){reject(new Error("Aucun token Google trouvé. Reconnectez-vous à À L’HEURE."));return}var cb="pdf_"+Date.now()+"_"+(++seq),s=document.createElement("script"),q=new URLSearchParams({action:action,id_token:token,callback:cb}),done=false,timer;Object.keys(params||{}).forEach(function(k){q.set(k,String(params[k]))});function finish(fn,value){if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(value)}window[cb]=function(r){r&&r.success?finish(resolve,r):finish(reject,new Error(r&&r.error?r.error:"Erreur API"))};s.onerror=function(){finish(reject,new Error("Impossible de contacter le serveur."))};timer=setTimeout(function(){finish(reject,new Error("Le serveur ne répond pas après 15 secondes."))},15000);s.src=API+"?"+q.toString();document.head.appendChild(s)})}
+function monthInfo(){var p=new URLSearchParams(location.search).get("mois")||new Date().toISOString().slice(0,7),m=p.match(/^(\d{4})-(\d{2})$/);if(!m)throw new Error("Mois invalide.");var y=Number(m[1]),mo=Number(m[2]);if(mo<1||mo>12)throw new Error("Mois invalide.");var d=new Date(y,mo-1,1);return {y:y,mo:mo,label:d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}}
+async function load(){
+ var status=document.getElementById("status"),sub=document.getElementById("toolbarSub");
+ status.textContent="1/3 — Vérification de la session…";
+ var info=monthInfo(),cap=info.label.charAt(0).toUpperCase()+info.label.slice(1);
+ document.title="À L’HEURE — "+cap;sub.textContent="Récapitulatif de "+cap;
+ if(!getToken())throw new Error("Aucun token Google trouvé. Reconnectez-vous à À L’HEURE.");
+ status.textContent="2/3 — Connexion aux données…";
+ var response=await api("obtenirTableauDeBord",{annee:info.y,mois:info.mo}),data=response.data||{},rows=Array.isArray(data.historique)?data.historique:[],worked=rows.filter(function(r){return r&&(r.travaille||r.heures)}),total=worked.reduce(function(s,r){return s+mins(r.travaille||r.heures)},0),abs=rows.filter(function(r){return /absent/i.test(String(r&&r.statut||""))}).length;
+ var labels=["L","M","M","J","V","S","D"],map={};
+ rows.forEach(function(r){var d=r&&r.date?new Date(r.date):null;if(d&&!isNaN(d))map[d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()]=r});
+ var first=new Date(info.y,info.mo-1,1).getDay(),offset=(first+6)%7,totalDays=new Date(info.y,info.mo,0).getDate(),cal=labels.map(function(x){return "<div class='cal-head'>"+x+"</div>"}).join("");
+ for(var i=0;i<offset;i++)cal+="<div class='cal-empty'></div>";
+ for(var day=1;day<=totalDays;day++){var d=new Date(info.y,info.mo-1,day),r=map[info.y+"-"+info.mo+"-"+day]||{},weekend=d.getDay()===0||d.getDay()===6,raw=String(r.statut||"").trim(),low=raw.toLowerCase(),label=weekend?"Repos":"À pointer",cls=weekend?" weekend":"";
+  if(/fête|chabbat/.test(low)){label=raw||"Fête";cls+=" holiday"}else if(/absent/.test(low)){label="Absent";cls+=" absent"}else if(r.travaille||r.heures||r.debut){label=r.travaille||r.heures||"Travaillé";cls+=" worked"}else if(raw)label=raw;
+  if(new Date().toDateString()===d.toDateString())cls+=" today";
+  cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(label)+"</span>"+((r.travaille||r.heures)?"<span class='cal-hours'>"+esc(r.travaille||r.heures)+"</span>":"")+"</div>";
+ }
+ var sheet=document.getElementById("sheet");sheet.hidden=false;sheet.innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
+ status.textContent="3/3 — Aperçu A4 prêt. Vérifiez le document puis cliquez sur « Enregistrer en PDF ».";
+ status.style.color="var(--green)";
+}
+load().catch(function(e){console.error("PDF:",e);var s=document.getElementById("status"),t=document.getElementById("toolbarSub");if(s){s.textContent="ERREUR PDF — "+(e.message||"Erreur inconnue");s.style.color="var(--red)"}if(t)t.textContent="Erreur de chargement"});
+</script>
+</body>
+</html>
