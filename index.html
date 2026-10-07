@@ -974,6 +974,136 @@ button{
 }
 
 /* =========================================================
+   CALENDRIER PLANNING
+========================================================= */
+
+.planning-calendar{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:7px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:27px;
+  background:linear-gradient(145deg,rgba(19,22,27,.9),rgba(10,12,15,.9));
+  box-shadow:0 18px 60px rgba(0,0,0,.2);
+}
+
+.cal-head{
+  text-align:center;
+  padding:5px 0 7px;
+  color:#666d77;
+  font-size:9px;
+  font-weight:850;
+  text-transform:uppercase;
+}
+
+.cal-day{
+  position:relative;
+  min-height:76px;
+  padding:9px 7px 7px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.055);
+  overflow:hidden;
+  transition:transform .18s,background .18s,border-color .18s;
+}
+
+.cal-day b{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+}
+
+.cal-day .cal-status{
+  display:block;
+  margin-top:9px;
+  font-size:8px;
+  line-height:1.15;
+  color:#747b85;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.cal-day .cal-hours{
+  display:block;
+  margin-top:8px;
+  color:var(--green);
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.cal-day.worked{
+  background:rgba(69,230,160,.075);
+  border-color:rgba(69,230,160,.18);
+}
+
+.cal-day.worked .cal-status{
+  color:#72eeb7;
+}
+
+.cal-day.absent{
+  background:rgba(255,89,104,.075);
+  border-color:rgba(255,89,104,.17);
+}
+
+.cal-day.absent .cal-status{
+  color:#ff8b96;
+}
+
+.cal-day.holiday{
+  background:rgba(178,140,255,.075);
+  border-color:rgba(178,140,255,.16);
+}
+
+.cal-day.holiday .cal-status{
+  color:#c5a8ff;
+}
+
+.cal-day.weekend{
+  opacity:.58;
+}
+
+.cal-day.today{
+  box-shadow:0 0 0 2px rgba(255,255,255,.85),0 8px 28px rgba(255,255,255,.06);
+}
+
+.cal-day.today:after{
+  content:"AUJ.";
+  position:absolute;
+  top:7px;
+  right:7px;
+  font-size:6px;
+  font-weight:900;
+  color:#111318;
+  background:#f1f3f5;
+  padding:3px 4px;
+  border-radius:6px;
+}
+
+@media(max-width:600px){
+  .planning-calendar{
+    gap:5px;
+    padding:9px;
+  }
+  .cal-day{
+    min-height:66px;
+    padding:8px 6px;
+    border-radius:14px;
+  }
+  .cal-day .cal-status{
+    margin-top:7px;
+    font-size:7px;
+  }
+  .cal-day .cal-hours{
+    margin-top:6px;
+    font-size:9px;
+  }
+}
+
+/* =========================================================
    MODALES
 ========================================================= */
 
@@ -1931,7 +2061,7 @@ button{
         <div class="mini"><span>Mois</span><b id="planningMonthLabel">—</b></div>
       </div>
 
-      <div id="planningCalendar" class="panel" style="padding:16px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+      <div id="planningCalendar" class="planning-calendar"></div>
     </section>
 
 
@@ -4942,38 +5072,91 @@ function minutesEnTexte(min){
 function rendrePlanning(){
   const cal=document.getElementById("planningCalendar");
   if(!cal)return;
+
   const safeSet=(id,value)=>{
     const el=document.getElementById(id);
     if(el) el.textContent=value;
   };
-  const y=moisCourant.getFullYear(), m=moisCourant.getMonth();
+
+  const y=moisCourant.getFullYear();
+  const m=moisCourant.getMonth();
   const titre=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
   const titleEl=document.getElementById("planningMonthTitle");
-  if(titleEl) titleEl.innerHTML=esc(titre.charAt(0).toUpperCase()+titre.slice(1))+"<small>Calendrier</small>";
+
+  if(titleEl){
+    const t=titre.charAt(0).toUpperCase()+titre.slice(1);
+    titleEl.innerHTML=esc(t)+"<small>Calendrier</small>";
+  }
+
   safeSet("planningMonthLabel",titre);
+
   const map={};
   historiqueCourant.forEach(r=>{
     const d=r.date?new Date(r.date):null;
-    if(d&&!isNaN(d))map[d.getDate()] = r;
+    if(d&&!isNaN(d)) map[d.getDate()]=r;
   });
+
   const first=new Date(y,m,1).getDay();
   const offset=(first+6)%7;
   const total=new Date(y,m+1,0).getDate();
   const today=new Date();
   const labels=["L","M","M","J","V","S","D"];
-  cal.innerHTML=labels.map(x=>'<div class="cal-head">'+x+'</div>').join("");
-  for(let i=0;i<offset;i++)cal.innerHTML+='<div></div>';
+
+  let html=labels.map(x=>'<div class="cal-head">'+x+'</div>').join("");
+
+  for(let i=0;i<offset;i++){
+    html+='<div></div>';
+  }
+
   for(let day=1;day<=total;day++){
     const r=map[day];
     const date=new Date(y,m,day);
-    const cls=(date.toDateString()===today.toDateString()?" today":"")+
-      (r&&/absent/i.test(r.statut||"")?" absent":r&&((r.travaille||r.heures||r.debut)?" worked":" off"));
-    cal.innerHTML+='<div class="cal-day'+cls+'"><b>'+day+'</b>'+
-      (r?'<span class="cal-hours">'+esc(r.travaille||r.heures||r.statut||"—")+'</span>':"")+
+    const dayOfWeek=date.getDay();
+    const weekend=dayOfWeek===0||dayOfWeek===6;
+    const rawStatus=String(r?.statut||"").trim();
+    const lower=rawStatus.toLowerCase();
+
+    let status="À pointer";
+    let cls=weekend?"weekend":"";
+
+    if(/fête|chabbat/.test(lower)){
+      status=rawStatus||"Fête";
+      cls+=" holiday";
+    }else if(/absent/.test(lower)){
+      status="Absent";
+      cls+=" absent";
+    }else if(r&&(r.travaille||r.heures||r.debut)){
+      status=r.travaille||r.heures||r.debut||"Travaillé";
+      cls+=" worked";
+    }else if(rawStatus){
+      status=rawStatus;
+    }else if(weekend){
+      status="Repos";
+    }
+
+    const isToday=date.toDateString()===today.toDateString();
+    if(isToday) cls+=" today";
+
+    html+='<div class="cal-day'+cls+'">'+
+      '<b>'+day+'</b>'+
+      '<span class="cal-status">'+esc(status)+'</span>'+
+      ((r&&(r.travaille||r.heures))?
+        '<span class="cal-hours">'+esc(r.travaille||r.heures)+'</span>':
+        '')+
       '</div>';
   }
-  safeSet("planningWorked",historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length);
-  safeSet("planningAbsent",historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length);
+
+  cal.innerHTML=html;
+
+  safeSet(
+    "planningWorked",
+    historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length
+  );
+
+  safeSet(
+    "planningAbsent",
+    historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length
+  );
 }
 
 function rendreStats(){
