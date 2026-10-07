@@ -31,7 +31,7 @@ body{display:grid;place-items:center;padding:24px;background:radial-gradient(cir
 <script>
 const now=new Date(),input=document.getElementById("month");
 input.value=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
-function exporter(){if(!input.value)return;location.href="pdf.html?mois="+encodeURIComponent(input.value)}
+function exporter(){if(!input.value)return;location.href="pdf-preview.html?mois="+encodeURIComponent(input.value)}
 input.addEventListener("keydown",e=>{if(e.key==="Enter")exporter()});
 </script>
 </body>
