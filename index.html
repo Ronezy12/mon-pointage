@@ -9,7 +9,7 @@
 <style>
 :root{--bg:#070809;--bg2:#0b0d10;--surface:rgba(18,21,25,.78);--surface2:#111419;--surface3:#171a20;--ink:#f5f7fa;--muted:#858b96;--muted2:#5d636d;--line:rgba(255,255,255,.075);--green:#45e6a0;--green2:#20bd7d;--red:#ff5968;--gold:#e6c879;--blue:#7f8cff;--shadow:0 30px 90px rgba(0,0,0,.32);--radius:28px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 12% 0%,rgba(69,230,160,.08),transparent 30%),radial-gradient(circle at 92% 18%,rgba(127,140,255,.07),transparent 28%),var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(rgba(255,255,255,.16) .5px,transparent .5px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
-#loginScreen{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 20%,rgba(69,230,160,.11),transparent 24%),radial-gradient(circle at 20% 90%,rgba(127,140,255,.08),transparent 30%),#060708}.login{width:min(460px,100%);padding:48px 30px 28px;border:1px solid rgba(255,255,255,.09);border-radius:38px;background:linear-gradient(145deg,rgba(25,29,34,.86),rgba(12,14,17,.9));backdrop-filter:blur(35px);box-shadow:0 40px 120px rgba(0,0,0,.45);text-align:center;animation:up .7s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}.login:before{content:"";position:absolute;width:260px;height:260px;right:-120px;top:-150px;border-radius:50%;background:radial-gradient(circle,rgba(69,230,160,.2),transparent 68%)}.logo{width:76px;height:76px;margin:0 auto 24px;border-radius:25px;display:grid;place-items:center;color:#07100c;font-weight:950;letter-spacing:-1px;background:linear-gradient(145deg,#8affc5,#2fd28e);box-shadow:0 0 0 7px rgba(69,230,160,.07),0 20px 50px rgba(69,230,160,.18);position:relative}.login h1{font-size:36px;letter-spacing:-2px;margin:0;position:relative}.login p{color:var(--muted);font-size:14px;line-height:1.6;margin:11px auto 30px;max-width:340px;position:relative}.login-foot{margin-top:18px;color:var(--muted2);font-size:10px;letter-spacing:.2px}.google-fallback{width:min(320px,100%);padding:15px 20px;border-radius:999px;background:#fff;color:#111;font-weight:800;font-size:14px;box-shadow:0 12px 30px rgba(0,0,0,.25);transition:transform .18s,filter .18s}.google-fallback:hover{filter:brightness(.96)}.google-fallback:active{transform:scale(.98)}.google-status{margin-top:9px;color:var(--muted2);font-size:10px}#googleButton{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:48px}.g_id_signin{width:min(100%,320px);max-width:100%}#googleButtonRender{width:100%;max-width:320px;display:flex;justify-content:center}.g_id_signin iframe{max-width:100%!important}.login-error{margin-top:15px;padding:12px;border-radius:15px;background:rgba(255,89,104,.1);color:#ff8994;font-size:12px}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 20%,rgba(69,230,160,.11),transparent 24%),radial-gradient(circle at 20% 90%,rgba(127,140,255,.08),transparent 30%),#060708}.login{width:min(460px,100%);padding:48px 30px 28px;border:1px solid rgba(255,255,255,.09);border-radius:38px;background:linear-gradient(145deg,rgba(25,29,34,.86),rgba(12,14,17,.9));backdrop-filter:blur(35px);box-shadow:0 40px 120px rgba(0,0,0,.45);text-align:center;animation:up .7s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}.login:before{content:"";position:absolute;width:260px;height:260px;right:-120px;top:-150px;border-radius:50%;background:radial-gradient(circle,rgba(69,230,160,.2),transparent 68%)}.logo{width:76px;height:76px;margin:0 auto 24px;border-radius:25px;display:grid;place-items:center;color:#07100c;font-weight:950;letter-spacing:-1px;background:linear-gradient(145deg,#8affc5,#2fd28e);box-shadow:0 0 0 7px rgba(69,230,160,.07),0 20px 50px rgba(69,230,160,.18);position:relative}.login h1{font-size:36px;letter-spacing:-2px;margin:0;position:relative}.login p{color:var(--muted);font-size:14px;line-height:1.6;margin:11px auto 30px;max-width:340px;position:relative}.login-foot{margin-top:18px;color:var(--muted2);font-size:10px;letter-spacing:.2px}.google-status{margin-top:9px;color:var(--muted2);font-size:10px}#googleButton{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:48px}.g_id_signin{width:min(100%,320px);max-width:100%}#googleButtonRender{width:100%;max-width:320px;display:flex;justify-content:center}.g_id_signin iframe{max-width:100%!important}.login-error{margin-top:15px;padding:12px;border-radius:15px;background:rgba(255,89,104,.1);color:#ff8994;font-size:12px}
 #app{display:none;min-height:100vh;padding:0 0 100px}.shell{width:min(1160px,calc(100% - 28px));margin:auto}.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,#f3f5f7,#7c838d);color:#08090a;display:grid;place-items:center;font-size:10px;font-weight:950;box-shadow:0 8px 25px #0005}.brandname{font-weight:900;font-size:17px;letter-spacing:-.5px}.brandsub{font-size:10px;color:var(--muted);margin-top:3px}.account{display:flex;align-items:center;gap:9px}.account img{width:39px;height:39px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.2);box-shadow:0 5px 20px #0006}.ghost{background:transparent;color:var(--muted);padding:9px;font-size:11px}.ghost:hover{color:var(--ink)}
 .view{display:none;animation:fade .35s ease}.view.active{display:block}.hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:34px;padding:30px;background:linear-gradient(145deg,rgba(25,29,34,.95),rgba(12,14,17,.96));box-shadow:var(--shadow);min-height:270px}.hero:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-230px;top:-300px;background:radial-gradient(circle,rgba(69,230,160,.22),transparent 63%);animation:float 9s ease-in-out infinite alternate}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 18%,rgba(255,255,255,.045) 45%,transparent 72%);transform:translateX(-120%);animation:shine 8s ease-in-out infinite}.hero-content{position:relative;z-index:1}.eyebrow{font-size:9px;letter-spacing:2px;font-weight:850;color:#777e89}.hero-date{font-size:clamp(28px,5vw,45px);font-weight:900;letter-spacing:-2px;text-transform:capitalize;margin-top:11px}.hero-clock{font-size:clamp(56px,10vw,88px);line-height:.9;letter-spacing:-6px;font-weight:230;margin-top:17px;font-variant-numeric:tabular-nums}.hero-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:25px;gap:10px}.pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);font-size:9px;font-weight:850}.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}.pill.green{color:#67efb1}.pill.red{color:#ff8994}.pill.yellow{color:#e9cf7d}.pill.gray{color:#a1a7b0}
 .section-head{display:flex;align-items:end;justify-content:space-between;margin:29px 2px 12px}.section-head h2{margin:0;font-size:20px;letter-spacing:-.8px}.section-head span{color:var(--muted2);font-size:10px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:19px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,rgba(22,25,30,.84),rgba(13,15,18,.84));backdrop-filter:blur(20px);box-shadow:0 14px 45px rgba(0,0,0,.16);min-height:112px}.metric-label{font-size:10px;color:var(--muted)}.metric-value{margin-top:12px;font-size:25px;font-weight:900;letter-spacing:-1px;font-variant-numeric:tabular-nums}.metric.accent .metric-value{color:var(--green)}
@@ -29,7 +29,10 @@
 </style>
 </head>
 <body>
-<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton"><div id="googleButtonRender"></div><div id="googleStatus" class="google-status">Connexion sécurisée avec Google</div></div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
+<section id="loginScreen"><div class="login"><div class="logo">MP</div><h1>Mon Pointage</h1><p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p><div id="googleButton">
+  <div id="googleButtonRender"></div>
+  <div id="googleStatus" class="google-status">Chargement de Google…</div>
+</div></div><div id="loginError" class="login-error hidden"></div><div class="login-foot">Accès sécurisé avec Google · Compte autorisé uniquement</div></div></section>
 <main id="app"><div class="shell"><header class="topbar"><div class="brand"><div class="brandmark">MP</div><div><div class="brandname">Mon Pointage</div><div id="welcome" class="brandsub">Votre espace personnel</div></div></div><div class="account"><img id="avatar" alt=""><button class="ghost" onclick="deconnexion()">Déconnexion</button></div></header>
 <section id="homeView" class="view active"><div class="hero"><div class="hero-content"><div class="eyebrow">AUJOURD'HUI · <span id="heroTime">--:--:--</span></div><div id="heroDate" class="hero-date">Chargement…</div><div id="clock" class="hero-clock">--:--:--</div><div class="hero-bottom"><div id="status" class="pill gray"><i></i>Chargement</div><span id="heroHint" class="eyebrow">Synchronisation</span></div></div></div>
 <div class="section-head"><h2>Votre journée</h2><span id="daySummary">En attente</span></div><div class="metrics"><div class="metric accent"><div class="metric-label">Arrivée</div><div id="arrival" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Départ</div><div id="departure" class="metric-value">—</div></div><div class="metric"><div class="metric-label">Pause</div><div id="break" class="metric-value">—</div></div><div class="metric accent"><div class="metric-label">Travaillé</div><div id="worked" class="metric-value">—</div></div></div>
@@ -43,61 +46,241 @@
 <div id="loading" class="loading"><div class="loader"><div class="clock-face"><div class="hand"></div><div class="hand m"></div><div class="pin"></div></div><div class="load-title">Synchronisation</div><div class="load-sub">Mon Pointage</div></div></div><div id="toast" class="toast"></div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbyGHfIcUVimauPjm9mrhUHoIDFl7iAjcQQHkQAZxLCSD1GvVDKDCGIKo1169CVVRKuiBw/exec";const GOOGLE_CLIENT_ID="390069736161-bvharjfi4m4c28gfo4il7uktdrmmr318.apps.googleusercontent.com";const EMAIL_AUTORISE="aharonelbaz6@gmail.com";let idToken=null,utilisateur=null,callbackCounter=0;let moisCourant=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-window.addEventListener("load",()=>{horloge();setInterval(horloge,1000);restaurerSession();initialiserGoogle()});
-let googleInitialise=false,googleTimer=null;
-function initialiserGoogle(){
-  const status=document.getElementById("googleStatus"),container=document.getElementById("googleButtonRender");
-  if(!container)return;
-  if(!window.google?.accounts?.id){if(status)status.textContent="Chargement de Google…";clearTimeout(googleTimer);googleTimer=setTimeout(initialiserGoogle,400);return}
-  if(googleInitialise)return;
-  try{
-    googleInitialise=true;
-    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:connexionGoogle,auto_select:false,cancel_on_tap_outside:true,context:"signin"});
-    container.innerHTML="";
-    const width=Math.max(200,Math.min(320,Math.floor(container.clientWidth||320)));
-    google.accounts.id.renderButton(container,{type:"standard",theme:"filled_black",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width});
-    if(status)status.textContent="Connexion sécurisée avec Google";
-  }catch(e){console.error("Initialisation Google:",e);googleInitialise=false;if(status)status.textContent="Impossible de charger Google"}
+const AUTH={
+  apiUrl:API_URL,
+  clientId:GOOGLE_CLIENT_ID,
+  allowedEmail:EMAIL_AUTORISE
+};
+
+let authState={
+  token:null,
+  user:null,
+  googleReady:false,
+  googleRendered:false,
+  restoring:false
+};
+
+window.addEventListener("load",()=>{
+  horloge();
+  setInterval(horloge,1000);
+  afficherTitreMois();
+  initialiserApplication();
+});
+
+async function initialiserApplication(){
+  await restaurerSession();
+  if(!authState.token)initialiserGoogle();
 }
-function decoderJwt(token){try{const p=token.split(".");if(p.length!==3)return null;return JSON.parse(decodeURIComponent(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")))}catch(e){return null}}
+
+function decoderJwt(token){
+  try{
+    const parts=String(token||"").split(".");
+    if(parts.length!==3)return null;
+    let base64=parts[1].replace(/-/g,"+").replace(/_/g,"/");
+    while(base64.length%4)base64+="=";
+    return JSON.parse(decodeURIComponent(
+      atob(base64).split("").map(ch=>"%"+("00"+ch.charCodeAt(0).toString(16)).slice(-2)).join("")
+    ));
+  }catch(e){
+    console.error("JWT decode:",e);
+    return null;
+  }
+}
+
+function construireUtilisateur(payload){
+  return {
+    email:String(payload?.email||"").toLowerCase(),
+    nom:payload?.name||payload?.given_name||"",
+    picture:payload?.picture||""
+  };
+}
+
+function compteAutorise(email){
+  return String(email||"").toLowerCase()===AUTH.allowedEmail.toLowerCase();
+}
+
 async function restaurerSession(){
-  const t=sessionStorage.getItem("monPointageGoogleToken");if(!t)return;
-  const p=decoderJwt(t);
-  if(!p?.email||p.email.toLowerCase()!==EMAIL_AUTORISE){sessionStorage.removeItem("monPointageGoogleToken");return}
-  idToken=t;utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};
-  try{afficherApp();await chargerTout();demarrerSynchronisationTempsReel()}catch(e){console.error("Restauration session:",e);afficherErreur(e)}
-}
-async function connexionGoogle(response){
+  const token=sessionStorage.getItem("monPointageGoogleToken");
+  if(!token)return false;
+
+  const payload=decoderJwt(token);
+  if(!payload?.email || !compteAutorise(payload.email)){
+    sessionStorage.removeItem("monPointageGoogleToken");
+    return false;
+  }
+
+  authState.token=token;
+  authState.user=construireUtilisateur(payload);
+  idToken=token;
+  utilisateur=authState.user;
+
   try{
-    if(!response?.credential)throw new Error("Google n'a pas retourné de jeton.");
-    const p=decoderJwt(response.credential);
-    if(!p?.email)throw new Error("Jeton Google invalide.");
-    if(p.email.toLowerCase()!==EMAIL_AUTORISE)throw new Error("Ce compte Google n'est pas autorisé.");
-    idToken=response.credential;
-    utilisateur={email:p.email,nom:p.name||"",picture:p.picture||""};
-    sessionStorage.setItem("monPointageGoogleToken",idToken);
     afficherApp();
-    const status=document.getElementById("heroHint");
-    if(status)status.textContent="Connexion sécurisée · synchronisation…";
+    await chargerTout();
+  }catch(e){
+    console.error("Restauration:",e);
+  }
+
+  demarrerSynchronisationTempsReel();
+  return true;
+}
+
+function initialiserGoogle(){
+  const status=document.getElementById("googleStatus");
+  const mount=document.getElementById("googleButtonRender");
+  if(!mount)return;
+
+  if(!window.google?.accounts?.id){
+    if(status)status.textContent="Chargement de Google…";
+    setTimeout(initialiserGoogle,400);
+    return;
+  }
+
+  if(authState.googleRendered)return;
+
+  try{
+    google.accounts.id.initialize({
+      client_id:AUTH.clientId,
+      callback:recevoirCredentialGoogle,
+      auto_select:false,
+      cancel_on_tap_outside:true,
+      context:"signin"
+    });
+
+    mount.innerHTML="";
+
+    const width=Math.max(
+      200,
+      Math.min(320,Math.floor(mount.getBoundingClientRect().width||320))
+    );
+
+    google.accounts.id.renderButton(mount,{
+      type:"standard",
+      theme:"filled_black",
+      size:"large",
+      text:"signin_with",
+      shape:"pill",
+      logo_alignment:"left",
+      width:width
+    });
+
+    authState.googleReady=true;
+    authState.googleRendered=true;
+
+    if(status)status.textContent="Connexion sécurisée avec Google";
+  }catch(error){
+    console.error("Google init:",error);
+    authState.googleReady=false;
+    authState.googleRendered=false;
+    if(status)status.textContent="Google n’a pas pu être chargé.";
+  }
+}
+
+async function recevoirCredentialGoogle(response){
+  const loginError=document.getElementById("loginError");
+  if(loginError)loginError.classList.add("hidden");
+
+  try{
+    if(!response?.credential){
+      throw new Error("Google n’a pas retourné de credential.");
+    }
+
+    const payload=decoderJwt(response.credential);
+    if(!payload?.email){
+      throw new Error("La réponse Google est invalide.");
+    }
+
+    if(!compteAutorise(payload.email)){
+      throw new Error("Ce compte Google n’est pas autorisé.");
+    }
+
+    const token=response.credential;
+    const user=construireUtilisateur(payload);
+
+    // Session locale avant toute requête réseau.
+    authState.token=token;
+    authState.user=user;
+    idToken=token;
+    utilisateur=user;
+    sessionStorage.setItem("monPointageGoogleToken",token);
+
+    // Transition UI immédiate.
+    afficherApp();
+
+    const hint=document.getElementById("heroHint");
+    if(hint)hint.textContent="Connexion sécurisée · chargement…";
+
     setLoading(true);
-    try{await chargerTout();if(status)status.textContent="Synchronisé"}catch(e){console.error("Synchronisation initiale:",e);if(status)status.textContent="Connexion active · synchronisation en attente"}finally{setLoading(false)}
+
+    try{
+      await chargerTout();
+      if(hint)hint.textContent="Synchronisé";
+    }catch(error){
+      console.error("Chargement initial:",error);
+      if(hint)hint.textContent="Connecté · synchronisation en attente";
+      toast("Connexion réussie.");
+    }finally{
+      setLoading(false);
+    }
+
     demarrerSynchronisationTempsReel();
-  }catch(e){console.error("Connexion Google:",e);erreurConnexion(e.message||"Connexion Google impossible.")}
+  }catch(error){
+    console.error("Google login:",error);
+    authState.token=null;
+    authState.user=null;
+    idToken=null;
+    utilisateur=null;
+    sessionStorage.removeItem("monPointageGoogleToken");
+    erreurConnexion(error.message||"Connexion Google impossible.");
+  }
 }
-window.connexionGoogle=connexionGoogle;
+
+window.recevoirCredentialGoogle=recevoirCredentialGoogle;
+window.connexionGoogle=recevoirCredentialGoogle;
+
 function afficherApp(){
-  const login=document.getElementById("loginScreen"),app=document.getElementById("app");
-  if(login)login.style.display="none";if(app)app.style.display="block";
-  const prenom=(utilisateur?.nom||"").trim().split(" ")[0];
-  const welcome=document.getElementById("welcome"),avatar=document.getElementById("avatar"),profileBig=document.getElementById("profileBig"),profileName=document.getElementById("profileName"),profileEmail=document.getElementById("profileEmail");
+  const login=document.getElementById("loginScreen");
+  const app=document.getElementById("app");
+
+  if(login)login.style.display="none";
+  if(app){
+    app.style.display="block";
+    app.removeAttribute("aria-hidden");
+  }
+
+  const user=authState.user||utilisateur||{};
+  const prenom=String(user.nom||"").trim().split(/\s+/)[0];
+
+  const welcome=document.getElementById("welcome");
+  const avatar=document.getElementById("avatar");
+  const profileBig=document.getElementById("profileBig");
+  const profileName=document.getElementById("profileName");
+  const profileEmail=document.getElementById("profileEmail");
+
   if(welcome)welcome.textContent=prenom?"Bonjour "+prenom:"Votre espace personnel";
-  if(avatar)avatar.src=utilisateur?.picture||"";
-  if(profileBig)profileBig.src=utilisateur?.picture||"";
-  if(profileName)profileName.textContent=utilisateur?.nom||"Utilisateur";
-  if(profileEmail)profileEmail.textContent=utilisateur?.email||"";
+  if(avatar)avatar.src=user.picture||"";
+  if(profileBig)profileBig.src=user.picture||"";
+  if(profileName)profileName.textContent=user.nom||"Utilisateur";
+  if(profileEmail)profileEmail.textContent=user.email||"";
 }
+
 function appelerAPI(action,params={}){return new Promise((resolve,reject)=>{if(!idToken)return reject(new Error("Connexion Google requise."));const cb="mp_"+Date.now()+"_"+(++callbackCounter),s=document.createElement("script"),q=new URLSearchParams({action,id_token:idToken,callback:cb});Object.entries(params).forEach(([k,v])=>q.set(k,v));let done=false;const finish=(fn,val)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(val)};const timer=setTimeout(()=>finish(reject,new Error("Le serveur Mon Pointage ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur inconnue."));s.onerror=()=>finish(reject,new Error("Impossible de contacter Mon Pointage."));s.src=API_URL+"?"+q;s.async=true;document.head.appendChild(s)})}
-async function chargerTout(){await synchroniserTout()}async function synchroniserTout(){await Promise.all([chargerEtat(),chargerRecapEtHistorique()])}let synchronisationTimer=null;function demarrerSynchronisationTempsReel(){if(synchronisationTimer)clearInterval(synchronisationTimer);synchronisationTimer=setInterval(async()=>{if(!idToken)return;try{await synchroniserTout()}catch(e){console.warn("Synchronisation:",e)}},5000)}
+async function chargerTout(){
+  await synchroniserTout();
+}
+async function synchroniserTout(){
+  const results=await Promise.allSettled([chargerEtat(),chargerRecapEtHistorique()]);
+  return results;
+}
+let synchronisationTimer=null;
+function demarrerSynchronisationTempsReel(){
+  if(synchronisationTimer)clearInterval(synchronisationTimer);
+  if(!authState.token)return;
+  synchronisationTimer=setInterval(()=>{
+    if(!authState.token)return;
+    synchroniserTout().catch(error=>console.warn("Synchronisation:",error));
+  },5000);
+}
 async function chargerEtat(){try{const r=await appelerAPI("getEtatDuJour");appliquerEtat(r.data)}catch(e){afficherErreur(e)}}async function chargerRecapEtHistorique(){const annee=moisCourant.getFullYear(),mois=moisCourant.getMonth()+1;try{const r=await appelerAPI("obtenirTableauDeBord",{annee,mois});const d=r.data||{};const recap=d.recap||{};let historique=Array.isArray(d.historique)?d.historique:[];if(!historique.length){try{const h=await appelerAPI("obtenirHistoriqueMois",{annee,mois});historique=h.data?.historique||h.data?.rows||h.data||[]}catch(_){} }afficherRecap(recap);afficherHistorique(historique)}catch(e){try{const [r,h]=await Promise.all([appelerAPI("obtenirRecapMois",{annee,mois}),appelerAPI("obtenirHistoriqueMois",{annee,mois})]);afficherRecap(r.data||{});const rows=h.data?.historique||h.data?.rows||h.data||[];afficherHistorique(Array.isArray(rows)?rows:[])}catch(e2){afficherHistorique([]);console.warn("Historique non disponible:",e2)}}}
 function appliquerEtat(e){if(!e)return;document.getElementById("heroDate").textContent=formaterDate(e.date);document.getElementById("arrival").textContent=e.debut||"—";document.getElementById("departure").textContent=e.fin||"—";document.getElementById("break").textContent=e.pause||"—";document.getElementById("worked").textContent=e.travaille||"—";document.getElementById("timelineArrival").textContent=e.debut||"—";document.getElementById("timelineDeparture").textContent=e.fin||"—";const status=document.getElementById("status");status.className="pill "+classeStatut(e.statut);status.innerHTML="<i></i>"+(e.statut||"—");const blockedStart=["Fête","Chabbat","Absent"].includes(e.statut);const start=typeof e.peutCommencer==="boolean"?e.peutCommencer:(!blockedStart&&!e.debut);const finish=typeof e.fin==="string"&&e.fin?false:true;document.getElementById("startButton").classList.toggle("disabled",!start);document.getElementById("finishButton").classList.toggle("disabled",!finish);document.getElementById("daySummary").textContent=e.statut||"—";const hint=e.statut==="En cours"?"Journée en cours":e.statut==="Terminé"?"Journée terminée":e.statut==="Absent"?"Absence enregistrée":e.statut||"Prêt à pointer";document.getElementById("heroHint").textContent=hint;const note=document.getElementById("homeNote");if(e.statut==="Fête"||e.statut==="Chabbat"){note.textContent="Cette journée n'est pas une journée de travail : le pointage est désactivé.";note.classList.remove("hidden")}else note.classList.add("hidden");const obs=document.getElementById("timelineObservation");if(obs)obs.innerHTML=e.observation?"📝 "+esc(e.observation):"Fin de votre journée"}
 function classeStatut(s){return s==="En cours"?"green":s==="Absent"?"red":s==="Fête"?"yellow":"gray"}
@@ -105,13 +288,58 @@ async function commencer(){if(document.getElementById("startButton").classList.c
 function ouvrirModalPause(){const field=document.getElementById("departureObservation");if(field)field.value="";ouvrirModal("pauseModal")}
 async function terminer(pauseMinutes){const observation=document.getElementById("departureObservation").value.trim();fermerModal("pauseModal");setLoading(true);try{const heure=heureActuelle();const r=await appelerAPI("terminerJour",{heure,pauseMinutes,observation});appliquerEtat(r.data);toast("✓ Départ enregistré à "+heure);await synchroniserTout()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
 function ouvrirAbsence(){document.getElementById("absenceMotif").value="";document.getElementById("absenceModal").classList.add("show")}async function confirmerAbsence(){const motif=document.getElementById("absenceMotif").value.trim()||"Non précisé";fermerModal("absenceModal");setLoading(true);try{const r=await appelerAPI("signalerAbsence",{motif});appliquerEtat(r.data);toast("✓ Absence enregistrée");await chargerRecapEtHistorique()}catch(e){afficherErreur(e)}finally{setLoading(false)}}
-function ouvrirVue(id,btn){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="hoursView")chargerRecapEtHistorique();window.scrollTo({top:0,behavior:"smooth"})}function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}function afficherTitreMois(){document.getElementById("monthTitle").innerHTML=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"Europe/Paris"})+"<small>Récapitulatif</small>"}function afficherRecap(r){document.getElementById("monthHours").textContent=r.heuresTravaillees||r.heures||"—";document.getElementById("monthDays").textContent=r.joursTravailles??"—";document.getElementById("monthAbsences").textContent=r.absences??"—";afficherTitreMois()}function afficherHistorique(rows){const el=document.getElementById("history");if(!rows?.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}el.innerHTML=rows.map(x=>{const d=x.date?new Date(x.date):null;const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):x.libelle||"—";return '<div class="history-row"><div class="hdate">'+label+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+' → '+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+(x.observation?' · 📝 '+esc(x.observation):"")+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+'</div></div>'}).join("")}function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}function horloge(){const n=new Date();document.getElementById("clock").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("heroTime").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});if(document.getElementById("heroDate").textContent==="Chargement…")document.getElementById("heroDate").textContent=n.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function heureActuelle(){const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")}function formaterDate(v){if(!v)return"Date indisponible";if(typeof v==="string"){let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});m=v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}const d=new Date(v);return isNaN(d)?"Date indisponible":d.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function ouvrirModal(id){document.getElementById(id).classList.add("show")}function fermerModal(id){document.getElementById(id).classList.remove("show")}document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}))function setLoading(v){const el=document.getElementById("loading");if(el)el.classList.toggle("show",v)}
-function toast(msg){const t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2800)}
-function afficherErreur(e){console.error(e);toast(e?.message||"Une erreur est survenue.")}
-function erreurConnexion(msg){const e=document.getElementById("loginError");if(!e)return;e.textContent=msg;e.classList.remove("hidden")}
-function deconnexion(){if(synchronisationTimer)clearInterval(synchronisationTimer);synchronisationTimer=null;idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");try{if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect()}catch(e){}const app=document.getElementById("app"),login=document.getElementById("loginScreen"),error=document.getElementById("loginError");if(app)app.style.display="none";if(login)login.style.display="grid";if(error)error.classList.add("hidden");initialiserGoogle()}
-afficherTitreMois();
+function ouvrirVue(id,btn){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="hoursView")chargerRecapEtHistorique();window.scrollTo({top:0,behavior:"smooth"})}function changerMois(delta){moisCourant=new Date(moisCourant.getFullYear(),moisCourant.getMonth()+delta,1);afficherTitreMois();chargerRecapEtHistorique()}function afficherTitreMois(){document.getElementById("monthTitle").innerHTML=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"Europe/Paris"})+"<small>Récapitulatif</small>"}function afficherRecap(r){document.getElementById("monthHours").textContent=r.heuresTravaillees||r.heures||"—";document.getElementById("monthDays").textContent=r.joursTravailles??"—";document.getElementById("monthAbsences").textContent=r.absences??"—";afficherTitreMois()}function afficherHistorique(rows){const el=document.getElementById("history");if(!rows?.length){el.innerHTML='<div class="empty">Aucune journée détaillée disponible pour ce mois.</div>';return}el.innerHTML=rows.map(x=>{const d=x.date?new Date(x.date):null;const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}):x.libelle||"—";return '<div class="history-row"><div class="hdate">'+label+'<small>'+esc(x.statut||"")+'</small></div><div class="hinfo"><b>'+esc(x.debut||"—")+' → '+esc(x.fin||"—")+'</b><span>Pause : '+esc(x.pause||"—")+(x.observation?' · 📝 '+esc(x.observation):"")+'</span></div><div class="hhours">'+esc(x.travaille||x.heures||"—")+'</div></div>'}).join("")}function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}function horloge(){const n=new Date();document.getElementById("clock").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});document.getElementById("heroTime").textContent=n.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});if(document.getElementById("heroDate").textContent==="Chargement…")document.getElementById("heroDate").textContent=n.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function heureActuelle(){const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")}function formaterDate(v){if(!v)return"Date indisponible";if(typeof v==="string"){let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],+m[2]-1,+m[3],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});m=v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return new Date(+m[3],+m[2]-1,+m[1],12).toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}const d=new Date(v);return isNaN(d)?"Date indisponible":d.toLocaleDateString("fr-FR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})}function ouvrirModal(id){document.getElementById(id).classList.add("show")}function fermerModal(id){document.getElementById(id).classList.remove("show")}document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}))function setLoading(value){
+  const el=document.getElementById("loading");
+  if(el)el.classList.toggle("show",Boolean(value));
+}
+function toast(message){
+  const el=document.getElementById("toast");
+  if(!el)return;
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(window.__toast);
+  window.__toast=setTimeout(()=>el.classList.remove("show"),2800);
+}
+function afficherErreur(error){
+  console.error(error);
+  toast(error?.message||"Une erreur est survenue.");
+}
+function erreurConnexion(message){
+  const el=document.getElementById("loginError");
+  if(!el)return;
+  el.textContent=message;
+  el.classList.remove("hidden");
+}
+function deconnexion(){
+  if(synchronisationTimer)clearInterval(synchronisationTimer);
+  synchronisationTimer=null;
+
+  authState.token=null;
+  authState.user=null;
+  authState.googleRendered=false;
+  idToken=null;
+  utilisateur=null;
+
+  sessionStorage.removeItem("monPointageGoogleToken");
+
+  try{
+    if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();
+  }catch(e){}
+
+  const app=document.getElementById("app");
+  const login=document.getElementById("loginScreen");
+  const error=document.getElementById("loginError");
+  const mount=document.getElementById("googleButtonRender");
+
+  if(app)app.style.display="none";
+  if(login)login.style.display="grid";
+  if(error)error.classList.add("hidden");
+  if(mount)mount.innerHTML="";
+
+  initialiserGoogle();
+}
 </script>
+
 
 <script src="https://accounts.google.com/gsi/client" async defer onload="initialiserGoogle()"></script>
 </body>
