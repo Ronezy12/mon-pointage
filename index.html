@@ -1976,47 +1976,24 @@ button{
 
   <nav class="bottom-nav">
 
-    <button
-      class="nav-item active"
-      onclick="ouvrirVue('homeView',this)"
-    >
-      <span class="nav-icon">
-        ⌂
-      </span>
-      Accueil
+    <button class="nav-item active" onclick="ouvrirVue('homeView',this)">
+      <span class="nav-icon">⌂</span>Accueil
     </button>
 
-
-    <button
-      class="nav-item"
-      onclick="ouvrirVue('hoursView',this)"
-    >
-      <span class="nav-icon">
-        ◷
-      </span>
-      Mes heures
+    <button class="nav-item" onclick="ouvrirVue('planningView',this);rendrePlanning()">
+      <span class="nav-icon">▦</span>Planning
     </button>
 
-
-    <button
-      class="nav-item"
-      onclick="ouvrirVue('profileView',this)"
-    >
-      <span class="nav-icon">
-        ◎
-      </span>
-      Profil
+    <button class="nav-item" onclick="ouvrirVue('hoursView',this)">
+      <span class="nav-icon">◷</span>Heures
     </button>
 
+    <button class="nav-item" onclick="ouvrirVue('statsView',this);rendreStats()">
+      <span class="nav-icon">↗</span>Stats
+    </button>
 
-    <button
-      class="nav-item"
-      onclick="ouvrirAbsence()"
-    >
-      <span class="nav-icon">
-        +
-      </span>
-      Absence
+    <button class="nav-item" onclick="ouvrirVue('profileView',this)">
+      <span class="nav-icon">◎</span>Profil
     </button>
 
   </nav>
@@ -2235,6 +2212,7 @@ let utilisateur = null;
 
 let callbackCounter = 0;
 let synchronisationTimer = null;
+let historiqueCourant = [];
 
 let googleRendered = false;
 let googleLoadStarted = false;
@@ -3668,13 +3646,12 @@ async function chargerRecapEtHistorique() {
     );
 
 
-    afficherHistorique(
-      Array.isArray(
-        data.historique
-      )
-        ? data.historique
-        : []
-    );
+    const rows = Array.isArray(data.historique) ? data.historique : [];
+    historiqueCourant = rows;
+    afficherHistorique(rows);
+    rendrePlanning();
+    rendreStats();
+    rendreObservations();
 
 
     return response;
@@ -3725,11 +3702,11 @@ async function chargerRecapEtHistorique() {
       [];
 
 
-    afficherHistorique(
-      Array.isArray(rows)
-        ? rows
-        : []
-    );
+    historiqueCourant = Array.isArray(rows) ? rows : [];
+    afficherHistorique(historiqueCourant);
+    rendrePlanning();
+    rendreStats();
+    rendreObservations();
 
 
   } catch (error) {
@@ -4511,12 +4488,14 @@ function ouvrirVue(
 
 
   if (target) {
-
-    target.classList.add(
-      "active"
-    );
-
+    target.classList.add("active");
   }
+
+  if(id==="planningView") rendrePlanning();
+  if(id==="statsView") rendreStats();
+  if(id==="observationsView") rendreObservations();
+  const settingsEmail=document.getElementById("settingsEmail");
+  if(id==="settingsView" && settingsEmail) settingsEmail.textContent=utilisateur?.email||"—";
 
 
   if (button) {
@@ -4605,6 +4584,8 @@ function afficherTitreMois() {
 function afficherRecap(
   recap
 ) {
+  const settingsEmail=document.getElementById("settingsEmail");
+  if(settingsEmail) settingsEmail.textContent=utilisateur?.email||"—";
 
   const set =
     (id,value) => {
@@ -4801,6 +4782,83 @@ function afficherHistorique(
 
 }
 
+
+/* =========================================================
+   PAGES À L’HEURE
+========================================================= */
+
+function heuresEnMinutes(value){
+  if(value===null||value===undefined)return 0;
+  const s=String(value).toLowerCase().trim();
+  let m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);
+  if(m)return Number(m[1])*60+Number(m[2]||0);
+  m=s.match(/^(\d+):(\d{2})/);
+  if(m)return Number(m[1])*60+Number(m[2]);
+  return 0;
+}
+
+function minutesEnTexte(min){
+  min=Math.max(0,Math.round(min||0));
+  const h=Math.floor(min/60), m=min%60;
+  return h ? h+"h"+(m?" "+String(m).padStart(2,"0"):"") : m+" min";
+}
+
+function rendrePlanning(){
+  const cal=document.getElementById("planningCalendar");
+  if(!cal)return;
+  const y=moisCourant.getFullYear(), m=moisCourant.getMonth();
+  const titre=moisCourant.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  document.getElementById("planningMonthTitle").innerHTML=esc(titre.charAt(0).toUpperCase()+titre.slice(1))+"<small>Calendrier</small>";
+  document.getElementById("planningMonthLabel").textContent=titre;
+  const map={};
+  historiqueCourant.forEach(r=>{
+    const d=r.date?new Date(r.date):null;
+    if(d&&!isNaN(d))map[d.getDate()] = r;
+  });
+  const first=new Date(y,m,1).getDay();
+  const offset=(first+6)%7;
+  const total=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  const labels=["L","M","M","J","V","S","D"];
+  cal.innerHTML=labels.map(x=>'<div class="cal-head">'+x+'</div>').join("");
+  for(let i=0;i<offset;i++)cal.innerHTML+='<div></div>';
+  for(let day=1;day<=total;day++){
+    const r=map[day];
+    const date=new Date(y,m,day);
+    const cls=(date.toDateString()===today.toDateString()?" today":"")+
+      (r&&/absent/i.test(r.statut||"")?" absent":r&&((r.travaille||r.heures||r.debut)?" worked":" off"));
+    cal.innerHTML+='<div class="cal-day'+cls+'"><b>'+day+'</b>'+
+      (r?'<span class="cal-hours">'+esc(r.travaille||r.heures||r.statut||"—")+'</span>':"")+
+      '</div>';
+  }
+  document.getElementById("planningWorked").textContent=historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length;
+  document.getElementById("planningAbsent").textContent=historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length;
+}
+
+function rendreStats(){
+  const rows=historiqueCourant.filter(r=>r.travaille||r.heures);
+  const mins=rows.map(r=>heuresEnMinutes(r.travaille||r.heures)).filter(Boolean);
+  const pauses=historiqueCourant.reduce((s,r)=>s+heuresEnMinutes(r.pause),0);
+  const total=mins.reduce((a,b)=>a+b,0);
+  document.getElementById("statsTotal").textContent=minutesEnTexte(total);
+  document.getElementById("statsAverage").textContent=minutesEnTexte(mins.length?total/mins.length:0);
+  document.getElementById("statsMax").textContent=minutesEnTexte(mins.length?Math.max(...mins):0);
+  document.getElementById("statsPause").textContent=minutesEnTexte(pauses);
+  const obs=historiqueCourant.filter(r=>r.observation).length;
+  document.getElementById("statsSummary").textContent=obs+" observation"+(obs>1?"s":"")+" enregistrée"+(obs>1?"s":"")+" sur le mois.";
+}
+
+function rendreObservations(){
+  const el=document.getElementById("observationsList");
+  if(!el)return;
+  const rows=historiqueCourant.filter(r=>r.observation);
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune observation disponible pour ce mois.</div>';return;}
+  el.innerHTML=rows.map(r=>{
+    const d=r.date?new Date(r.date):null;
+    const label=d&&!isNaN(d)?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"long"}):"Journée";
+    return '<div class="obs-item"><b>'+esc(label)+'</b><span>'+esc(r.observation)+'</span></div>';
+  }).join("");
+}
 
 /* =========================================================
    ESCAPE HTML
