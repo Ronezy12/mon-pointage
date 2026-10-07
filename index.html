@@ -25,6 +25,7 @@
     <p>Votre espace personnel pour pointer, suivre vos heures et gérer vos absences.</p>
     <div id="googleButton">
       <div id="googleButtonRender"></div>
+      <div id="googleHardDebug" style="display:block;margin-top:12px;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:12px;text-align:left;font:12px/1.5 monospace;white-space:pre-wrap;max-height:220px;overflow:auto">BOOT…</div>
       <div id="googleStatus" class="google-status">Chargement de Google…</div>
     </div>
     <div id="loginError" class="login-error hidden"></div>
@@ -61,7 +62,21 @@ let moisCourant=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 window.addEventListener("error",e=>console.error("Mon Pointage:",e.error||e.message));
 window.addEventListener("unhandledrejection",e=>console.error("Mon Pointage promise:",e.reason));
 
+function googleHardLog(message,data){
+ const box=document.getElementById("googleHardDebug");
+ const time=new Date().toLocaleTimeString("fr-FR",{hour12:false});
+ let extra="";
+ try{if(data!==undefined)extra=" | "+(typeof data==="string"?data:JSON.stringify(data));}catch(_){extra=" | "+String(data);}
+ const line="["+time+"] "+message+extra;
+ console.log("[Mon Pointage Google]",line);
+ if(box){box.textContent+=(box.textContent==="BOOT…"?"": "\n")+line;box.scrollTop=box.scrollHeight;}
+}
+window.addEventListener("error",e=>googleHardLog("WINDOW ERROR",e.message+" @ "+e.filename+":"+e.lineno+":"+e.colno));
+window.addEventListener("unhandledrejection",e=>googleHardLog("UNHANDLED REJECTION",e.reason?.message||String(e.reason)));
+googleHardLog("PAGE CHARGÉE",{origin:location.origin,path:location.pathname});
+
 document.addEventListener("DOMContentLoaded",()=>{
+ googleHardLog("DOM PRÊT",{gis:!!window.google?.accounts?.id});
  horloge();
  setInterval(horloge,1000);
  afficherTitreMois();
@@ -87,6 +102,7 @@ function afficherLogin(){
 }
 
 function chargerBibliothequeGoogle(){
+ googleHardLog("CHARGEMENT GIS",CONFIG.googleScript);
  googleDebug("chargement de la bibliothèque");
  const status=document.getElementById("googleStatus");
  if(window.google?.accounts?.id){initialiserGoogle();return;}
@@ -96,8 +112,8 @@ function chargerBibliothequeGoogle(){
  const script=document.createElement("script");
  script.src=CONFIG.googleScript;
  script.async=true;
- script.onload=()=>{googleDebug("bibliothèque chargée");initialiserGoogle()};
- script.onerror=(event)=>{
+ script.onload=()=>{googleHardLog("GIS SCRIPT CHARGÉ",!!window.google?.accounts?.id);googleDebug("bibliothèque chargée");initialiserGoogle()};
+ script.onerror=(event)=>{ googleHardLog("GIS SCRIPT ERROR",event?.type||"script.onerror");
    googleLoadStarted=false;
    afficherErreurGoogleDetaillee("chargement",event||"Impossible de charger https://accounts.google.com/gsi/client");
  };
@@ -122,6 +138,7 @@ function googleDebug(etape,detail=""){
  console.log("[Google Debug]",...lines);
 }
 function afficherErreurGoogleDetaillee(type,error){
+ googleHardLog("ERREUR GOOGLE "+type,error);
  let detail="";
  try{
    if(error instanceof Error) detail=error.name+": "+error.message;
@@ -140,6 +157,7 @@ function afficherErreurGoogleDetaillee(type,error){
 }
 
 function initialiserGoogle(){
+ googleHardLog("INITIALISATION GIS",{available:!!window.google?.accounts?.id,client:CONFIG.googleClientId});
  googleDebug("initialisation");
  const mount=document.getElementById("googleButtonRender"),status=document.getElementById("googleStatus");
  if(!mount)return;
@@ -149,17 +167,19 @@ function initialiserGoogle(){
    google.accounts.id.initialize({
      client_id:CONFIG.googleClientId,
      callback:connexionGoogle,
-     error_callback:(error)=>afficherErreurGoogleDetaillee("error_callback",error),
+     error_callback:(error)=>{googleHardLog("GOOGLE ERROR CALLBACK",error);afficherErreurGoogleDetaillee("error_callback",error)},
      auto_select:false,
      cancel_on_tap_outside:true,
      context:"signin"
    });
+   googleHardLog("GOOGLE INITIALIZE OK");
    googleDebug("initialize OK");
    mount.innerHTML="";
    google.accounts.id.renderButton(mount,{
      type:"standard",theme:"filled_black",size:"large",text:"signin_with",shape:"pill",logo_alignment:"left",width:320
    });
    googleRendered=true;
+   googleHardLog("BOUTON GOOGLE RENDU");
    googleDebug("bouton Google rendu");
    if(status)status.textContent="Connexion sécurisée avec Google";
    setTimeout(()=>googleDebug("attente du clic Google"),0);
@@ -193,6 +213,7 @@ function restaurerSession(token){
 }
 
 async function connexionGoogle(response){
+ googleHardLog("GOOGLE CALLBACK REÇU",response?{keys:Object.keys(response),hasCredential:!!response.credential}:"NO RESPONSE");
  googleDebug("callback Google reçu", response ? Object.keys(response).join(", ") : "Aucune réponse");
  const errorBox=document.getElementById("loginError");
  if(errorBox)errorBox.classList.add("hidden");
