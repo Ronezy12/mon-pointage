@@ -62,6 +62,7 @@ function route_(action, p) {
 }
 
 function verifierGoogle_(token) {
+
   if (!token) {
     return {
       ok: false,
@@ -69,63 +70,106 @@ function verifierGoogle_(token) {
     };
   }
 
+  /*
+    Vérification mise en cache :
+    un même jeton Google est réutilisé pendant quelques minutes.
+    Cela évite de contacter Google à chaque clic (arrivée,
+    départ, actualisation, etc.).
+  */
+
+  const cacheKey =
+    "google_" +
+    Utilities.base64EncodeWebSafe(
+      Utilities.computeDigest(
+        Utilities.DigestAlgorithm.SHA_256,
+        token
+      )
+    ).substring(0, 80);
+
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get(cacheKey);
+
+  if (cached) {
+    try {
+      const user = JSON.parse(cached);
+
+      if (
+        user &&
+        user.email === CONFIG.EMAIL_AUTORISE.toLowerCase()
+      ) {
+        return user;
+      }
+    } catch (_) {}
+  }
+
   const url =
     "https://oauth2.googleapis.com/tokeninfo?id_token=" +
     encodeURIComponent(token);
 
-  let data = null;
-  let lastError = null;
+  let response;
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const response = UrlFetchApp.fetch(url, {
-        method: "get",
-        muteHttpExceptions: true,
-        followRedirects: true,
-        headers: {
-          "Accept": "application/json"
-        }
-      });
+  try {
 
-      const status = response.getResponseCode();
-      const body = response.getContentText();
-
-      if (status === 200) {
-        try {
-          data = JSON.parse(body);
-          break;
-        } catch (error) {
-          lastError = error;
-        }
-      } else {
-        lastError = new Error("HTTP " + status);
-
-        if (status !== 429 && status < 500) {
-          return {
-            ok: false,
-            error: "Jeton Google invalide ou expiré."
-          };
-        }
+    response = UrlFetchApp.fetch(url, {
+      method: "get",
+      muteHttpExceptions: true,
+      followRedirects: true,
+      headers: {
+        "Accept": "application/json"
       }
-    } catch (error) {
-      lastError = error;
-    }
+    });
 
-    if (attempt < 2) {
-      Utilities.sleep(500 * Math.pow(2, attempt));
-    }
-  }
+  } catch (error) {
 
-  if (!data) {
     console.error(
       "Vérification Google impossible : " +
-      String(lastError || "erreur inconnue")
+      String(error)
     );
 
     return {
       ok: false,
       error:
         "Impossible de vérifier la connexion Google. Réessayez dans quelques secondes."
+    };
+  }
+
+  const status =
+    response.getResponseCode();
+
+  if (status !== 200) {
+
+    console.error(
+      "Token Google refusé. HTTP " +
+      status
+    );
+
+    return {
+      ok: false,
+      error:
+        "Jeton Google invalide ou expiré."
+    };
+  }
+
+  let data;
+
+  try {
+
+    data =
+      JSON.parse(
+        response.getContentText()
+      );
+
+  } catch (error) {
+
+    console.error(
+      "Réponse Google invalide : " +
+      String(error)
+    );
+
+    return {
+      ok: false,
+      error:
+        "Réponse Google invalide."
     };
   }
 
@@ -138,15 +182,17 @@ function verifierGoogle_(token) {
     CONFIG.GOOGLE_CLIENT_ID;
 
   const email =
-    String(data.email || "").trim().toLowerCase();
+    String(data.email || "")
+      .trim()
+      .toLowerCase();
 
   const emailOk =
     email ===
     CONFIG.EMAIL_AUTORISE.toLowerCase();
 
   const verified =
-    String(data.email_verified || "").toLowerCase() ===
-    "true";
+    String(data.email_verified || "")
+      .toLowerCase() === "true";
 
   const expiresOk =
     !data.exp ||
@@ -160,6 +206,7 @@ function verifierGoogle_(token) {
     !verified ||
     !expiresOk
   ) {
+
     return {
       ok: false,
       error:
@@ -167,13 +214,28 @@ function verifierGoogle_(token) {
     };
   }
 
-  return {
+  const user = {
     ok: true,
     email: email,
     name: data.name || "",
     picture: data.picture || ""
   };
+
+  /*
+    10 minutes de cache :
+    le jeton Google reste vérifié côté serveur,
+    sans refaire un appel réseau à chaque action.
+  */
+
+  cache.put(
+    cacheKey,
+    JSON.stringify(user),
+    600
+  );
+
+  return user;
 }
+
 function jsonp_(payload, callback) {
   const body = JSON.stringify(payload);
   if (!callback || !/^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
