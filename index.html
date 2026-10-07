@@ -827,68 +827,116 @@ button{
 ========================================================= */
 
 .profile-panel{
-  padding:27px;
-  border-radius:30px;
-  background:var(--surface);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
+  padding:18px;
+  border-radius:26px;
+  background:linear-gradient(145deg,rgba(24,27,33,.98),rgba(15,17,21,.98));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 55px rgba(0,0,0,.28);
 }
 
 .profile-main{
   display:flex;
   align-items:center;
-  gap:16px;
+  gap:14px;
+  padding:4px 2px 18px;
 }
 
 .profile-main img{
-  width:72px;
-  height:72px;
-  border-radius:24px;
+  width:64px;
+  height:64px;
+  flex:0 0 64px;
+  border-radius:20px;
   object-fit:cover;
-  border:1px solid var(--line);
+  border:1px solid rgba(255,255,255,.1);
   background:#171a20;
 }
 
 .profile-main h2{
   margin:0;
-  font-size:22px;
+  font-size:20px;
+  letter-spacing:-.4px;
 }
 
 .profile-main p{
-  margin:5px 0 0;
+  margin:4px 0 0;
   color:var(--muted);
-  font-size:12px;
+  font-size:11px;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .settings-list{
-  margin-top:22px;
+  margin-top:0;
   display:grid;
-  gap:8px;
+  gap:7px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.07);
 }
 
 .setting{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:16px;
-  border-radius:18px;
-  background:#171a1f;
-  border:1px solid var(--line);
-  font-size:12px;
+  gap:12px;
+  min-height:48px;
+  padding:11px 13px;
+  border-radius:15px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.055);
+  font-size:11px;
+}
+
+.setting strong{
+  text-align:right;
+  white-space:nowrap;
 }
 
 .setting span{
   color:var(--muted);
 }
 
+.profile-panel .app-page-grid{
+  margin-top:12px !important;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.profile-panel .page-card{
+  min-height:92px;
+  padding:14px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.055);
+}
+
+.profile-panel .page-card h3{
+  margin:0 0 5px;
+  font-size:12px;
+}
+
+.profile-panel .page-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+
 .primary{
   width:100%;
-  padding:15px;
-  border-radius:17px;
+  padding:13px;
+  border-radius:15px;
   background:#f2f4f6;
   color:#0a0c0e;
   font-weight:800;
-  margin-top:9px;
+  margin-top:10px;
+}
+
+@media(max-width:600px){
+  .profile-panel .app-page-grid{
+    grid-template-columns:1fr;
+  }
 }
 
 /* =========================================================
