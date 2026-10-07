@@ -3907,12 +3907,12 @@ async function chargerRecapEtHistorique() {
       response.data || {};
 
 
-    afficherRecap(
-      data.recap || {}
-    );
-
-
     const rows = Array.isArray(data.historique) ? data.historique : [];
+
+    afficherRecap(
+      data.recap || {},
+      rows
+    );
     historiqueCourant = rows;
     afficherHistorique(rows);
     rendrePlanning();
@@ -3956,16 +3956,16 @@ async function chargerRecapEtHistorique() {
       ]);
 
 
-    afficherRecap(
-      resultats[0].data || {}
-    );
-
-
     const rows =
       resultats[1].data?.historique ||
       resultats[1].data?.rows ||
       resultats[1].data ||
       [];
+
+    afficherRecap(
+      resultats[0].data || {},
+      Array.isArray(rows) ? rows : []
+    );
 
 
     historiqueCourant = Array.isArray(rows) ? rows : [];
@@ -4847,57 +4847,35 @@ function afficherTitreMois() {
    RÉCAP MOIS
 ========================================================= */
 
-function afficherRecap(
-  recap
-) {
+function afficherRecap(recap, rows) {
   const settingsEmail=document.getElementById("settingsEmail");
   if(settingsEmail) settingsEmail.textContent=utilisateur?.email||"—";
 
-  const set =
-    (id,value) => {
+  const set=(id,value)=>{
+    const element=document.getElementById(id);
+    if(element) element.textContent=value ?? "—";
+  };
 
-      const element =
-        document.getElementById(
-          id
-        );
+  const history=Array.isArray(rows)?rows:[];
+  const workedRows=history.filter(r=>{
+    const value=String(r?.travaille||r?.heures||"").trim();
+    return /\d+\s*h|\d+:\d{2}/i.test(value);
+  });
 
-      if (element) {
+  const totalMinutes=workedRows.reduce((sum,r)=>{
+    return sum+heuresEnMinutes(r.travaille||r.heures);
+  },0);
 
-        element.textContent =
-          value ??
-          "—";
+  const days=workedRows.length;
+  const absences=history.filter(r=>/absent/i.test(String(r?.statut||""))).length;
+  const apiHours=recap?.heuresTravaillees||recap?.heures;
 
-      }
-
-    };
-
-
-  set(
-    "monthHours",
-    recap.heuresTravaillees ||
-    recap.heures ||
-    "—"
-  );
-
-
-  set(
-    "monthDays",
-    recap.joursTravailles ??
-    "—"
-  );
-
-
-  set(
-    "monthAbsences",
-    recap.absences ??
-    "—"
-  );
-
+  set("monthHours",totalMinutes>0?minutesEnTexte(totalMinutes):(apiHours||"0h 00"));
+  set("monthDays",days);
+  set("monthAbsences",absences);
 
   afficherTitreMois();
-
 }
-
 
 /* =========================================================
    HISTORIQUE
