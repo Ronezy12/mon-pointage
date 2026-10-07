@@ -2557,13 +2557,10 @@ function initialiserGoogle() {
     );
 
   if (!mount) {
-
     return;
   }
 
-  if (
-    !window.google?.accounts?.id
-  ) {
+  if (!window.google?.accounts?.id) {
 
     afficherErreurGoogle(
       "Google Identity Services n'est pas disponible."
@@ -2596,6 +2593,15 @@ function initialiserGoogle() {
 
         },
 
+      /*
+        IMPORTANT :
+        On force Google à utiliser
+        une fenêtre popup au lieu d'une
+        navigation vers /gsi/transform.
+      */
+      ux_mode:
+        "popup",
+
       auto_select:
         false,
 
@@ -2614,6 +2620,7 @@ function initialiserGoogle() {
     google.accounts.id.renderButton(
       mount,
       {
+
         type:
           "standard",
 
@@ -2634,6 +2641,7 @@ function initialiserGoogle() {
 
         width:
           320
+
       }
     );
 
@@ -2668,10 +2676,7 @@ function initialiserGoogle() {
 
   }
 
-}
-
-
-window.initialiserGoogle =
+}window.initialiserGoogle =
   initialiserGoogle;
 
 
@@ -2822,9 +2827,11 @@ function construireUtilisateur(payload) {
 ========================================================= */
 
 function restaurerSession(token) {
+function restaurerSession(token) {
 
   const payload =
     decoderJwt(token);
+
 
   if (
     !payload?.email ||
@@ -2838,7 +2845,9 @@ function restaurerSession(token) {
     );
 
     return false;
+
   }
+
 
   if (
     payload.exp &&
@@ -2851,25 +2860,42 @@ function restaurerSession(token) {
     );
 
     return false;
+
   }
+
 
   idToken =
     token;
+
 
   utilisateur =
     construireUtilisateur(
       payload
     );
 
+
+  googleHardLog(
+    "SESSION RESTAURÉE",
+    {
+      email:
+        utilisateur.email,
+
+      expiration:
+        payload.exp
+          ? new Date(
+              Number(payload.exp) * 1000
+            ).toISOString()
+          : "inconnue"
+    }
+  );
+
+
   return true;
 
 }
-
-
 /* =========================================================
    CALLBACK GOOGLE
 ========================================================= */
-
 async function connexionGoogle(response) {
 
   googleHardLog(
@@ -2879,6 +2905,7 @@ async function connexionGoogle(response) {
         !!response?.credential
     }
   );
+
 
   const errorBox =
     document.getElementById(
@@ -2893,10 +2920,12 @@ async function connexionGoogle(response) {
 
   }
 
+
   try {
 
     const token =
       response?.credential;
+
 
     if (!token) {
 
@@ -2906,8 +2935,10 @@ async function connexionGoogle(response) {
 
     }
 
+
     const payload =
       decoderJwt(token);
+
 
     if (!payload?.email) {
 
@@ -2916,6 +2947,7 @@ async function connexionGoogle(response) {
       );
 
     }
+
 
     if (
       !compteAutorise(
@@ -2928,6 +2960,7 @@ async function connexionGoogle(response) {
       );
 
     }
+
 
     if (
       payload.exp &&
@@ -2943,8 +2976,10 @@ async function connexionGoogle(response) {
 
 
     /*
-      IMPORTANT :
-      On conserve immédiatement le token.
+      =====================================================
+      IMPORTANT
+      Le token est sauvegardé immédiatement.
+      =====================================================
     */
 
     idToken =
@@ -2955,11 +2990,34 @@ async function connexionGoogle(response) {
         payload
       );
 
+
     sessionStorage.setItem(
       "monPointageGoogleToken",
       token
     );
 
+
+    googleHardLog(
+      "TOKEN GOOGLE STOCKÉ",
+      {
+        email:
+          utilisateur.email,
+
+        expiration:
+          payload.exp
+            ? new Date(
+                Number(payload.exp) * 1000
+              ).toISOString()
+            : "inconnue"
+      }
+    );
+
+
+    /*
+      =====================================================
+      ON ENTRE DANS L'APPLICATION
+      =====================================================
+    */
 
     afficherApp();
 
@@ -2979,9 +3037,11 @@ async function connexionGoogle(response) {
 
     setLoading(true);
 
+
     try {
 
       await chargerTout();
+
 
       if (hint) {
 
@@ -2999,6 +3059,7 @@ async function connexionGoogle(response) {
 
     demarrerSynchronisationTempsReel();
 
+
   } catch (error) {
 
     console.error(
@@ -3006,15 +3067,27 @@ async function connexionGoogle(response) {
       error
     );
 
-    idToken = null;
 
-    utilisateur = null;
+    googleHardLog(
+      "ERREUR CONNEXION GOOGLE",
+      error?.message || error
+    );
+
+
+    idToken =
+      null;
+
+    utilisateur =
+      null;
+
 
     sessionStorage.removeItem(
       "monPointageGoogleToken"
     );
 
+
     afficherLogin();
+
 
     afficherErreurGoogle(
       error?.message ||
@@ -3157,7 +3230,9 @@ function appelerAPI(
     (resolve, reject) => {
 
       /*
-        Vérification locale du token.
+        =====================================================
+        VÉRIFICATION DU TOKEN LOCAL
+        =====================================================
       */
 
       if (!idToken) {
@@ -3173,18 +3248,33 @@ function appelerAPI(
         reject(error);
 
         return;
+
       }
 
-
-      /*
-        Vérification rapide de l'expiration.
-      */
 
       const payload =
         decoderJwt(idToken);
 
+
+      if (!payload) {
+
+        const error =
+          new Error(
+            "Le jeton Google est invalide. Reconnectez-vous."
+          );
+
+        error.code =
+          "GOOGLE_TOKEN_INVALID";
+
+        reject(error);
+
+        return;
+
+      }
+
+
       if (
-        payload?.exp &&
+        payload.exp &&
         Number(payload.exp) <=
           Date.now() / 1000
       ) {
@@ -3200,8 +3290,15 @@ function appelerAPI(
         reject(error);
 
         return;
+
       }
 
+
+      /*
+        =====================================================
+        CALLBACK JSONP UNIQUE
+        =====================================================
+      */
 
       const callbackName =
         "mp_" +
@@ -3234,7 +3331,7 @@ function appelerAPI(
       Object.entries(
         params
       ).forEach(
-        ([key,value]) => {
+        ([key, value]) => {
 
           if (
             value !== undefined &&
@@ -3258,23 +3355,35 @@ function appelerAPI(
         query.toString();
 
 
+      googleHardLog(
+        "APPEL API",
+        {
+          action,
+          email:
+            payload.email,
+          url:
+            CONFIG.apiUrl
+        }
+      );
+
+
       let done = false;
 
 
       const finish =
-        (fn,value) => {
+        (fn, value) => {
 
           if (done) {
-
             return;
-
           }
 
           done = true;
 
+
           clearTimeout(
             timer
           );
+
 
           try {
 
@@ -3284,11 +3393,13 @@ function appelerAPI(
 
           } catch (_) {}
 
+
           try {
 
             script.remove();
 
           } catch (_) {}
+
 
           fn(value);
 
@@ -3310,6 +3421,13 @@ function appelerAPI(
             error.action =
               action;
 
+
+            googleHardLog(
+              "API TIMEOUT",
+              action
+            );
+
+
             finish(
               reject,
               error
@@ -3325,6 +3443,18 @@ function appelerAPI(
       ] =
         response => {
 
+          googleHardLog(
+            "RÉPONSE API",
+            {
+              action,
+              success:
+                !!response?.success,
+              error:
+                response?.error || null
+            }
+          );
+
+
           if (
             response?.success
           ) {
@@ -3335,6 +3465,7 @@ function appelerAPI(
             );
 
             return;
+
           }
 
 
@@ -3348,6 +3479,7 @@ function appelerAPI(
             new Error(
               message
             );
+
 
           error.code =
             "API_ERROR";
@@ -3381,9 +3513,27 @@ function appelerAPI(
           error.action =
             action;
 
+
+          googleHardLog(
+            "ERREUR RÉSEAU API",
+            action
+          );
+
+
           finish(
             reject,
             error
+          );
+
+        };
+
+
+      script.onload =
+        () => {
+
+          googleHardLog(
+            "SCRIPT API CHARGÉ",
+            action
           );
 
         };
