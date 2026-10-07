@@ -92,9 +92,9 @@ function chargerBibliothequeGoogle(){
  script.src=CONFIG.googleScript;
  script.async=true;
  script.onload=()=>{initialiserGoogle()};
- script.onerror=()=>{
+ script.onerror=(event)=>{
    googleLoadStarted=false;
-   if(status)status.textContent="Google est bloqué ou indisponible. Actualisez la page.";
+   afficherErreurGoogleDetaillee("chargement",event||"Impossible de charger https://accounts.google.com/gsi/client");
  };
  document.head.appendChild(script);
  setTimeout(()=>{
@@ -102,10 +102,28 @@ function chargerBibliothequeGoogle(){
  },10000);
 }
 
+function afficherErreurGoogleDetaillee(type,error){
+ const status=document.getElementById("googleStatus");
+ const box=document.getElementById("loginError");
+ let detail="";
+ try{
+   if(error instanceof Error) detail=error.message;
+   else if(typeof error==="string") detail=error;
+   else if(error) detail=JSON.stringify(error);
+ }catch(_){detail=String(error||"Erreur inconnue");}
+ detail=detail||"Erreur Google inconnue.";
+ console.error("Google Identity Services:",type,error);
+ if(status)status.textContent="Erreur Google : "+detail;
+ if(box){
+   box.classList.remove("hidden");
+   box.textContent="Google ("+type+") : "+detail;
+ }
+}
+
 function initialiserGoogle(){
  const mount=document.getElementById("googleButtonRender"),status=document.getElementById("googleStatus");
  if(!mount)return;
- if(!window.google?.accounts?.id){if(status)status.textContent="Google n'est pas encore disponible…";return;}
+ if(!window.google?.accounts?.id){afficherErreurGoogleDetaillee("bibliothèque","Google Identity Services n'est pas disponible.");return;}
  if(googleRendered)return;
  try{
    google.accounts.id.initialize({
@@ -123,8 +141,7 @@ function initialiserGoogle(){
    if(status)status.textContent="Connexion sécurisée avec Google";
  }catch(error){
    googleRendered=false;
-   console.error("Google init:",error);
-   if(status)status.textContent="Erreur lors du chargement de Google.";
+   afficherErreurGoogleDetaillee("initialisation",error);
  }
 }
 window.initialiserGoogle=initialiserGoogle;
@@ -171,9 +188,9 @@ async function connexionGoogle(response){
    finally{setLoading(false)}
    demarrerSynchronisationTempsReel();
  }catch(error){
-   console.error("Connexion Google:",error);
    idToken=null;utilisateur=null;sessionStorage.removeItem("monPointageGoogleToken");
-   afficherLogin();erreurConnexion(error.message||"Connexion Google impossible.");
+   afficherLogin();
+   afficherErreurGoogleDetaillee("connexion",error);
  }
 }
 window.connexionGoogle=connexionGoogle;
