@@ -980,12 +980,19 @@ button{
 .planning-calendar{
   display:grid;
   grid-template-columns:repeat(7,minmax(0,1fr));
-  gap:7px;
+  gap:8px;
   padding:12px;
   border:1px solid var(--line);
   border-radius:27px;
   background:linear-gradient(145deg,rgba(19,22,27,.9),rgba(10,12,15,.9));
   box-shadow:0 18px 60px rgba(0,0,0,.2);
+  width:100%;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+.planning-calendar>*{
+  min-width:0;
 }
 
 .cal-head{
@@ -1085,21 +1092,68 @@ button{
 
 @media(max-width:600px){
   .planning-calendar{
-    gap:5px;
-    padding:9px;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:4px;
+    padding:7px;
+    border-radius:20px;
   }
+
+  .cal-head{
+    padding:4px 0 6px;
+    font-size:8px;
+  }
+
   .cal-day{
-    min-height:66px;
-    padding:8px 6px;
-    border-radius:14px;
+    min-height:62px;
+    height:auto;
+    padding:7px 5px;
+    border-radius:12px;
   }
+
+  .cal-day b{
+    font-size:12px;
+  }
+
   .cal-day .cal-status{
     margin-top:7px;
     font-size:7px;
+    line-height:1.1;
   }
+
   .cal-day .cal-hours{
-    margin-top:6px;
-    font-size:9px;
+    margin-top:5px;
+    font-size:8px;
+  }
+
+  .cal-day.today:after{
+    content:"";
+    top:5px;
+    right:5px;
+    width:5px;
+    height:5px;
+    padding:0;
+    border-radius:50%;
+  }
+}
+
+@media(max-width:380px){
+  .planning-calendar{
+    gap:3px;
+    padding:6px;
+  }
+
+  .cal-day{
+    min-height:56px;
+    padding:6px 4px;
+    border-radius:10px;
+  }
+
+  .cal-day .cal-status{
+    font-size:6px;
+  }
+
+  .cal-day .cal-hours{
+    font-size:7px;
   }
 }
 
@@ -5071,7 +5125,10 @@ function rendrePlanning(){
   const map={};
   historiqueCourant.forEach(r=>{
     const d=r.date?new Date(r.date):null;
-    if(d&&!isNaN(d)) map[d.getDate()]=r;
+    if(d&&!isNaN(d)){
+      const key=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+      map[key]=r;
+    }
   });
 
   const first=new Date(y,m,1).getDay();
@@ -5082,20 +5139,19 @@ function rendrePlanning(){
 
   let html=labels.map(x=>'<div class="cal-head">'+x+'</div>').join("");
 
-  for(let i=0;i<offset;i++){
-    html+='<div></div>';
-  }
+  for(let i=0;i<offset;i++) html+='<div class="cal-empty"></div>';
 
   for(let day=1;day<=total;day++){
-    const r=map[day];
     const date=new Date(y,m,day);
+    const key=y+"-"+(m+1)+"-"+day;
+    const r=map[key];
     const dayOfWeek=date.getDay();
     const weekend=dayOfWeek===0||dayOfWeek===6;
     const rawStatus=String(r?.statut||"").trim();
     const lower=rawStatus.toLowerCase();
 
-    let status="À pointer";
-    let cls=weekend?"weekend":"";
+    let status=weekend?"Repos":"À pointer";
+    let cls=weekend?" weekend":"";
 
     if(/fête|chabbat/.test(lower)){
       status=rawStatus||"Fête";
@@ -5103,38 +5159,40 @@ function rendrePlanning(){
     }else if(/absent/.test(lower)){
       status="Absent";
       cls+=" absent";
-    }else if(r&&(r.travaille||r.heures||r.debut)){
+    }else if(!weekend && r&&(r.travaille||r.heures||r.debut)){
       status=r.travaille||r.heures||r.debut||"Travaillé";
       cls+=" worked";
-    }else if(rawStatus){
+    }else if(!weekend && rawStatus){
       status=rawStatus;
-    }else if(weekend){
-      status="Repos";
     }
 
     const isToday=date.toDateString()===today.toDateString();
     if(isToday) cls+=" today";
 
+    const hours=!weekend && r&&(r.travaille||r.heures)
+      ? '<span class="cal-hours">'+esc(r.travaille||r.heures)+'</span>'
+      : '';
+
     html+='<div class="cal-day'+cls+'">'+
       '<b>'+day+'</b>'+
       '<span class="cal-status">'+esc(status)+'</span>'+
-      ((r&&(r.travaille||r.heures))?
-        '<span class="cal-hours">'+esc(r.travaille||r.heures)+'</span>':
-        '')+
+      hours+
       '</div>';
   }
 
   cal.innerHTML=html;
 
-  safeSet(
-    "planningWorked",
-    historiqueCourant.filter(r=>r.debut||r.travaille||r.heures).length
-  );
+  const worked=historiqueCourant.filter(r=>{
+    const d=r.date?new Date(r.date):null;
+    if(!d||isNaN(d))return false;
+    const weekend=d.getDay()===0||d.getDay()===6;
+    return !weekend && !!(r.debut||r.travaille||r.heures);
+  }).length;
 
-  safeSet(
-    "planningAbsent",
-    historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length
-  );
+  const absent=historiqueCourant.filter(r=>/absent/i.test(r.statut||"")).length;
+
+  safeSet("planningWorked",worked);
+  safeSet("planningAbsent",absent);
 }
 
 function rendreStats(){
