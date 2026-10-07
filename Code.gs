@@ -62,31 +62,118 @@ function route_(action, p) {
 }
 
 function verifierGoogle_(token) {
-  if (!token) return { ok:false, error:"Connexion Google requise." };
-
-  const url = "https://oauth2.googleapis.com/tokeninfo?id_token=" + encodeURIComponent(token);
-  let data;
-  try {
-    const response = UrlFetchApp.fetch(url, { muteHttpExceptions:true });
-    if (response.getResponseCode() !== 200) return { ok:false, error:"Jeton Google invalide ou expiré." };
-    data = JSON.parse(response.getContentText());
-  } catch (e) {
-    return { ok:false, error:"Impossible de vérifier la connexion Google." };
+  if (!token) {
+    return {
+      ok: false,
+      error: "Connexion Google requise."
+    };
   }
 
-  const issuerOk = data.iss === "https://accounts.google.com" || data.iss === "accounts.google.com";
-  const audienceOk = data.aud === CONFIG.GOOGLE_CLIENT_ID;
-  const email = String(data.email || "").toLowerCase();
-  const emailOk = email === CONFIG.EMAIL_AUTORISE.toLowerCase();
-  const verified = String(data.email_verified || "").toLowerCase() === "true";
+  const url =
+    "https://oauth2.googleapis.com/tokeninfo?id_token=" +
+    encodeURIComponent(token);
 
-  if (!issuerOk || !audienceOk || !emailOk || !verified) {
-    return { ok:false, error:"Ce compte Google n'est pas autorisé." };
+  let data = null;
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const response = UrlFetchApp.fetch(url, {
+        method: "get",
+        muteHttpExceptions: true,
+        followRedirects: true,
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      const status = response.getResponseCode();
+      const body = response.getContentText();
+
+      if (status === 200) {
+        try {
+          data = JSON.parse(body);
+          break;
+        } catch (error) {
+          lastError = error;
+        }
+      } else {
+        lastError = new Error("HTTP " + status);
+
+        if (status !== 429 && status < 500) {
+          return {
+            ok: false,
+            error: "Jeton Google invalide ou expiré."
+          };
+        }
+      }
+    } catch (error) {
+      lastError = error;
+    }
+
+    if (attempt < 2) {
+      Utilities.sleep(500 * Math.pow(2, attempt));
+    }
   }
 
-  return { ok:true, email:email, name:data.name || "", picture:data.picture || "" };
+  if (!data) {
+    console.error(
+      "Vérification Google impossible : " +
+      String(lastError || "erreur inconnue")
+    );
+
+    return {
+      ok: false,
+      error:
+        "Impossible de vérifier la connexion Google. Réessayez dans quelques secondes."
+    };
+  }
+
+  const issuerOk =
+    data.iss === "https://accounts.google.com" ||
+    data.iss === "accounts.google.com";
+
+  const audienceOk =
+    String(data.aud || "") ===
+    CONFIG.GOOGLE_CLIENT_ID;
+
+  const email =
+    String(data.email || "").trim().toLowerCase();
+
+  const emailOk =
+    email ===
+    CONFIG.EMAIL_AUTORISE.toLowerCase();
+
+  const verified =
+    String(data.email_verified || "").toLowerCase() ===
+    "true";
+
+  const expiresOk =
+    !data.exp ||
+    Number(data.exp) >
+      Math.floor(Date.now() / 1000);
+
+  if (
+    !issuerOk ||
+    !audienceOk ||
+    !emailOk ||
+    !verified ||
+    !expiresOk
+  ) {
+    return {
+      ok: false,
+      error:
+        "Ce compte Google n'est pas autorisé."
+    };
+  }
+
+  return {
+    ok: true,
+    email: email,
+    name: data.name || "",
+    picture: data.picture || ""
+  };
 }
-
 function jsonp_(payload, callback) {
   const body = JSON.stringify(payload);
   if (!callback || !/^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
