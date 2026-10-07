@@ -105,42 +105,34 @@ th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:
 "use strict";
 const API="https://script.google.com/macros/s/AKfycbz85SD7D98IEhIInFX-DLI2P9_rer1U_6U2ctYo7bo8s2UgiANmqFVwy2EGPnPfGxpXfQ/exec";
 let seq=0;
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
-function mins(v){const s=String(v??"").toLowerCase().trim();let m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);if(m)return Number(m[1])*60+Number(m[2]||0);m=s.match(/^(\d+):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):0}
-function fmt(n){n=Math.max(0,Math.round(n||0));const h=Math.floor(n/60),m=n%60;return h+"h"+(m?" "+String(m).padStart(2,"0"):"")}
-function getToken(){let token=sessionStorage.getItem("monPointageGoogleToken")||localStorage.getItem("monPointageGoogleToken");if(token)return token;try{token=window.opener?.sessionStorage?.getItem("monPointageGoogleToken")||"";if(token)sessionStorage.setItem("monPointageGoogleToken",token)}catch(e){}return token} 
-function api(action,params){return new Promise((resolve,reject)=>{const token=getToken();if(!token){reject(new Error("Session Google introuvable. Retournez dans À L’HEURE et reconnectez-vous."));return}const cb="pdf_"+Date.now()+"_"+(++seq),s=document.createElement("script"),q=new URLSearchParams({action,id_token:token,callback:cb});Object.entries(params||{}).forEach(([k,v])=>q.set(k,String(v)));let done=false;const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(v)},timer=setTimeout(()=>finish(reject,new Error("Le serveur ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur API"));s.onerror=()=>finish(reject,new Error("Impossible de contacter le serveur."));s.src=API+"?"+q.toString();document.head.appendChild(s)})}
-function monthInfo(){const p=new URLSearchParams(location.search).get("mois")||new Date().toISOString().slice(0,7);const m=p.match(/^(\d{4})-(\d{2})$/);if(!m)throw new Error("Mois invalide.");const y=Number(m[1]),mo=Number(m[2]);if(mo<1||mo>12)throw new Error("Mois invalide.");const d=new Date(y,mo-1,1);return {y,mo,d,label:d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}}
-async function load(){const status=document.getElementById("status");const sub=document.getElementById("toolbarSub");try{if(status)status.textContent="1/3 — Vérification de la session…";const token=getToken();if(!token)throw new Error("Aucun token Google trouvé. Reconnectez-vous à À L’HEURE puis relancez l’export.");if(status)status.textContent="2/3 — Connexion aux données…";const info=monthInfo(),cap=info.label.charAt(0).toUpperCase()+info.label.slice(1);document.title="À L’HEURE — "+cap;if(sub)sub.textContent="Récapitulatif de "+cap;const response=await api("obtenirTableauDeBord",{annee:info.y,mois:info.mo}),data=response.data||{},rows=Array.isArray(data.historique)?data.historique:[],worked=rows.filter(r=>r&&(r.travaille||r.heures)),total=worked.reduce((s,r)=>s+mins(r.travaille||r.heures),0),abs=rows.filter(r=>/absent/i.test(String(r?.statut||""))).length;
-const labels=["L","M","M","J","V","S","D"];
-const map={};
-rows.forEach(r=>{
- const d=r?.date?new Date(r.date):null;
- if(d&&!isNaN(d)) map[d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()]=r;
-});
-const first=new Date(info.y,info.mo-1,1).getDay();
-const offset=(first+6)%7;
-const totalDays=new Date(info.y,info.mo,0).getDate();
-let cal=labels.map(x=>"<div class='cal-head'>"+x+"</div>").join("");
-for(let i=0;i<offset;i++) cal+="<div class='cal-empty'></div>";
-for(let day=1;day<=totalDays;day++){
- const d=new Date(info.y,info.mo-1,day),key=info.y+"-"+info.mo+"-"+day,r=map[key]||{};
- const weekend=d.getDay()===0||d.getDay()===6;
- const raw=String(r.statut||"").trim(),low=raw.toLowerCase();
- let status=weekend?"Repos":"À pointer",cls=weekend?" weekend":"";
- if(/fête|chabbat/.test(low)){status=raw||"Fête";cls+=" holiday"}
- else if(/absent/.test(low)){status="Absent";cls+=" absent"}
- else if(r.travaille||r.heures||r.debut){status=r.travaille||r.heures||"Travaillé";cls+=" worked"}
- else if(raw) status=raw;
- const today=new Date().toDateString()===d.toDateString(); if(today) cls+=" today";
- const hours=(r.travaille||r.heures)?esc(r.travaille||r.heures):"";
- cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(status)+"</span>"+(hours?"<span class='cal-hours'>"+hours+"</span>":"")+"</div>";
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]})}
+function mins(v){var s=String(v==null?"":v).toLowerCase().trim(),m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);if(m)return Number(m[1])*60+Number(m[2]||0);m=s.match(/^(\d+):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):0}
+function fmt(n){n=Math.max(0,Math.round(n||0));var h=Math.floor(n/60),m=n%60;return h+"h"+(m?" "+String(m).padStart(2,"0"):"")}
+function getToken(){return sessionStorage.getItem("monPointageGoogleToken")||localStorage.getItem("monPointageGoogleToken")||""}
+function api(action,params){return new Promise(function(resolve,reject){var token=getToken();if(!token){reject(new Error("Aucun token Google trouvé. Reconnectez-vous à À L’HEURE."));return}var cb="pdf_"+Date.now()+"_"+(++seq),s=document.createElement("script"),q=new URLSearchParams({action:action,id_token:token,callback:cb}),done=false,timer;Object.keys(params||{}).forEach(function(k){q.set(k,String(params[k]))});function finish(fn,value){if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(value)}window[cb]=function(r){r&&r.success?finish(resolve,r):finish(reject,new Error(r&&r.error?r.error:"Erreur API"))};s.onerror=function(){finish(reject,new Error("Impossible de contacter le serveur."))};timer=setTimeout(function(){finish(reject,new Error("Le serveur ne répond pas après 15 secondes."))},15000);s.src=API+"?"+q.toString();document.head.appendChild(s)})}
+function monthInfo(){var p=new URLSearchParams(location.search).get("mois")||new Date().toISOString().slice(0,7),m=p.match(/^(\d{4})-(\d{2})$/);if(!m)throw new Error("Mois invalide.");var y=Number(m[1]),mo=Number(m[2]);if(mo<1||mo>12)throw new Error("Mois invalide.");var d=new Date(y,mo-1,1);return {y:y,mo:mo,label:d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}}
+async function load(){
+ var status=document.getElementById("status"),sub=document.getElementById("toolbarSub");
+ status.textContent="1/3 — Vérification de la session…";
+ var info=monthInfo(),cap=info.label.charAt(0).toUpperCase()+info.label.slice(1);
+ document.title="À L’HEURE — "+cap;sub.textContent="Récapitulatif de "+cap;
+ if(!getToken())throw new Error("Aucun token Google trouvé. Reconnectez-vous à À L’HEURE.");
+ status.textContent="2/3 — Connexion aux données…";
+ var response=await api("obtenirTableauDeBord",{annee:info.y,mois:info.mo}),data=response.data||{},rows=Array.isArray(data.historique)?data.historique:[],worked=rows.filter(function(r){return r&&(r.travaille||r.heures)}),total=worked.reduce(function(s,r){return s+mins(r.travaille||r.heures)},0),abs=rows.filter(function(r){return /absent/i.test(String(r&&r.statut||""))}).length;
+ var labels=["L","M","M","J","V","S","D"],map={};
+ rows.forEach(function(r){var d=r&&r.date?new Date(r.date):null;if(d&&!isNaN(d))map[d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()]=r});
+ var first=new Date(info.y,info.mo-1,1).getDay(),offset=(first+6)%7,totalDays=new Date(info.y,info.mo,0).getDate(),cal=labels.map(function(x){return "<div class='cal-head'>"+x+"</div>"}).join("");
+ for(var i=0;i<offset;i++)cal+="<div class='cal-empty'></div>";
+ for(var day=1;day<=totalDays;day++){var d=new Date(info.y,info.mo-1,day),r=map[info.y+"-"+info.mo+"-"+day]||{},weekend=d.getDay()===0||d.getDay()===6,raw=String(r.statut||"").trim(),low=raw.toLowerCase(),label=weekend?"Repos":"À pointer",cls=weekend?" weekend":"";
+  if(/fête|chabbat/.test(low)){label=raw||"Fête";cls+=" holiday"}else if(/absent/.test(low)){label="Absent";cls+=" absent"}else if(r.travaille||r.heures||r.debut){label=r.travaille||r.heures||"Travaillé";cls+=" worked"}else if(raw)label=raw;
+  if(new Date().toDateString()===d.toDateString())cls+=" today";
+  cal+="<div class='cal-day"+cls+"'><b>"+day+"</b><span class='cal-status'>"+esc(label)+"</span>"+((r.travaille||r.heures)?"<span class='cal-hours'>"+esc(r.travaille||r.heures)+"</span>":"")+"</div>";
+ }
+ document.getElementById("sheet").innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
+ status.textContent="3/3 — PDF prêt. Vous pouvez l’enregistrer.";
+ status.style.color="var(--green)";
 }
-document.getElementById("sheet").innerHTML="<header class='pdf-head'><div class='brand'><img class='logo' src='favicon12.png' alt=''><div><div class='brand-name'>À L’HEURE</div><div class='brand-sub'>Suivi des heures de travail</div></div></div><div class='period'><div class='period-label'>Période</div><div class='period-name'>"+esc(cap)+"</div></div></header><section class='hero'><div class='hero-label'>Total d’heures effectuées</div><div class='total'>"+esc(fmt(total))+"</div><div class='hero-note'>Cumul des journées enregistrées sur le mois sélectionné</div></section><section class='metrics'><div class='metric'><span>Jours travaillés</span><strong>"+worked.length+"</strong></div><div class='metric'><span>Absences</span><strong>"+abs+"</strong></div><div class='metric'><span>Document édité le</span><strong>"+new Date().toLocaleDateString("fr-FR")+"</strong></div></section><section class='calendar-wrap'><h2 class='calendar-title'>Calendrier du mois</h2><div class='calendar'>"+cal+"</div><div class='legend'><span><i class='lg-worked'></i>Travaillé</span><span><i class='lg-absent'></i>Absent</span><span><i class='lg-holiday'></i>Fête / Chabbat</span><span><i></i>Repos / à pointer</span></div></section><footer class='footer'><span>À L’HEURE · Récapitulatif mensuel</span><span>"+esc(cap)+"</span></footer>";
-}catch(e){if(status){status.textContent="ERREUR PDF — "+(e.message||"Erreur inconnue");status.style.color="var(--red)";}if(sub)sub.textContent="Erreur de chargement";throw e;}
-}
-load().then(()=>{const s=document.getElementById("status");if(s){s.textContent="3/3 — PDF prêt. Vous pouvez l’enregistrer.";s.style.color="var(--green)";}}).catch(e=>{console.error("PDF:",e);const s=document.getElementById("status");if(s){s.textContent="ERREUR PDF — "+(e.message||"Impossible de générer le PDF.");s.style.color="var(--red)";}const t=document.getElementById("toolbarSub");if(t)t.textContent="Erreur de chargement";});
-
+load().catch(function(e){console.error("PDF:",e);var s=document.getElementById("status"),t=document.getElementById("toolbarSub");if(s){s.textContent="ERREUR PDF — "+(e.message||"Erreur inconnue");s.style.color="var(--red)"}if(t)t.textContent="Erreur de chargement"});
 </script>
 </body>
 </html>
