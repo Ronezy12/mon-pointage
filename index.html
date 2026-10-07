@@ -3743,7 +3743,7 @@ async function chargerRecapEtHistorique() {
 
 
 /* =========================================================
-   SYNCHRONISATION 5 SECONDES
+   SYNCHRONISATION 30 MINUTES
 ========================================================= */
 
 function demarrerSynchronisationTempsReel() {
@@ -3764,7 +3764,6 @@ function demarrerSynchronisationTempsReel() {
 
   }
 
-
   synchronisationTimer =
     setInterval(
       async () => {
@@ -3777,8 +3776,9 @@ function demarrerSynchronisationTempsReel() {
 
         try {
 
-          await chargerTout();          
-      }, 1800000);
+          await chargerTout();
+
+        } catch (error) {
 
           /*
             On ne déconnecte pas immédiatement
@@ -3793,11 +3793,10 @@ function demarrerSynchronisationTempsReel() {
         }
 
       },
-      5000
+      1800000
     );
 
 }
-
 
 /* =========================================================
    APPLIQUER ÉTAT JOUR
