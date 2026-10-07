@@ -36,3 +36,19 @@
   function pauseMinutes(v){var s=String(v||"").toLowerCase();var m=s.match(/(\d+)\s*heure/);var n=m?Number(m[1])*60:0;var x=s.match(/(\d+)\s*minute/);return n+(x?Number(x[1]):0)}
   function escC(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]})}
 })();
+(function(){
+"use strict";
+var originalAfficherHistorique=window.afficherHistorique;
+if(typeof originalAfficherHistorique==="function"){
+ window.afficherHistorique=function(rows){
+  originalAfficherHistorique(rows);
+  var host=document.getElementById("history"); if(!host)return;
+  host.querySelectorAll(".history-row").forEach(function(item,i){
+   var row=Array.isArray(rows)?rows[i]:null;if(!row||!row.date)return;
+   var b=document.createElement("button");b.type="button";b.className="history-edit";b.textContent="Modifier le pointage";
+   b.onclick=function(){window.ouvrirCorrectionPointage(row.date)};
+   item.appendChild(b);
+  });
+ };
+}
+})();
