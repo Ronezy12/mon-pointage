@@ -26,75 +26,49 @@ body{min-height:100vh}
 .hero{margin:16px 0 12px;padding:19px 20px;border-radius:20px;background:linear-gradient(145deg,#171c20,#0f1215);border:1px solid rgba(69,230,160,.14);position:relative;overflow:hidden;break-inside:avoid}.hero:after{content:"";position:absolute;width:210px;height:210px;right:-100px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(69,230,160,.2),transparent 68%)}.hero-label{position:relative;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:#858b96}.total{position:relative;margin-top:5px;font-size:30px;font-weight:950;letter-spacing:-1.5px;color:var(--green)}.hero-note{position:relative;margin-top:6px;font-size:8px;color:var(--muted)}
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;break-inside:avoid}.metric{padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025)}.metric span{display:block;font-size:7px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}.metric strong{display:block;margin-top:5px;font-size:14px;font-variant-numeric:tabular-nums}
 .section-title{font-size:10px;font-weight:900;margin:0 0 8px}
-.table-wrap{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:14px}
-table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:7.4px}
-th,td{padding:7px 6px;text-align:left;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,.065);overflow-wrap:anywhere}
-th{background:#15191e;color:#858b96;font-size:6.7px;text-transform:uppercase;letter-spacing:.45px;font-weight:850}
-td{color:#dfe3e8}tr:last-child td{border-bottom:0}.hours{font-weight:900;color:var(--green);white-space:nowrap}.status-cell{color:#aeb4bd}
-th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:13%}th:nth-child(3),td:nth-child(3){width:13%}th:nth-child(4),td:nth-child(4){width:14%}th:nth-child(5),td:nth-child(5){width:14%}th:nth-child(6),td:nth-child(6){width:29%}
-.empty{text-align:center!important;color:var(--muted)!important;padding:20px!important}
-.footer{display:flex;justify-content:space-between;gap:12px;margin-top:13px;padding-top:9px;border-top:1px solid var(--line);font-size:6.8px;color:#656b74;break-inside:avoid}
+.table-wrap{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:14px}table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:7.4px}th,td{padding:7px 6px;text-align:left;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,.065);overflow-wrap:anywhere}th{background:#15191e;color:#858b96;font-size:6.7px;text-transform:uppercase;letter-spacing:.45px;font-weight:850}td{color:#dfe3e8}tr:last-child td{border-bottom:0}.hours{font-weight:900;color:var(--green);white-space:nowrap}.status-cell{color:#aeb4bd}th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:13%}th:nth-child(3),td:nth-child(3){width:13%}th:nth-child(4),td:nth-child(4){width:14%}th:nth-child(5),td:nth-child(5){width:14%}th:nth-child(6),td:nth-child(6){width:29%}
+.empty{text-align:center!important;color:var(--muted)!important;padding:20px!important}.footer{display:flex;justify-content:space-between;gap:12px;margin-top:13px;padding-top:9px;border-top:1px solid var(--line);font-size:6.8px;color:#656b74;break-inside:avoid}
 @media(max-width:700px){.toolbar-inner{align-items:flex-start}.actions{flex-shrink:0}.btn{padding:10px 11px}.sheet{padding:20px;margin-top:12px}.pdf-head{gap:10px}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:1/-1}.period-name{font-size:13px}table{font-size:7px}th,td{padding:6px 4px}}
 @media(max-width:430px){.toolbar-title{font-size:12px}.toolbar-sub{max-width:130px}.sheet{max-width:calc(100% - 16px);padding:15px;border-radius:20px}.brand-name{font-size:14px}.brand-sub{font-size:7px}.logo{width:34px;height:34px}.total{font-size:27px}table{font-size:6.5px}th{font-size:5.9px}}
+/* ===== Calendrier mensuel A4 ===== */
+.sheet{width:210mm;min-height:297mm;max-width:calc(100% - 28px);margin:22px auto 50px;padding:12mm;background:#0b0d10;border:1px solid rgba(255,255,255,.09);border-radius:26px;box-shadow:0 30px 100px rgba(0,0,0,.38);overflow:hidden}
+.pdf-head{padding-bottom:14px}.hero{margin:14px 0 10px;padding:16px 18px}.total{font-size:34px}.metrics{gap:7px;margin-bottom:14px}.metric{padding:10px 12px}.calendar-wrap{margin-top:2px}.calendar-title{font-size:10px;font-weight:900;margin:0 0 8px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:7px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#111419,#0d0f12);width:100%;table-layout:fixed}
+.cal-head{padding:4px 2px 6px;text-align:center;color:#fff;font-size:6.5px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+.cal-empty{min-height:38mm}.cal-day{min-height:30mm;padding:7px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;overflow:hidden;break-inside:avoid}.cal-day b{font-size:11px;line-height:1;font-weight:950}.cal-status{margin-top:7px;font-size:6.5px;line-height:1.2;color:var(--muted);overflow-wrap:anywhere}.cal-hours{margin-top:auto;padding-top:6px;font-size:8px;font-weight:950;color:var(--green)}
+.cal-day.worked{border-color:rgba(69,230,160,.22);background:linear-gradient(145deg,rgba(69,230,160,.09),rgba(255,255,255,.025))}.cal-day.absent{border-color:rgba(255,89,104,.25);background:linear-gradient(145deg,rgba(255,89,104,.08),rgba(255,255,255,.025))}.cal-day.holiday{border-color:rgba(230,200,121,.24);background:linear-gradient(145deg,rgba(230,200,121,.08),rgba(255,255,255,.025))}
+.cal-day.weekend{background:#2a2d32;color:#aeb4bd;border-color:#3a3e45}.cal-day.weekend .cal-status{color:#9aa1aa}.cal-day.today{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:6.5px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:4px}.legend i{width:6px;height:6px;border-radius:50%;display:inline-block;background:#626873}.legend .lg-worked{background:var(--green)}.legend .lg-absent{background:var(--red)}.legend .lg-holiday{background:var(--gold)}.footer{margin-top:10px}
+@media(max-width:700px){.sheet{min-height:auto;padding:20px;margin-top:12px}.calendar{gap:4px;padding:6px}.cal-day{min-height:74px;padding:6px 5px;border-radius:10px}.cal-status{font-size:6px}.cal-hours{font-size:7px}}
+/* ===== Impression PDF : lisibilité renforcée ===== */
 @media print{
-  @page{size:A4 portrait;margin:9mm}
-  html,body{background:#fff!important;color:#111!important}
+  @page{size:A4 portrait;margin:0}
+  html,body{background:#fff!important;color:#fff!important}
   body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   .toolbar,.status{display:none!important}
-  .sheet{width:100%;max-width:none;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;overflow:visible;background:#fff!important;color:#111!important}
-  .pdf-head,.hero,.metrics,.section-title,.table-wrap,.footer{break-inside:avoid}
+  .sheet{width:210mm;min-height:297mm;max-width:none;margin:0;padding:9mm;border:0;border-radius:0;box-shadow:none;background:#0b0d10!important;color:#fff!important}
+  .pdf-head,.hero,.metrics,.section-title,.table-wrap,.footer,.calendar{break-inside:avoid}
   .table-wrap{overflow:visible}
   table{break-inside:auto}
   thead{display:table-header-group}
   tr{break-inside:avoid;page-break-inside:avoid}
-  th{background:#15191e!important}
-  .hero{background:#f2f5f3!important;color:#111!important}.metric,.calendar,.cal-day{background:#fff!important;color:#111!important}.pdf-head{border-color:#d9dde2!important}.footer{border-color:#d9dde2!important}.cal-status,.brand-sub,.period-label,.hero-label,.hero-note,.metric span{color:#66707a!important}.cal-day{border-color:#d9dde2!important}.cal-day.worked{background:#f0fbf5!important;border-color:#b9ead0!important}.cal-day.absent{background:#fff1f2!important;border-color:#f2c0c5!important}.cal-day.holiday{background:#fff9e8!important;border-color:#ead99c!important}.cal-hours{color:#138a5b!important}.total{color:#138a5b!important}
-}
 
-/* ===== Calendrier mensuel A4 ===== */
-.sheet{width:210mm;min-height:297mm;max-width:calc(100% - 28px);margin:22px auto 50px;padding:12mm;background:#0b0d10;border:1px solid rgba(255,255,255,.09);border-radius:26px;box-shadow:0 30px 100px rgba(0,0,0,.38);overflow:hidden}
-.pdf-head{padding-bottom:14px}
-.hero{margin:14px 0 10px;padding:16px 18px}
-.total{font-size:34px}
-.metrics{gap:7px;margin-bottom:14px}
-.metric{padding:10px 12px}
-.calendar-wrap{margin-top:2px}
-.calendar-title{font-size:10px;font-weight:900;margin:0 0 8px}
-.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:7px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#111419,#0d0f12);width:100%;table-layout:fixed}
-.cal-head{padding:4px 2px 6px;text-align:center;color:#fff;font-size:6.5px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
-.cal-empty{min-height:38mm}
-.cal-day{min-height:30mm;padding:7px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;overflow:hidden;break-inside:avoid}
-.cal-day b{font-size:11px;line-height:1;font-weight:950}
-.cal-status{margin-top:7px;font-size:6.5px;line-height:1.2;color:var(--muted);overflow-wrap:anywhere}
-.cal-hours{margin-top:auto;padding-top:6px;font-size:8px;font-weight:950;color:var(--green)}
-.cal-day.worked{border-color:rgba(69,230,160,.22);background:linear-gradient(145deg,rgba(69,230,160,.09),rgba(255,255,255,.025))}
-.cal-day.absent{border-color:rgba(255,89,104,.25);background:linear-gradient(145deg,rgba(255,89,104,.08),rgba(255,255,255,.025))}
-.cal-day.holiday{border-color:rgba(230,200,121,.24);background:linear-gradient(145deg,rgba(230,200,121,.08),rgba(255,255,255,.025))}
-.cal-day.weekend{background:#2a2d32;color:#aeb4bd;border-color:#3a3e45}.cal-day.weekend .cal-status{color:#9aa1aa}
-.cal-day.today{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
-.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:6.5px;color:var(--muted)}
-.legend span{display:flex;align-items:center;gap:4px}
-.legend i{width:6px;height:6px;border-radius:50%;display:inline-block;background:#626873}
-.legend .lg-worked{background:var(--green)} .legend .lg-absent{background:var(--red)} .legend .lg-holiday{background:var(--gold)}
-.footer{margin-top:10px}
-@media(max-width:700px){
- .sheet{min-height:auto;padding:20px;margin-top:12px}
- .calendar{gap:4px;padding:6px}
- .cal-day{min-height:74px;padding:6px 5px;border-radius:10px}
- .cal-status{font-size:6px}.cal-hours{font-size:7px}
+  .pdf-head{border-color:rgba(255,255,255,.13)!important}
+  .brand-name,.period-name,.calendar-title,.cal-head{color:#fff!important}
+  .brand-sub,.period-label,.hero-label,.hero-note,.metric span,.cal-status,.legend,.footer{color:#dfe4ea!important}
+  .hero{background:#171c20!important;color:#fff!important}
+  .metric{background:#12161b!important;border-color:rgba(255,255,255,.12)!important}
+  .metric strong{color:#fff!important}
+  .calendar{background:#0f1216!important;border-color:rgba(255,255,255,.12)!important}
+  .cal-day{background:#15191e!important;color:#fff!important;border-color:rgba(255,255,255,.1)!important}
+  .cal-day.worked{background:#14261f!important;border-color:rgba(69,230,160,.28)!important}
+  .cal-day.absent{background:#29171a!important;border-color:rgba(255,89,104,.3)!important}
+  .cal-day.holiday{background:#292516!important;border-color:rgba(230,200,121,.3)!important}
+  .cal-day.weekend{background:#2a2d32!important;color:#fff!important;border-color:#3a3e45!important}
+  .cal-day.weekend .cal-status{color:#dfe4ea!important}
+  .cal-hours{color:#45e6a0!important}
+  .total{color:#45e6a0!important}
 }
-@media print{
- @page{size:A4 portrait;margin:0}
- .sheet{width:210mm;min-height:297mm;max-width:none;margin:0;padding:9mm;border:0;border-radius:0;box-shadow:none;background:#0b0d10!important}
- .calendar{break-inside:avoid;page-break-inside:avoid}
- .cal-day{break-inside:avoid;page-break-inside:avoid}.cal-day.weekend{background:#e5e7eb!important;color:#555!important;border-color:#cfd3d8!important}.cal-day.weekend .cal-status{color:#666!important}
- .cal-empty{min-height:30mm}
-}
-
-/* Aperçu A4 */
-.status{position:relative}
-.sheet{display:block}
-@media print{.sheet{display:block!important}}
 </style>
 </head>
 <body>
