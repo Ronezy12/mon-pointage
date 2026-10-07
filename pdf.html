@@ -65,7 +65,7 @@ th:nth-child(1),td:nth-child(1){width:17%}th:nth-child(2),td:nth-child(2){width:
 "use strict";
 const API="https://script.google.com/macros/s/AKfycbz85SD7D98IEhIInFX-DLI2P9_rer1U_6U2ctYo7bo8s2UgiANmqFVwy2EGPnPfGxpXfQ/exec";
 let seq=0;
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",""":"&quot;","'":"&#039;"}[c]))}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
 function mins(v){const s=String(v??"").toLowerCase().trim();let m=s.match(/(\d+)h(?:\s*(\d{1,2}))?/);if(m)return Number(m[1])*60+Number(m[2]||0);m=s.match(/^(\d+):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):0}
 function fmt(n){n=Math.max(0,Math.round(n||0));const h=Math.floor(n/60),m=n%60;return h+"h"+(m?" "+String(m).padStart(2,"0"):"")}
 function api(action,params){return new Promise((resolve,reject)=>{const token=sessionStorage.getItem("monPointageGoogleToken");if(!token){reject(new Error("Session Google introuvable. Retournez dans À L’HEURE et reconnectez-vous."));return}const cb="pdf_"+Date.now()+"_"+(++seq),s=document.createElement("script"),q=new URLSearchParams({action,id_token:token,callback:cb});Object.entries(params||{}).forEach(([k,v])=>q.set(k,String(v)));let done=false;const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();fn(v)},timer=setTimeout(()=>finish(reject,new Error("Le serveur ne répond pas.")),15000);window[cb]=r=>r?.success?finish(resolve,r):finish(reject,new Error(r?.error||"Erreur API"));s.onerror=()=>finish(reject,new Error("Impossible de contacter le serveur."));s.src=API+"?"+q.toString();document.head.appendChild(s)})}
